@@ -42,6 +42,8 @@ public class SyncInventory {
 
     private static final int FAILURE_PICKRATE_COUNT = 10;
 
+    private static final int PICK_RATE_LESS_THAN_DEL_LIMIT = 50; //配货率小于多少删除
+
     //private static OrderCatConfig context;
     private TianmaSportHttp tianmaSportHttp;
 
@@ -398,6 +400,18 @@ public class SyncInventory {
             }
         });
         Logger.info("库存信息进行配货率匹配-结束");
+
+
+        Logger.info(String.format("配货率低于[%d]百分比,进行过滤.",PICK_RATE_LESS_THAN_DEL_LIMIT));
+        intersectionList = intersectionList.parallelStream().
+                filter(inventoryInfo -> inventoryInfo.getPickRate()>PICK_RATE_LESS_THAN_DEL_LIMIT)
+                .collect(Collectors.toList());
+
+        Logger.info(String.format("配货率低于[%d]百分比,进行过滤后的记录数:[%d].",PICK_RATE_LESS_THAN_DEL_LIMIT,intersectionList.size()));
+
+
+
+
 
         //尺码换算
         Logger.info("进行尺码换算");
