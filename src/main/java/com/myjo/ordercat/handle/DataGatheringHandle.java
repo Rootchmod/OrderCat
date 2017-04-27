@@ -1,7 +1,7 @@
 package com.myjo.ordercat.handle;
 
 
-import com.myjo.ordercat.bean.InventoryQueryCondition;
+import com.myjo.ordercat.domain.InventoryQueryCondition;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.http.TianmaSportHttp;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +28,7 @@ public class DataGatheringHandle {
         for(InventoryQueryCondition iqc :list){
             Logger.debug("InventoryQueryCondition.BrandName"+iqc.getBrandName());
             Logger.debug("InventoryQueryCondition.Quarter"+iqc.getQuarter());
-            tianmaSportHttp.inventoryDownGroup(iqc.getBrandName(),iqc.getQuarter());
+            //tianmaSportHttp.inventoryDownGroup(iqc.getBrandName(),iqc.getQuarter());
         }
         Logger.debug("InventoryQueryCondition.exec done.");
     }

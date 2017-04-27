@@ -1,11 +1,8 @@
 package com.myjo.ordercat
 
-import com.myjo.ordercat.bean.ItemsOnSale
-import com.myjo.ordercat.bean.SkuInfo
-import com.myjo.ordercat.handle.SyncInventory
+import com.myjo.ordercat.domain.ItemsOnSale
+import com.myjo.ordercat.domain.SkuInfo
 import com.myjo.ordercat.http.TaoBaoHttp
-import com.myjo.ordercat.http.TianmaSportHttp
-import com.taobao.api.domain.Sku
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import spock.lang.Specification

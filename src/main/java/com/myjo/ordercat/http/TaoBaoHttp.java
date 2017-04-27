@@ -3,11 +3,11 @@ package com.myjo.ordercat.http;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.myjo.ordercat.bean.ItemsOnSale;
-import com.myjo.ordercat.bean.PageResult;
-import com.myjo.ordercat.bean.SkuInfo;
+import com.myjo.ordercat.domain.ItemsOnSale;
+import com.myjo.ordercat.domain.PageResult;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
+import com.taobao.api.domain.Sku;
 import com.taobao.api.request.ItemSkusGetRequest;
 import com.taobao.api.request.ItemsOnsaleGetRequest;
 import com.taobao.api.request.SellercatsListGetRequest;
@@ -38,7 +38,6 @@ public class TaoBaoHttp {
 
 
     public TaoBaoHttp() {
-
 
     }
 
@@ -87,6 +86,8 @@ public class TaoBaoHttp {
         req.setIsCspu(true);
 //        req.setIsCombine(true);
         ItemsOnsaleGetResponse rsp = client.execute(req, SESSION_KEY);
+
+
         JSONObject object = JSON.parseObject(rsp.getBody());
 
         JSONObject items_onsale_get_response = object.getJSONObject("items_onsale_get_response");
@@ -136,9 +137,9 @@ public class TaoBaoHttp {
      * @param list
      * @return
      */
-    public List<SkuInfo> getTaoBaoItemSkus(List<ItemsOnSale> list) throws Exception {
+    public List<Sku> getTaoBaoItemSkus(List<ItemsOnSale> list) throws Exception {
         Logger.debug("getTaoBaoItemSkus:" + CID);
-        List<SkuInfo> rtlist = new ArrayList<>();
+        List<Sku> rtlist = new ArrayList<>();
         int[] indexes =
                 Stream.of(IntStream.range(-1, list.size())
                         .filter(i -> i % 40 == 0), IntStream.of(list.size()))
@@ -156,15 +157,12 @@ public class TaoBaoHttp {
         return rtlist;
     }
 
-    private List<SkuInfo> taoBaoItemSkus(List<ItemsOnSale> list) throws Exception {
-        List<SkuInfo> rtlist = new ArrayList<>();
+    private List<Sku> taoBaoItemSkus(List<ItemsOnSale> list) throws Exception {
+        List<Sku> rtlist = new ArrayList<>();
 
         TaobaoClient client = new DefaultTaobaoClient(URL, APP_KEY, APP_SECRET);
         ItemSkusGetRequest req = new ItemSkusGetRequest();
         req.setFields("sku_id,id,num_iid,properties,quantity,price,created,modified,status,extra_id,memo,properties_name,sku_spec_id,with_hold_quantity,sku_delivery_time,change_prop,outer_id,barcode");
-
-
-
 //        String commaSeparatedNumbers = numbers.stream()
 //                .map(i -> i.toString())
 //                .collect(Collectors.joining(", "));
@@ -176,8 +174,9 @@ public class TaoBaoHttp {
         req.setNumIids(NumIidStr);
         //req.setNumIids(numIid.toString());
         ItemSkusGetResponse rsp = client.execute(req, SESSION_KEY);
-
-       // System.out.println(rsp.getBody());
+        if(rsp.isSuccess() == true){
+            rtlist.addAll(rsp.getSkus());
+        }
 
         return rtlist;
     }

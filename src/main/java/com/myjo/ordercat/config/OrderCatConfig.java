@@ -1,6 +1,6 @@
 package com.myjo.ordercat.config;
 
-import com.myjo.ordercat.bean.InventoryQueryCondition;
+import com.myjo.ordercat.domain.InventoryQueryCondition;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
@@ -41,8 +41,12 @@ public class OrderCatConfig {
 
 
 
-    public static String getInventoryGroupFileName(){
-        return config.getString(String.format(DATA_GATHERING, "inventory_group_file_name"));
+    public static String getInventoryGroupWhfile(){
+        return config.getString(String.format(DATA_GATHERING, "wh_file"));
+    }
+
+    public static String getInventoryGroupIwhfile(){
+        return config.getString(String.format(DATA_GATHERING, "iwh_file"));
     }
 
 
@@ -102,6 +106,8 @@ public class OrderCatConfig {
     public static String getSearchByArticlenoHttpUrl() {
         return config.getString(String.format(TIANMA_SPORT, "search_by_articleno_http_url"));
     }
+
+
 
 
 

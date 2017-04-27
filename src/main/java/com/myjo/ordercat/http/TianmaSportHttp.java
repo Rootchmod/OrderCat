@@ -5,10 +5,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import com.myjo.ordercat.bean.InventoryInfo;
+import com.myjo.ordercat.domain.InventoryInfo;
 import com.myjo.ordercat.config.OrderCatConfig;
+import com.myjo.ordercat.domain.PickDate;
+import com.myjo.ordercat.utils.OcDateTimeUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
@@ -148,7 +151,7 @@ public class TianmaSportHttp {
         return vcfile;
     }
 
-    public void inventoryDownGroup(String brandName, String quarter) throws Exception {
+    public void inventoryDownGroup(String fileName,String brandName, String quarter) throws Exception {
         Logger.info("inventory_down_group_http_url: " + OrderCatConfig.getTianmaSportIDGHttpUrl());
         Logger.info("brandName: " + brandName);
         Logger.info("quarter: " + quarter);
@@ -189,15 +192,15 @@ public class TianmaSportHttp {
         if(rt.getBoolean("success") == true){
             String path = rt.getString("path");
             Logger.info("inventoryDownGroup return path:" + path);
-            dataDownLoad(path);
+            dataDownLoad(path,fileName);
         }
     }
 
 
-    public String dataDownLoad(String path) throws Exception {
+    public String dataDownLoad(String path,String fileName) throws Exception {
         Logger.info("http data DownLoad:"+path);
 
-        String dfileStr = OrderCatConfig.getOrderCatOutPutPath()+ OrderCatConfig.getInventoryGroupFileName();
+        String dfileStr = OrderCatConfig.getOrderCatOutPutPath()+fileName;
         //IOUtils.toByteArray(inputStream);
         File dfile = new File(dfileStr);
 
@@ -262,13 +265,29 @@ public class TianmaSportHttp {
             JSONArray array = object.getJSONArray("rows");
             com.alibaba.fastjson.JSONObject jsonObject;
             InventoryInfo inventoryInfo;
+
+            String dd1 ; //配货率
+            String dd2 ; //发货时效
             for(int i=0;i<array.size();i++){
-                inventoryInfo = new InventoryInfo();
+
                 jsonObject = array.getJSONObject(i);
+                dd1 = StringUtils.substringBeforeLast(jsonObject.getString("pickRate"),"%");
+                dd2 = StringUtils.substringAfterLast(jsonObject.getString("pickRate"),"发货时效:");
+
+                inventoryInfo = new InventoryInfo();
                 inventoryInfo.setWareHouseID(jsonObject.getString("wareHouseID"));
                 inventoryInfo.setWarehouseName(jsonObject.getString("wareHouseName"));
-                inventoryInfo.setPickRate(jsonObject.getString("pickRate"));
-                inventoryInfo.setUpdateTime(jsonObject.getString("updateTime"));
+                inventoryInfo.setPickRate(Integer.valueOf(dd1.replaceAll("配货率：","")));
+                inventoryInfo.setThedtime(dd2.replaceAll("小时",""));
+                inventoryInfo.setPickDate(PickDate.valueOf(Integer.valueOf(jsonObject.getString("pick_date"))));
+                inventoryInfo.setMark(jsonObject.getString("mark"));
+                inventoryInfo.setRetrunDesc(jsonObject.getString("retrun_desc"));
+                inventoryInfo.setExpressName(jsonObject.getString("expressName"));
+                inventoryInfo.setReturnRate(Integer.valueOf(jsonObject.getString("returnRate")));
+                inventoryInfo.setEndT(jsonObject.getString("endT"));
+
+
+                inventoryInfo.setUpdateTime(OcDateTimeUtils.string2LocalDateTime(jsonObject.getString("updateTime")));
                 list.add(inventoryInfo);
             }
             Logger.info("JSON-String:" + jsonstr);
