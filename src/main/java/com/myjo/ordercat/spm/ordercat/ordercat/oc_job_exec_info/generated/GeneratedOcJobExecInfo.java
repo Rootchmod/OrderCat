@@ -7,11 +7,12 @@ import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
+import com.speedment.runtime.field.StringField;
 import com.speedment.runtime.typemapper.TypeMapper;
 import com.speedment.runtime.typemapper.time.TimestampToLocalDateTimeMapper;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.OptionalInt;
+import java.util.Optional;
 
 /**
  * The generated base for the {@link
@@ -41,7 +42,7 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getJobName()} method.
      */
-    final ComparableField<OcJobExecInfo, Integer, Integer> JOB_NAME = ComparableField.create(
+    final StringField<OcJobExecInfo, String> JOB_NAME = StringField.create(
         Identifier.JOB_NAME,
         o -> OptionalUtil.unwrap(o.getJobName()),
         OcJobExecInfo::setJobName,
@@ -65,7 +66,7 @@ public interface GeneratedOcJobExecInfo {
      */
     final ComparableField<OcJobExecInfo, Timestamp, LocalDateTime> END_TIME = ComparableField.create(
         Identifier.END_TIME,
-        OcJobExecInfo::getEndTime,
+        o -> OptionalUtil.unwrap(o.getEndTime()),
         OcJobExecInfo::setEndTime,
         new TimestampToLocalDateTimeMapper(), 
         false
@@ -74,11 +75,22 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getElapsed()} method.
      */
-    final LongField<OcJobExecInfo, Long> ELAPSED = LongField.create(
+    final StringField<OcJobExecInfo, String> ELAPSED = StringField.create(
         Identifier.ELAPSED,
-        OcJobExecInfo::getElapsed,
+        o -> OptionalUtil.unwrap(o.getElapsed()),
         OcJobExecInfo::setElapsed,
-        TypeMapper.primitive(), 
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcJobExecInfo} field that can be
+     * obtained using the {@link OcJobExecInfo#getStatus()} method.
+     */
+    final StringField<OcJobExecInfo, String> STATUS = StringField.create(
+        Identifier.STATUS,
+        OcJobExecInfo::getStatus,
+        OcJobExecInfo::setStatus,
+        TypeMapper.identity(), 
         false
     );
     
@@ -96,7 +108,7 @@ public interface GeneratedOcJobExecInfo {
      * 
      * @return the jobName of this OcJobExecInfo
      */
-    OptionalInt getJobName();
+    Optional<String> getJobName();
     
     /**
      * Returns the beginTime of this OcJobExecInfo. The beginTime field
@@ -113,7 +125,7 @@ public interface GeneratedOcJobExecInfo {
      * 
      * @return the endTime of this OcJobExecInfo
      */
-    LocalDateTime getEndTime();
+    Optional<LocalDateTime> getEndTime();
     
     /**
      * Returns the elapsed of this OcJobExecInfo. The elapsed field corresponds
@@ -121,7 +133,15 @@ public interface GeneratedOcJobExecInfo {
      * 
      * @return the elapsed of this OcJobExecInfo
      */
-    long getElapsed();
+    Optional<String> getElapsed();
+    
+    /**
+     * Returns the status of this OcJobExecInfo. The status field corresponds to
+     * the database column ordercat.ordercat.oc_job_exec_info.status.
+     * 
+     * @return the status of this OcJobExecInfo
+     */
+    String getStatus();
     
     /**
      * Sets the id of this OcJobExecInfo. The id field corresponds to the
@@ -139,7 +159,7 @@ public interface GeneratedOcJobExecInfo {
      * @param jobName to set of this OcJobExecInfo
      * @return        this OcJobExecInfo instance
      */
-    OcJobExecInfo setJobName(Integer jobName);
+    OcJobExecInfo setJobName(String jobName);
     
     /**
      * Sets the beginTime of this OcJobExecInfo. The beginTime field corresponds
@@ -166,7 +186,16 @@ public interface GeneratedOcJobExecInfo {
      * @param elapsed to set of this OcJobExecInfo
      * @return        this OcJobExecInfo instance
      */
-    OcJobExecInfo setElapsed(long elapsed);
+    OcJobExecInfo setElapsed(String elapsed);
+    
+    /**
+     * Sets the status of this OcJobExecInfo. The status field corresponds to
+     * the database column ordercat.ordercat.oc_job_exec_info.status.
+     * 
+     * @param status to set of this OcJobExecInfo
+     * @return       this OcJobExecInfo instance
+     */
+    OcJobExecInfo setStatus(String status);
     
     enum Identifier implements ColumnIdentifier<OcJobExecInfo> {
         
@@ -174,7 +203,8 @@ public interface GeneratedOcJobExecInfo {
         JOB_NAME   ("job_name"),
         BEGIN_TIME ("begin_time"),
         END_TIME   ("end_time"),
-        ELAPSED    ("elapsed");
+        ELAPSED    ("elapsed"),
+        STATUS     ("status");
         
         private final String columnName;
         private final TableIdentifier<OcJobExecInfo> tableIdentifier;

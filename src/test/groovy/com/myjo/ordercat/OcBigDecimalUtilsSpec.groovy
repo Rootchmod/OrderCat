@@ -1,8 +1,8 @@
 package com.myjo.ordercat
 
-import com.myjo.ordercat.domain.ItemsOnSale
-import com.myjo.ordercat.domain.TaoBaoGoodInfo
-import com.myjo.ordercat.http.TaoBaoHttp
+import com.myjo.ordercat.config.OrderCatConfig
+import com.myjo.ordercat.http.TianmaSportHttp
+import com.myjo.ordercat.utils.OcBigDecimalUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import spock.lang.Specification
@@ -12,37 +12,28 @@ import spock.lang.Unroll
  * Created by lee5hx on 17/4/20.
  */
 @Unroll
-class TaoBaoSpec extends Specification {
+class OcBigDecimalUtilsSpec extends Specification {
 
-    private static final Logger Logger = LogManager.getLogger(TaoBaoSpec.class);
-
-    private static TaoBaoHttp taoBaoHttp;
+    private static final Logger Logger = LogManager.getLogger(OcBigDecimalUtilsSpec.class);
 
 
 
-    def setupSpec() {
-        taoBaoHttp = new TaoBaoHttp()
+    def setup() {
     }
 
+    def println() {
 
-
-    def "getTaobaoItemsOnSale and TaoBaoItemSkus"(){
-        when:
-        List<ItemsOnSale> list =  taoBaoHttp.getTaobaoItemsOnSale();
-        List<TaoBaoGoodInfo> list1 =  taoBaoHttp.getTaoBaoItemSkus(list);
-
-        then:
-        list.size() == list1.size();
     }
 
-
-
-    def "test"(){
+    def "OcBigDecimalUtils.purchasePrice"(){
         when:
-        taoBaoHttp.test();
+        def ff = OcBigDecimalUtils.purchasePrice(new BigDecimal("500"),true);
+        def ff1 = OcBigDecimalUtils.purchasePrice(new BigDecimal("495.02"),false);
 
         then:
-        "ok" == "ok"
+        ff.toString() == "589";
+        ff1.toString() == "559";
+
     }
 
 //    def "config"() {

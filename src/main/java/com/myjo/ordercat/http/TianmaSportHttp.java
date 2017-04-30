@@ -275,7 +275,7 @@ public class TianmaSportHttp {
                 dd2 = StringUtils.substringAfterLast(jsonObject.getString("pickRate"),"发货时效:");
 
                 inventoryInfo = new InventoryInfo();
-                inventoryInfo.setWareHouseID(jsonObject.getString("wareHouseID"));
+                inventoryInfo.setWareHouseID(Integer.valueOf(jsonObject.getString("wareHouseID")));
                 inventoryInfo.setWarehouseName(jsonObject.getString("wareHouseName"));
                 inventoryInfo.setPickRate(Integer.valueOf(dd1.replaceAll("配货率：","")));
                 inventoryInfo.setThedtime(dd2.replaceAll("小时",""));
@@ -295,5 +295,8 @@ public class TianmaSportHttp {
         return list;
 
     }
+
+
+
 
 }

@@ -3,6 +3,8 @@ package com.myjo.ordercat.spm.generated;
 import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.OrdercatApplicationImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManagerImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManagerImpl;
@@ -26,8 +28,10 @@ public abstract class GeneratedOrdercatApplicationBuilder extends AbstractApplic
     
     protected GeneratedOrdercatApplicationBuilder() {
         super(OrdercatApplicationImpl.class, GeneratedOrdercatMetadata.class);
+        withManager(OcInventoryInfoManagerImpl.class);
         withManager(OcJobExecInfoManagerImpl.class);
         withManager(OcWarehouseInfoManagerImpl.class);
+        withComponent(OcInventoryInfoSqlAdapter.class);
         withComponent(OcJobExecInfoSqlAdapter.class);
         withComponent(OcWarehouseInfoSqlAdapter.class);
     }

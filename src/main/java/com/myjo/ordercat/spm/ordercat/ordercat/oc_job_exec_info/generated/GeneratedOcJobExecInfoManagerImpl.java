@@ -38,7 +38,8 @@ public abstract class GeneratedOcJobExecInfoManagerImpl extends AbstractManager<
             OcJobExecInfo.JOB_NAME,
             OcJobExecInfo.BEGIN_TIME,
             OcJobExecInfo.END_TIME,
-            OcJobExecInfo.ELAPSED
+            OcJobExecInfo.ELAPSED,
+            OcJobExecInfo.STATUS
         );
     }
     

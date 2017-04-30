@@ -14,8 +14,8 @@ public class GoodsInventoryInfo {
     private int quantity;//库存数量
     private BigDecimal marketPrice;//市场价格
     private BigDecimal price;//价格
-    private BigDecimal avgPrice;//平均价格(根据仓库取平均)
-    private int sizeCount;//尺码数
+    //private BigDecimal avgPrice;//平均价格(根据仓库取平均)
+    private Long sizeCount;//尺码数
 
     public String getGoodsNo() {
         return goodsNo;
@@ -65,22 +65,14 @@ public class GoodsInventoryInfo {
         this.price = price;
     }
 
-    public BigDecimal getAvgPrice() {
-        return avgPrice;
-    }
 
-    public void setAvgPrice(BigDecimal avgPrice) {
-        this.avgPrice = avgPrice;
-    }
-
-    public int getSizeCount() {
+    public Long getSizeCount() {
         return sizeCount;
     }
 
-    public void setSizeCount(int sizeCount) {
+    public void setSizeCount(Long sizeCount) {
         this.sizeCount = sizeCount;
     }
-
 
     public BigDecimal getMarketPrice() {
         return marketPrice;

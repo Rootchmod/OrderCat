@@ -2,9 +2,9 @@ package com.myjo.ordercat.domain;
 
 import com.taobao.api.domain.Sku;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 public class InventoryInfo {
 
     private String goodsNo;//商品货号
-    private String wareHouseID;//货源ID
+    private Integer wareHouseID;//货源ID
     private String warehouseName;//货源
     private String size1;//中国尺码
     private String size2;//外国尺码
@@ -28,17 +28,32 @@ public class InventoryInfo {
     private Sex sex;//性别
     private String quarter;//季节
     private String discount;//折扣
+    private BigDecimal bdiscount;
     private int pickRate;//配货率
     private LocalDateTime updateTime;//库存更新时间
     private PickDate pickDate;//配货时间
     private String thedtime;
-
+    private BigDecimal proxyPrice;
+    private BigDecimal purchasePrice;
+    private Long salesCount;
     private String expressName;
     private String retrunDesc;
     private int returnRate;
     private String endT;
     private String mark;
+    private Long numIid;
 
+    //按照仓库去重复`
+    public static <T> Predicate<T> distinctByField(Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
+    //根据SKU信息去重复
+    public static <T> Predicate<T> distinctBySkusMap(Function<? super T, String> keyExtractor, Map<String, List<Sku>> map) {
+        //return t -> map.putIfAbsent(keyExtractor.apply(t), null) == null;
+        return t -> map.containsKey(keyExtractor.apply(t)) == true;
+    }
 
     public String getGoodsNo() {
         return goodsNo;
@@ -71,7 +86,6 @@ public class InventoryInfo {
     public void setSize2(String size2) {
         this.size2 = size2;
     }
-
 
     public Brand getBrand() {
         return brand;
@@ -137,14 +151,6 @@ public class InventoryInfo {
         this.discount = discount;
     }
 
-    public String getThedtime() {
-        return thedtime;
-    }
-
-    public void setThedtime(String thedtime) {
-        this.thedtime = thedtime;
-    }
-
     //    "warehouse_name": "广东特价渠道",
 //            "hide_flag": null,
 //            "sex": "男",
@@ -191,27 +197,12 @@ public class InventoryInfo {
 //            "num1": null,
 //            "quarter": "17Q2"
 
-    //按照仓库去重复`
-    public static <T> Predicate<T> distinctByField(Function<? super T, Object> keyExtractor) {
-        Map<Object, Boolean> map = new ConcurrentHashMap<>();
-        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    public String getThedtime() {
+        return thedtime;
     }
 
-    //根据SKU信息去重复
-    public static <T> Predicate<T> distinctBySkusMap(Function<? super T, String> keyExtractor,Map<String,List<Sku>>  map) {
-        //return t -> map.putIfAbsent(keyExtractor.apply(t), null) == null;
-        return t -> map.containsKey(keyExtractor.apply(t))==true;
-    }
-
-
-
-
-    public String getWareHouseID() {
-        return wareHouseID;
-    }
-
-    public void setWareHouseID(String wareHouseID) {
-        this.wareHouseID = wareHouseID;
+    public void setThedtime(String thedtime) {
+        this.thedtime = thedtime;
     }
 
     public int getPickRate() {
@@ -277,5 +268,56 @@ public class InventoryInfo {
 
     public void setMark(String mark) {
         this.mark = mark;
+    }
+
+    public Integer getWareHouseID() {
+        return wareHouseID;
+    }
+
+    public void setWareHouseID(Integer wareHouseID) {
+        this.wareHouseID = wareHouseID;
+    }
+
+
+    public BigDecimal getBdiscount() {
+        return bdiscount;
+    }
+
+    public void setBdiscount(BigDecimal bdiscount) {
+        this.bdiscount = bdiscount;
+    }
+
+
+    public BigDecimal getProxyPrice() {
+        return proxyPrice;
+    }
+
+    public void setProxyPrice(BigDecimal proxyPrice) {
+        this.proxyPrice = proxyPrice;
+    }
+
+
+    public Long getNumIid() {
+        return numIid;
+    }
+
+    public void setNumIid(Long numIid) {
+        this.numIid = numIid;
+    }
+
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+
+    public Long getSalesCount() {
+        return salesCount;
+    }
+
+    public void setSalesCount(Long salesCount) {
+        this.salesCount = salesCount;
     }
 }

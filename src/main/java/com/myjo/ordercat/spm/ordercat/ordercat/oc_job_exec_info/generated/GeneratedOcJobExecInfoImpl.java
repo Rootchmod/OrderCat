@@ -5,7 +5,7 @@ import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.OptionalInt;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 /**
@@ -21,10 +21,11 @@ import java.util.StringJoiner;
 public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
     
     private long id;
-    private Integer jobName;
+    private String jobName;
     private LocalDateTime beginTime;
     private LocalDateTime endTime;
-    private long elapsed;
+    private String elapsed;
+    private String status;
     
     protected GeneratedOcJobExecInfoImpl() {
         
@@ -36,8 +37,8 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
     }
     
     @Override
-    public OptionalInt getJobName() {
-        return OptionalUtil.ofNullable(jobName);
+    public Optional<String> getJobName() {
+        return Optional.ofNullable(jobName);
     }
     
     @Override
@@ -46,13 +47,18 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
     }
     
     @Override
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public Optional<LocalDateTime> getEndTime() {
+        return Optional.ofNullable(endTime);
     }
     
     @Override
-    public long getElapsed() {
-        return elapsed;
+    public Optional<String> getElapsed() {
+        return Optional.ofNullable(elapsed);
+    }
+    
+    @Override
+    public String getStatus() {
+        return status;
     }
     
     @Override
@@ -62,7 +68,7 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
     }
     
     @Override
-    public OcJobExecInfo setJobName(Integer jobName) {
+    public OcJobExecInfo setJobName(String jobName) {
         this.jobName = jobName;
         return this;
     }
@@ -80,8 +86,14 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
     }
     
     @Override
-    public OcJobExecInfo setElapsed(long elapsed) {
+    public OcJobExecInfo setElapsed(String elapsed) {
         this.elapsed = elapsed;
+        return this;
+    }
+    
+    @Override
+    public OcJobExecInfo setStatus(String status) {
+        this.status = status;
         return this;
     }
     
@@ -91,8 +103,9 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
         sj.add("id = "        + Objects.toString(getId()));
         sj.add("jobName = "   + Objects.toString(OptionalUtil.unwrap(getJobName())));
         sj.add("beginTime = " + Objects.toString(getBeginTime()));
-        sj.add("endTime = "   + Objects.toString(getEndTime()));
-        sj.add("elapsed = "   + Objects.toString(getElapsed()));
+        sj.add("endTime = "   + Objects.toString(OptionalUtil.unwrap(getEndTime())));
+        sj.add("elapsed = "   + Objects.toString(OptionalUtil.unwrap(getElapsed())));
+        sj.add("status = "    + Objects.toString(getStatus()));
         return "OcJobExecInfoImpl " + sj.toString();
     }
     
@@ -105,7 +118,8 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
         if (!Objects.equals(this.getJobName(), thatOcJobExecInfo.getJobName())) {return false; }
         if (!Objects.equals(this.getBeginTime(), thatOcJobExecInfo.getBeginTime())) {return false; }
         if (!Objects.equals(this.getEndTime(), thatOcJobExecInfo.getEndTime())) {return false; }
-        if (this.getElapsed() != thatOcJobExecInfo.getElapsed()) {return false; }
+        if (!Objects.equals(this.getElapsed(), thatOcJobExecInfo.getElapsed())) {return false; }
+        if (!Objects.equals(this.getStatus(), thatOcJobExecInfo.getStatus())) {return false; }
         return true;
     }
     
@@ -116,7 +130,8 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
         hash = 31 * hash + Objects.hashCode(getJobName());
         hash = 31 * hash + Objects.hashCode(getBeginTime());
         hash = 31 * hash + Objects.hashCode(getEndTime());
-        hash = 31 * hash + Long.hashCode(getElapsed());
+        hash = 31 * hash + Objects.hashCode(getElapsed());
+        hash = 31 * hash + Objects.hashCode(getStatus());
         return hash;
     }
 }

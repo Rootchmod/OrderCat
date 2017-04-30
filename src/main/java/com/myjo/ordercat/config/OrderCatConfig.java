@@ -1,13 +1,14 @@
 package com.myjo.ordercat.config;
 
 import com.myjo.ordercat.domain.InventoryQueryCondition;
+import com.myjo.ordercat.domain.PickRateDelCondition;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
 
 
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,12 @@ public class OrderCatConfig {
     private static final String TIANMA_SPORT = "tianma-sport.%s";
     private static final String ORDER_CAT = "order-cat.%s";
     private static final String DATA_GATHERING = "data-gathering.%s";
+    private static final String SYNC_INVENTORY = "sync-inventory.%s";
+    private static final String DATABASE = "database.%s";
+    private static final String TAOBAO_API = "taobao-api.%s";
+
     private static Config config;
+
 
     static {
         config = ConfigFactory.load("oc.conf");
@@ -30,6 +36,12 @@ public class OrderCatConfig {
     private OrderCatConfig() {
 
     }
+
+    public static void init(String cs) throws Exception{
+        config = ConfigFactory.parseFile(new File(cs));
+        //config = ConfigFactory.parseFile(new File(config));
+    }
+
 //    public OrderCatConfig() {
 //        this(ConfigFactory.load("oc.conf"));
 //
@@ -39,6 +51,70 @@ public class OrderCatConfig {
 //        //Logger.debug(config.origin().resource());
 //    }
 
+
+    public static String getTaobaoApiUrl(){
+        return config.getString(String.format(TAOBAO_API, "url"));
+    }
+    public static String getTaobaoApiAppKey(){
+        return config.getString(String.format(TAOBAO_API, "app_key"));
+    }
+    public static String getTaobaoApiAppSecret(){
+        return config.getString(String.format(TAOBAO_API, "app_secret"));
+    }
+    public static String getTaobaoApiSessionKey(){
+        return config.getString(String.format(TAOBAO_API, "session_key"));
+    }
+
+
+
+
+    public static String getDBmsName(){
+        return config.getString(String.format(DATABASE, "dbmsName"));
+    }
+
+    public static String getDBConnectionUrl(){
+        return config.getString(String.format(DATABASE, "connectionUrl"));
+    }
+    public static String getDBUsername(){
+        return config.getString(String.format(DATABASE, "username"));
+    }
+    public static String getDBPassword(){
+        return config.getString(String.format(DATABASE, "password"));
+    }
+
+
+    //平均价格+1%
+    public static Integer getAvgPriceAboveRate(){
+        return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "avg_price_above_rate")));
+    }
+    //销量大于等于20,或小于20
+    public static Integer getProductSalesLimitCount(){
+        return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "product_sales_limit_count")));
+    }
+    //SKU基础线百分比
+    public static Integer getSkuMultiplyRate(){
+        return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "sku_multiply_rate")));
+    }
+
+
+    public static Integer getFailurePickRateCount(){
+        return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "failure_pick_rate_count")));
+    }
+
+    public static Integer getPickRateLessThanDelLimit(){
+        return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "pick_rate_less_than_del_limit")));
+    }
+
+    public static List<PickRateDelCondition> getPickRateDelConditions(){
+        List<PickRateDelCondition> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(SYNC_INVENTORY, "pick_rate_less_than_del_conditions"));
+        PickRateDelCondition prdc;
+        for(ConfigObject cb :list){
+            prdc = ConfigBeanFactory.create(cb.toConfig(),PickRateDelCondition.class);
+            rtList.add(prdc);
+        }
+        return rtList;
+    }
 
 
     public static String getInventoryGroupWhfile(){
