@@ -290,7 +290,7 @@ public class TianmaSportHttp {
                 inventoryInfo.setUpdateTime(OcDateTimeUtils.string2LocalDateTime(jsonObject.getString("updateTime")));
                 list.add(inventoryInfo);
             }
-            Logger.info("JSON-String:" + jsonstr);
+            //Logger.info("JSON-String:" + jsonstr);
         }
         return list;
 

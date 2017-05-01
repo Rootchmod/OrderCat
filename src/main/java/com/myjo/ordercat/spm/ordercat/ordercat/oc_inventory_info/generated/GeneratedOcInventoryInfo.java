@@ -9,8 +9,10 @@ import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
 import com.speedment.runtime.field.StringField;
 import com.speedment.runtime.typemapper.TypeMapper;
+import com.speedment.runtime.typemapper.time.TimestampToLocalDateTimeMapper;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -197,11 +199,11 @@ public interface GeneratedOcInventoryInfo {
      * obtained using the {@link OcInventoryInfo#getWarehouseUpdateTime()}
      * method.
      */
-    final ComparableField<OcInventoryInfo, Timestamp, Timestamp> WAREHOUSE_UPDATE_TIME = ComparableField.create(
+    final ComparableField<OcInventoryInfo, Timestamp, LocalDateTime> WAREHOUSE_UPDATE_TIME = ComparableField.create(
         Identifier.WAREHOUSE_UPDATE_TIME,
         o -> OptionalUtil.unwrap(o.getWarehouseUpdateTime()),
         OcInventoryInfo::setWarehouseUpdateTime,
-        TypeMapper.identity(), 
+        new TimestampToLocalDateTimeMapper(), 
         false
     );
     /**
@@ -307,7 +309,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getMark()} method.
      */
-    final ComparableField<OcInventoryInfo, Integer, Integer> MARK = ComparableField.create(
+    final StringField<OcInventoryInfo, String> MARK = StringField.create(
         Identifier.MARK,
         o -> OptionalUtil.unwrap(o.getMark()),
         OcInventoryInfo::setMark,
@@ -329,11 +331,11 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getAddTime()} method.
      */
-    final ComparableField<OcInventoryInfo, Timestamp, Timestamp> ADD_TIME = ComparableField.create(
+    final ComparableField<OcInventoryInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
         Identifier.ADD_TIME,
         OcInventoryInfo::getAddTime,
         OcInventoryInfo::setAddTime,
-        TypeMapper.identity(), 
+        new TimestampToLocalDateTimeMapper(), 
         false
     );
     /**
@@ -483,7 +485,7 @@ public interface GeneratedOcInventoryInfo {
      * 
      * @return the warehouseUpdateTime of this OcInventoryInfo
      */
-    Optional<Timestamp> getWarehouseUpdateTime();
+    Optional<LocalDateTime> getWarehouseUpdateTime();
     
     /**
      * Returns the pickDate of this OcInventoryInfo. The pickDate field
@@ -571,7 +573,7 @@ public interface GeneratedOcInventoryInfo {
      * 
      * @return the mark of this OcInventoryInfo
      */
-    OptionalInt getMark();
+    Optional<String> getMark();
     
     /**
      * Returns the numIid of this OcInventoryInfo. The numIid field corresponds
@@ -588,7 +590,7 @@ public interface GeneratedOcInventoryInfo {
      * 
      * @return the addTime of this OcInventoryInfo
      */
-    Timestamp getAddTime();
+    LocalDateTime getAddTime();
     
     /**
      * Returns the execJobId of this OcInventoryInfo. The execJobId field
@@ -745,7 +747,7 @@ public interface GeneratedOcInventoryInfo {
      * @param warehouseUpdateTime to set of this OcInventoryInfo
      * @return                    this OcInventoryInfo instance
      */
-    OcInventoryInfo setWarehouseUpdateTime(Timestamp warehouseUpdateTime);
+    OcInventoryInfo setWarehouseUpdateTime(LocalDateTime warehouseUpdateTime);
     
     /**
      * Sets the pickDate of this OcInventoryInfo. The pickDate field corresponds
@@ -841,7 +843,7 @@ public interface GeneratedOcInventoryInfo {
      * @param mark to set of this OcInventoryInfo
      * @return     this OcInventoryInfo instance
      */
-    OcInventoryInfo setMark(Integer mark);
+    OcInventoryInfo setMark(String mark);
     
     /**
      * Sets the numIid of this OcInventoryInfo. The numIid field corresponds to
@@ -859,7 +861,7 @@ public interface GeneratedOcInventoryInfo {
      * @param addTime to set of this OcInventoryInfo
      * @return        this OcInventoryInfo instance
      */
-    OcInventoryInfo setAddTime(Timestamp addTime);
+    OcInventoryInfo setAddTime(LocalDateTime addTime);
     
     /**
      * Sets the execJobId of this OcInventoryInfo. The execJobId field

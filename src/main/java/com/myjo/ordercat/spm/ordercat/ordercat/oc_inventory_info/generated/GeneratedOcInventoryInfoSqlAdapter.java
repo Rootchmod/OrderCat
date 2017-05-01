@@ -4,13 +4,18 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfo
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoImpl;
 import com.speedment.common.injector.annotation.ExecuteBefore;
 import com.speedment.common.injector.annotation.WithState;
+import com.speedment.runtime.config.Project;
 import com.speedment.runtime.config.identifier.TableIdentifier;
 import com.speedment.runtime.core.annotation.GeneratedCode;
+import com.speedment.runtime.core.component.ProjectComponent;
 import com.speedment.runtime.core.component.sql.SqlPersistenceComponent;
 import com.speedment.runtime.core.component.sql.SqlStreamSupplierComponent;
+import com.speedment.runtime.core.component.sql.SqlTypeMapperHelper;
 import com.speedment.runtime.core.exception.SpeedmentException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import static com.speedment.common.injector.State.RESOLVED;
 import static com.speedment.runtime.core.internal.util.sql.ResultSetUtil.*;
 
@@ -28,6 +33,8 @@ import static com.speedment.runtime.core.internal.util.sql.ResultSetUtil.*;
 public abstract class GeneratedOcInventoryInfoSqlAdapter {
     
     private final TableIdentifier<OcInventoryInfo> tableIdentifier;
+    private SqlTypeMapperHelper<Timestamp, LocalDateTime> warehouseUpdateTimeHelper;
+    private SqlTypeMapperHelper<Timestamp, LocalDateTime> addTimeHelper;
     
     protected GeneratedOcInventoryInfoSqlAdapter() {
         this.tableIdentifier = TableIdentifier.of("ordercat", "ordercat", "oc_inventory_info");
@@ -42,35 +49,35 @@ public abstract class GeneratedOcInventoryInfoSqlAdapter {
     protected OcInventoryInfo apply(ResultSet resultSet) throws SpeedmentException {
         final OcInventoryInfo entity = createEntity();
         try {
-            entity.setId(                  resultSet.getLong(1)        );
-            entity.setGoodsNo(             resultSet.getString(2)      );
-            entity.setWarehouseId(         getInt(resultSet, 3)        );
-            entity.setWarehouseName(       resultSet.getString(4)      );
-            entity.setSize1(               resultSet.getString(5)      );
-            entity.setSize2(               resultSet.getString(6)      );
-            entity.setBrand(               resultSet.getString(7)      );
-            entity.setMarketprice(         resultSet.getBigDecimal(8)  );
-            entity.setNum2(                getInt(resultSet, 9)        );
-            entity.setDivision(            resultSet.getString(10)     );
-            entity.setCate(                resultSet.getString(11)     );
-            entity.setSex(                 resultSet.getString(12)     );
-            entity.setQuarter(             resultSet.getString(13)     );
-            entity.setDiscount(            resultSet.getString(14)     );
-            entity.setPickRate(            getInt(resultSet, 15)       );
-            entity.setWarehouseUpdateTime( resultSet.getTimestamp(16)  );
-            entity.setPickDate(            resultSet.getString(17)     );
-            entity.setThedtime(            resultSet.getString(18)     );
-            entity.setProxyPrice(          resultSet.getBigDecimal(19) );
-            entity.setPurchasePrice(       resultSet.getBigDecimal(20) );
-            entity.setSalesCount(          getInt(resultSet, 21)       );
-            entity.setExpressName(         resultSet.getString(22)     );
-            entity.setRetrunDesc(          resultSet.getString(23)     );
-            entity.setReturnRate(          getInt(resultSet, 24)       );
-            entity.setEndT(                resultSet.getString(25)     );
-            entity.setMark(                getInt(resultSet, 26)       );
-            entity.setNumIid(              resultSet.getString(27)     );
-            entity.setAddTime(             resultSet.getTimestamp(28)  );
-            entity.setExecJobId(           getInt(resultSet, 29)       );
+            entity.setId(                  resultSet.getLong(1)                                        );
+            entity.setGoodsNo(             resultSet.getString(2)                                      );
+            entity.setWarehouseId(         getInt(resultSet, 3)                                        );
+            entity.setWarehouseName(       resultSet.getString(4)                                      );
+            entity.setSize1(               resultSet.getString(5)                                      );
+            entity.setSize2(               resultSet.getString(6)                                      );
+            entity.setBrand(               resultSet.getString(7)                                      );
+            entity.setMarketprice(         resultSet.getBigDecimal(8)                                  );
+            entity.setNum2(                getInt(resultSet, 9)                                        );
+            entity.setDivision(            resultSet.getString(10)                                     );
+            entity.setCate(                resultSet.getString(11)                                     );
+            entity.setSex(                 resultSet.getString(12)                                     );
+            entity.setQuarter(             resultSet.getString(13)                                     );
+            entity.setDiscount(            resultSet.getString(14)                                     );
+            entity.setPickRate(            getInt(resultSet, 15)                                       );
+            entity.setWarehouseUpdateTime( warehouseUpdateTimeHelper.apply(resultSet.getTimestamp(16)) );
+            entity.setPickDate(            resultSet.getString(17)                                     );
+            entity.setThedtime(            resultSet.getString(18)                                     );
+            entity.setProxyPrice(          resultSet.getBigDecimal(19)                                 );
+            entity.setPurchasePrice(       resultSet.getBigDecimal(20)                                 );
+            entity.setSalesCount(          getInt(resultSet, 21)                                       );
+            entity.setExpressName(         resultSet.getString(22)                                     );
+            entity.setRetrunDesc(          resultSet.getString(23)                                     );
+            entity.setReturnRate(          getInt(resultSet, 24)                                       );
+            entity.setEndT(                resultSet.getString(25)                                     );
+            entity.setMark(                resultSet.getString(26)                                     );
+            entity.setNumIid(              resultSet.getString(27)                                     );
+            entity.setAddTime(             addTimeHelper.apply(resultSet.getTimestamp(28))             );
+            entity.setExecJobId(           getInt(resultSet, 29)                                       );
         } catch (final SQLException sqle) {
             throw new SpeedmentException(sqle);
         }
@@ -79,5 +86,12 @@ public abstract class GeneratedOcInventoryInfoSqlAdapter {
     
     protected OcInventoryInfoImpl createEntity() {
         return new OcInventoryInfoImpl();
+    }
+    
+    @ExecuteBefore(RESOLVED)
+    void createHelpers(ProjectComponent projectComponent) {
+        final Project project = projectComponent.getProject();
+        warehouseUpdateTimeHelper = SqlTypeMapperHelper.create(project, OcInventoryInfo.WAREHOUSE_UPDATE_TIME, OcInventoryInfo.class);
+        addTimeHelper = SqlTypeMapperHelper.create(project, OcInventoryInfo.ADD_TIME, OcInventoryInfo.class);
     }
 }

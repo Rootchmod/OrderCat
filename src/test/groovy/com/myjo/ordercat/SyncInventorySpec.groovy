@@ -12,6 +12,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfo
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import org.json.JSONObject
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -26,7 +27,7 @@ class SyncInventorySpec extends Specification {
     private static SyncInventory si;
 
 
-    def setupSpec() {
+    def setup() {
 
         OrdercatApplication app = new OrdercatApplicationBuilder()
                 .withConnectionUrl(OrderCatConfig.getDBmsName(), OrderCatConfig.getDBConnectionUrl())
@@ -47,6 +48,17 @@ class SyncInventorySpec extends Specification {
         si.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         si.setOcJobExecInfoManager(ocJobExecInfoManager);
 
+
+        tianmaSportHttp.getVerifyCodeImage();
+
+        String vcode = "1111";
+
+        JSONObject jsonObject = tianmaSportHttp.login(vcode);
+
+        tianmaSportHttp.main_html();
+
+
+
     }
 
 
@@ -60,7 +72,7 @@ class SyncInventorySpec extends Specification {
 
     def "syncTaoBaoInventory"() {
         when:
-        si.syncTaoBaoInventory();
+        si.syncTaoBaoInventory(10L);
         then:
         "ok" == "ok";
     }

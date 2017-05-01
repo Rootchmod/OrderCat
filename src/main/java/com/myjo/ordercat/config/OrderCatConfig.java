@@ -53,15 +53,21 @@ public class OrderCatConfig {
 
 
     public static String getTaobaoApiUrl(){
+
+        //System.out.println(config.getString(String.format(TAOBAO_API, "url")));
         return config.getString(String.format(TAOBAO_API, "url"));
     }
     public static String getTaobaoApiAppKey(){
+        //System.out.println(config.getString(String.format(TAOBAO_API, "app_key")));
+
         return config.getString(String.format(TAOBAO_API, "app_key"));
     }
     public static String getTaobaoApiAppSecret(){
+        //System.out.println(config.getString(String.format(TAOBAO_API, "app_secret")));
         return config.getString(String.format(TAOBAO_API, "app_secret"));
     }
     public static String getTaobaoApiSessionKey(){
+        //System.out.println(config.getString(String.format(TAOBAO_API, "session_key")));
         return config.getString(String.format(TAOBAO_API, "session_key"));
     }
 

@@ -7,6 +7,8 @@ import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
 import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfo;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoImpl;
@@ -499,6 +501,8 @@ public class SyncInventory {
                 inventoryInfo.setPickDate(PickDate.valueOf(ocWarehouseInfo.getPickDate().getAsInt()));
                 inventoryInfo.setMark(ocWarehouseInfo.getMark().get());
                 inventoryInfo.setRetrunDesc(ocWarehouseInfo.getRetrunDesc().get());
+                inventoryInfo.setEndT(ocWarehouseInfo.getEndT().get());
+                inventoryInfo.setThedtime(String.valueOf(ocWarehouseInfo.getThedTime().getAsInt()));
             }
             //折扣转换，除以10
             inventoryInfo.setBdiscount(
@@ -671,8 +675,12 @@ public class SyncInventory {
                 .filter(inventoryInfo -> inventoryInfo.getWareHouseID() != null)
                 .filter(inventoryInfo -> inventoryInfo.getSalesCount() < OrderCatConfig.getProductSalesLimitCount())
                 .forEach(inventoryInfo -> {
-                    BigDecimal pp = whSizePriceMap.get(inventoryInfo.getGoodsNo() + ":" + inventoryInfo.getSize1()).get().getProxyPrice();
-                    inventoryInfo.setPurchasePrice(OcBigDecimalUtils.purchasePrice(pp, false));
+                    Optional<InventoryInfo> op = whSizePriceMap.get(inventoryInfo.getGoodsNo() + ":" + inventoryInfo.getSize1());
+                    if(op.isPresent()){
+                        if(op.get().getWareHouseID() == inventoryInfo.getWareHouseID()){
+                            inventoryInfo.setPurchasePrice(OcBigDecimalUtils.purchasePrice(op.get().getProxyPrice(), false));
+                        }
+                    }
                 });
 
 
@@ -693,9 +701,43 @@ public class SyncInventory {
 
 
         Logger.info("开始插入数据库");
-        for (InventoryInfo i1 : intersectionList) {
 
+        OcInventoryInfo ocInventoryInfo;
+        for (InventoryInfo i1 : intersectionList) {
+            ocInventoryInfo = new OcInventoryInfoImpl();
+            ocInventoryInfo.setAddTime(LocalDateTime.now());
+            ocInventoryInfo.setNumIid(String.valueOf(i1.getNumIid()));
+            ocInventoryInfo.setBrand(i1.getBrand().name());
+            ocInventoryInfo.setCate(i1.getCate());
+            ocInventoryInfo.setDiscount(i1.getDiscount());
+            ocInventoryInfo.setProxyPrice(i1.getProxyPrice());
+            ocInventoryInfo.setExecJobId(execJobId.intValue());
+            ocInventoryInfo.setDivision(i1.getDivision());
+            ocInventoryInfo.setGoodsNo(i1.getGoodsNo());
+            ocInventoryInfo.setPurchasePrice(i1.getPurchasePrice());
+            ocInventoryInfo.setEndT(i1.getEndT());
+            ocInventoryInfo.setExpressName(i1.getExpressName());
+            ocInventoryInfo.setMark(i1.getMark());
+            ocInventoryInfo.setReturnRate(i1.getReturnRate());
+            ocInventoryInfo.setRetrunDesc(i1.getRetrunDesc());
+            ocInventoryInfo.setPickDate(i1.getPickDate().name());
+            ocInventoryInfo.setPickRate(i1.getPickRate());
+            ocInventoryInfo.setNum2(Integer.valueOf(i1.getNum2()));
+            ocInventoryInfo.setSize1(i1.getSize1());
+            ocInventoryInfo.setSize2(i1.getSize2());
+            ocInventoryInfo.setSalesCount(i1.getSalesCount().intValue());
+            ocInventoryInfo.setQuarter(i1.getQuarter());
+            ocInventoryInfo.setSex(i1.getSex().name());
+            ocInventoryInfo.setWarehouseId(i1.getWareHouseID());
+            ocInventoryInfo.setWarehouseName(i1.getWarehouseName());
+            ocInventoryInfo.setWarehouseUpdateTime(i1.getUpdateTime());
+            ocInventoryInfo.setThedtime(i1.getThedtime());
+            ocInventoryInfo.setMarketprice(new BigDecimal(i1.getMarketprice()));
+
+            ocInventoryInfoManager.persist(ocInventoryInfo);
         }
+
+        Logger.info("插入数据库结束");
         //删除
         delDataGatheringFile(OrderCatConfig.getInventoryGroupIwhfile());
 
@@ -771,7 +813,7 @@ public class SyncInventory {
         String dfileStr = OrderCatConfig.getOrderCatOutPutPath() + fileName;
         File dfile = new File(dfileStr);
         if(dfile.exists()){
-            FileUtils.forceDeleteOnExit(dfile);
+            FileUtils.forceDelete(dfile);
         }
         Logger.debug("if exists:" + dfile.exists() + " onExit del:" + dfileStr);
 

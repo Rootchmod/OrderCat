@@ -4,7 +4,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfo
 import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -37,7 +37,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     private String quarter;
     private String discount;
     private Integer pickRate;
-    private Timestamp warehouseUpdateTime;
+    private LocalDateTime warehouseUpdateTime;
     private String pickDate;
     private String thedtime;
     private BigDecimal proxyPrice;
@@ -47,9 +47,9 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     private String retrunDesc;
     private Integer returnRate;
     private String endT;
-    private Integer mark;
+    private String mark;
     private String numIid;
-    private Timestamp addTime;
+    private LocalDateTime addTime;
     private Integer execJobId;
     
     protected GeneratedOcInventoryInfoImpl() {
@@ -132,7 +132,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     }
     
     @Override
-    public Optional<Timestamp> getWarehouseUpdateTime() {
+    public Optional<LocalDateTime> getWarehouseUpdateTime() {
         return Optional.ofNullable(warehouseUpdateTime);
     }
     
@@ -182,8 +182,8 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     }
     
     @Override
-    public OptionalInt getMark() {
-        return OptionalUtil.ofNullable(mark);
+    public Optional<String> getMark() {
+        return Optional.ofNullable(mark);
     }
     
     @Override
@@ -192,7 +192,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     }
     
     @Override
-    public Timestamp getAddTime() {
+    public LocalDateTime getAddTime() {
         return addTime;
     }
     
@@ -292,7 +292,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     }
     
     @Override
-    public OcInventoryInfo setWarehouseUpdateTime(Timestamp warehouseUpdateTime) {
+    public OcInventoryInfo setWarehouseUpdateTime(LocalDateTime warehouseUpdateTime) {
         this.warehouseUpdateTime = warehouseUpdateTime;
         return this;
     }
@@ -352,7 +352,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     }
     
     @Override
-    public OcInventoryInfo setMark(Integer mark) {
+    public OcInventoryInfo setMark(String mark) {
         this.mark = mark;
         return this;
     }
@@ -364,7 +364,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     }
     
     @Override
-    public OcInventoryInfo setAddTime(Timestamp addTime) {
+    public OcInventoryInfo setAddTime(LocalDateTime addTime) {
         this.addTime = addTime;
         return this;
     }

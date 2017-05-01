@@ -14,7 +14,7 @@ public class SyncTaoBaoInventoryHandle extends ExecuteHandle {
 
     @Override
     public void exec(Long execJobId) throws Exception {
-        setJobName("SyncTaoBaoInventoryJob");
+       // setJobName("SyncTaoBaoInventoryJob");
         syncInventory.syncTaoBaoInventory(execJobId);
     }
 

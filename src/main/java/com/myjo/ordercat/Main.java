@@ -3,13 +3,13 @@ package com.myjo.ordercat;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.myjo.ordercat.config.OrderCatConfig;
+import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.handle.ExecuteHandle;
 import com.myjo.ordercat.handle.SyncInventory;
 import com.myjo.ordercat.handle.SyncTaoBaoInventoryHandle;
 import com.myjo.ordercat.handle.SyncWarehouseHandle;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
-import com.myjo.ordercat.job.SyncWarehouseJob;
 import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager;
@@ -18,20 +18,11 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfo
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import org.quartz.CronTrigger;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerFactory;
-import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 
 /**
@@ -67,11 +58,11 @@ public class Main {
         OcJobExecInfoManager ocJobExecInfoManager = app.getOrThrow(OcJobExecInfoManager.class);
         OcInventoryInfoManager ocInventoryInfoManager = app.getOrThrow(OcInventoryInfoManager.class);
 
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
 
         TianmaSportHttp tianmaSportHttp = new TianmaSportHttp(map);
         TaoBaoHttp taoBaoHttp = new TaoBaoHttp();
-        SyncInventory syncInventory = new SyncInventory(tianmaSportHttp,taoBaoHttp);
+        SyncInventory syncInventory = new SyncInventory(tianmaSportHttp, taoBaoHttp);
         syncInventory.setOcInventoryInfoManager(ocInventoryInfoManager);
         syncInventory.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         syncInventory.setOcJobExecInfoManager(ocJobExecInfoManager);
@@ -83,24 +74,28 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         JSONObject jsonObject = tianmaSportHttp.login(br.readLine());
 
+        if(!jsonObject.getBoolean("success")){
+            throw new OCException("天马平台-登陆失败");
+        }
+
         tianmaSportHttp.main_html();
 
 
-
         ExecuteHandle eh;
-        if(action.equals("SyncSalesInfoJob")){
+        if (action.equals("SyncSalesInfoJob")) {
 
 
-
-        }else if(action.equals("SyncWarehouseJob")){
+        } else if (action.equals("SyncWarehouseJob")) {
             eh = new SyncWarehouseHandle(syncInventory);
+            eh.setJobName("SyncWarehouseJob");
             eh.setOcJobExecInfoManager(ocJobExecInfoManager);
             eh.exec();
-        }else if(action.equals("syncTaoBaoInventory")){
+        } else if (action.equals("SyncTaoBaoInventory")) {
             eh = new SyncTaoBaoInventoryHandle(syncInventory);
+            eh.setJobName("SyncTaoBaoInventory");
             eh.setOcJobExecInfoManager(ocJobExecInfoManager);
             eh.exec();
-        }else if(action.equals("jobStart")){
+        } else if (action.equals("JobStart")) {
 //            SchedulerFactory sf = new StdSchedulerFactory();
 //            Scheduler sched = sf.getScheduler();
 //
@@ -115,7 +110,6 @@ public class Main {
 //            sched.scheduleJob(job, trigger);
 
         }
-
 
 
     }

@@ -10,7 +10,7 @@
         <Logger name="org.gradle.tooling" level="info"/>
         <Logger name="org.eclipse.aether" level="info"/>
         <Logger name="log4j.logger.org.apache.http" level="info"/>
-        <Root level="debug" includeLocation="true">
+        <Root level="info" includeLocation="true">
             <AppenderRef ref="STDOUT"/>
         </Root>
     </Loggers>

@@ -13,7 +13,7 @@ public class SyncWarehouseHandle extends ExecuteHandle {
 
     @Override
     public void exec(Long execJobId) throws Exception {
-        setJobName("SyncWarehouseJob");
+        //setJobName("SyncWarehouseJob");
         syncInventory.syncWarehouseInfo(execJobId);
     }
 
