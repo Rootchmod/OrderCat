@@ -2,7 +2,6 @@ package com.myjo.ordercat
 
 import com.myjo.ordercat.domain.InventoryInfo
 import com.myjo.ordercat.handle.InventoryDataOperate
-import com.myjo.ordercat.utils.OcBigDecimalUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import spock.lang.Specification
