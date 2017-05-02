@@ -1,5 +1,8 @@
 package com.myjo.ordercat.utils;
 
+import com.myjo.ordercat.config.OrderCatConfig;
+import com.myjo.ordercat.domain.SalesPriceCalculate;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -25,16 +28,24 @@ public class OcBigDecimalUtils {
         return data.divide(div, ROUND, RoundingMode.HALF_UP);
     }
 
-
-    public static BigDecimal purchasePrice(BigDecimal proxyPrice,boolean isxl) {
+    /**
+     * 获得销售价格
+     * @param proxyPrice
+     * @param isxl 大于20 = True 或小于20 = False
+     * @return
+     */
+    public static BigDecimal toSalesPrice(BigDecimal proxyPrice, boolean isxl) {
         long lrt;
+        SalesPriceCalculate spc;
         if(isxl){
-            lrt = Math.round(divide(proxyPrice,new BigDecimal("0.9")).add(new BigDecimal("25")).doubleValue());
+            spc = OrderCatConfig.getSalesPriceGtCalculate();
+            lrt = Math.round(divide(proxyPrice,new BigDecimal(spc.getDivide())).add(new BigDecimal(spc.getAdd())).doubleValue());
         }else {
-            lrt = Math.round(divide(proxyPrice,new BigDecimal("0.93")).add(new BigDecimal("25")).doubleValue());
+            spc = OrderCatConfig.getSalesPriceLtCalculate();
+            lrt = Math.round(divide(proxyPrice,new BigDecimal(spc.getDivide())).add(new BigDecimal(spc.getAdd())).doubleValue());
         }
         String lrtStr = String.valueOf(lrt);
         String a = lrtStr.substring(0, lrtStr.length() - 1);
-        return new BigDecimal(a+"9");
+        return new BigDecimal(a+OrderCatConfig.getSalesPriceEndReplace());
     }
 }

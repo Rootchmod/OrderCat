@@ -5,13 +5,8 @@ import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
-import com.myjo.ordercat.spm.OrdercatApplication;
-import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfo;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfo;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoImpl;
@@ -26,12 +21,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.CsvListReader;
+import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.io.ICsvListReader;
 import org.supercsv.prefs.CsvPreference;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -51,15 +49,12 @@ public class SyncInventory {
 
     private static final Logger Logger = LogManager.getLogger(SyncInventory.class);
 
-     ;
-
-   ; //配货率小于多少删除
+    ;; //配货率小于多少删除
 
 
     //private static final int SKU_MULTIPLY_RATE = 60;
     //private static final int AVG_PRICE_ABOVE_RATE = OrderCatConfig.getAvgPriceAboveRate();
-   // private static final long PRODUCT_SALES_LIMIT_COUNT = OrderCatConfig.getProductSalesLimitCount();
-
+    // private static final long PRODUCT_SALES_LIMIT_COUNT = OrderCatConfig.getProductSalesLimitCount();
 
 
     //private static OrderCatConfig context;
@@ -74,7 +69,6 @@ public class SyncInventory {
     private OcInventoryInfoManager ocInventoryInfoManager;
 
     public SyncInventory(TianmaSportHttp tianmaSportHttp, TaoBaoHttp taoBaoHttp) {
-
 
 
         this.tianmaSportHttp = tianmaSportHttp;
@@ -156,21 +150,81 @@ public class SyncInventory {
     }
 
 
-    private Integer getJobID(String jobName){
+    private void writeWithCsvInventoryWriter(List<InventoryInfo> lists) throws Exception {
+
+        ICsvBeanWriter beanWriter = null;
+        try {
+            File file = new File(OrderCatConfig.getOrderCatOutPutPath() + "inventory_info_rt.csv");
+            if (file.exists()) {
+                FileUtils.forceDelete(file);
+            }
+
+            beanWriter = new CsvBeanWriter(new FileWriter(OrderCatConfig.getOrderCatOutPutPath() + "inventory_info_rt.csv"),
+                    CsvPreference.STANDARD_PREFERENCE);
+
+            // the header elements are used to map the bean values to each column (names must match)
+            final String[] header = new String[]{
+                    "goodsNo",
+                    "wareHouseID",
+                    "warehouseName",
+                    "size1",
+                    "size2",
+                    "brand",
+                    "marketprice",
+                    "num2",
+                    "division",
+                    "cate",
+                    "sex",
+                    "quarter",
+                    "discount",
+                    "bdiscount",
+                    "pickRate",
+                    "updateTime",
+                    "pickDate",
+                    "thedtime",
+                    "proxyPrice",
+                    "salesPrice",
+                    "salesCount",
+                    "expressName",
+                    "retrunDesc",
+                    "returnRate",
+                    "endT",
+                    "mark",
+                    "numIid",
+            };
+
+            //final CellProcessor[] processors = getProcessors();
+
+            // write the header
+            beanWriter.writeHeader(header);
+
+            // write the beans
+            for (final InventoryInfo inventoryInfo : lists) {
+                beanWriter.write(inventoryInfo, header);
+            }
+
+        } finally {
+            if (beanWriter != null) {
+                beanWriter.close();
+            }
+        }
+    }
+
+
+    private Integer getJobID(String jobName) {
         Integer execJobId;
         Optional<OcJobExecInfo> oexecJob = ocJobExecInfoManager.stream()
                 .filter(OcJobExecInfo.STATUS.equal(JobStatus.SUCCESS.toString())
                         .and(OcJobExecInfo.JOB_NAME.equal(jobName))
                 ).sorted(OcJobExecInfo.JOB_NAME.comparator()).findFirst();
 
-        if(oexecJob.isPresent()){
+        if (oexecJob.isPresent()) {
             execJobId = (int) oexecJob.get().getId();
-        }else {
+        } else {
             throw new OCException("对不起,没有找到库存配合率信息!");
         }
         return execJobId;
     }
-
 
 
     /**
@@ -184,7 +238,7 @@ public class SyncInventory {
 //                .filter(Hare.ID.equal(71))  // Filters out all Hares with ID = 71 (just one)
 //                .forEach(hares.remover());
 
-       // Long execJobId = ocJobExecInfo.getId();
+        // Long execJobId = ocJobExecInfo.getId();
 
         //删除
         delDataGatheringFile(OrderCatConfig.getInventoryGroupWhfile());
@@ -195,27 +249,15 @@ public class SyncInventory {
                 .forEach(ocWarehouseInfoManager.remover());
 
         Logger.info("同步配货率信息,job-id:" + execJobId);
-
-//        File inventoryGroupWhfile = new File(OrderCatConfig.getOrderCatOutPutPath() + OrderCatConfig.getInventoryGroupWhfile());
-//        if(inventoryGroupWhfile.exists()){
-//            FileUtils.forceDelete(inventoryGroupWhfile);
-//        }
-//
-//
-//        //抓取天马库存信息数据
-//        Logger.info("抓取天马库存信息数据");
+        //抓取天马库存信息数据
+        Logger.info("抓取天马库存信息数据");
         dataGathering(OrderCatConfig.getInventoryGroupWhfile());
         List<InventoryInfo> list = getInventoryInfoInCsv(OrderCatConfig.getInventoryGroupWhfile());
         Logger.info("InventoryInfoInCsv.origin.size:" + list.size());
 
         //库存信息文件中根据仓库名称进行去重
 
-        List<InventoryInfo> distinctWarehouseList = list.parallelStream()
-                .filter(inventoryInfo -> !inventoryInfo.getDiscount().equals("折扣"))
-                //.filter(InventoryInfo.distinctByField(inventoryInfo -> inventoryInfo.getGoodsNo()))
-                .filter(InventoryInfo.distinctByField(inventoryInfo -> inventoryInfo.getWarehouseName()))
-                .collect(Collectors.toList());
-
+        List<InventoryInfo> distinctWarehouseList = InventoryDataOperate.distinctWarehouseList(list);
 
         int distinctWarehouseList_size = distinctWarehouseList.size();
         Logger.info("distinctWarehouseList.size:" + distinctWarehouseList_size);
@@ -229,7 +271,7 @@ public class SyncInventory {
 //        distinctWarehouseList.parallelStream().forEach(inventoryInfo ->
 //                Logger.info(inventoryInfo.getGoodsNo()+":"+inventoryInfo.getWarehouseName()));
 
-        //匹配配合率
+        //匹配配货率
         List<InventoryInfo> pickRateList = new ArrayList<>();
         InventoryInfo inventoryInfo;
         for (int i = 0; i < distinctWarehouseList.size(); i++) {
@@ -360,13 +402,10 @@ public class SyncInventory {
         // OcWarehouseInfo ocWarehouseInfo = new O
 
 
-
-
         ocJobExecInfoManager.stream()
                 .filter(OcJobExecInfo.ID.equal(execJobId))
                 .map(OcJobExecInfo.STATUS.setTo(JobStatus.SUCCESS.toString()))
                 .forEach(ocJobExecInfoManager.updater());
-
 
 
         Logger.info(String.format("匹配完成,总仓库条数:[%d],匹配成功:[%d],未匹配成功:[%d] :", distinctWarehouseList_size, distinctPickRateList.size(), distinctWarehouseList_size - distinctPickRateList.size()));
@@ -599,7 +638,6 @@ public class SyncInventory {
                         )
                 );
 
-
         //商品-平均价格
         Map<String, Double> avgPriceMap = intersectionList
                 .parallelStream()
@@ -612,7 +650,6 @@ public class SyncInventory {
                                 )
                         )
                 );
-
 
 
         for (PickRateDelCondition pickRateDelCondition : OrderCatConfig.getPickRateDelConditions()) {
@@ -642,6 +679,18 @@ public class SyncInventory {
         });
 
 
+        Logger.info(String.format("销量小于[%d]-只要仓库有货,取最低价格.", OrderCatConfig.getProductSalesLimitCount()));
+        intersectionList.parallelStream()
+                .filter(inventoryInfo -> inventoryInfo.getWareHouseID() != null)
+                .filter(inventoryInfo -> inventoryInfo.getSalesCount() < OrderCatConfig.getProductSalesLimitCount())
+                .forEach(inventoryInfo -> {
+                    Optional<InventoryInfo> op = whSizePriceMap.get(inventoryInfo.getGoodsNo() + ":" + inventoryInfo.getSize1());
+                    if (op.isPresent()) {
+                        if (op.get().getWareHouseID() == inventoryInfo.getWareHouseID()) {
+                            inventoryInfo.setSalesPrice(OcBigDecimalUtils.toSalesPrice(op.get().getProxyPrice(), false));
+                        }
+                    }
+                });
 
         //筛选采购价高于  平均价（+1%）
         //Logger.info(String.format("过滤SKU大于最大SKU*[%d]百分比.", SKU_MULTIPLY_RATE));
@@ -650,15 +699,33 @@ public class SyncInventory {
                 OrderCatConfig.getAvgPriceAboveRate(),
                 OrderCatConfig.getSkuMultiplyRate()));
 
-        intersectionList.parallelStream()
+
+        Map<String, Optional<InventoryInfo>> mapMinSkuPrice = intersectionList.parallelStream()
                 .filter(inventoryInfo -> inventoryInfo.getWareHouseID() != null)
                 .filter(inventoryInfo -> filterAvgPriceAbove(inventoryInfo, avgPriceMap))
                 .filter(inventoryInfo ->
-                        getSize1Count(size1Map, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID()) >
+                        getSize1Count(size1Map, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID()) >=
                                 getMaxSkuAvgCount(maxSize1Map, inventoryInfo.getGoodsNo()))
+                .collect(
+                        groupingBy(
+                                i -> i.getGoodsNo(),
+                                Collectors.minBy(Comparator.comparingDouble(i -> i.getProxyPrice().doubleValue()))
+                        )
+                );
+
+
+        intersectionList.parallelStream()
+                .filter(inventoryInfo -> inventoryInfo.getWareHouseID() != null)
+                .filter(inventoryInfo -> mapMinSkuPrice.get(inventoryInfo.getGoodsNo()) != null)
+                .filter(inventoryInfo -> filterAvgPriceAbove(inventoryInfo, avgPriceMap))
                 .filter(inventoryInfo -> inventoryInfo.getSalesCount() >= OrderCatConfig.getProductSalesLimitCount())
+                .filter(inventoryInfo ->
+                        inventoryInfo.getProxyPrice().compareTo(mapMinSkuPrice.get(inventoryInfo.getGoodsNo()).get().getProxyPrice()) <= 0
+
+
+                )
                 .forEach(inventoryInfo -> {
-                    inventoryInfo.setPurchasePrice(OcBigDecimalUtils.purchasePrice(inventoryInfo.getProxyPrice(), true));
+                    inventoryInfo.setSalesPrice(OcBigDecimalUtils.toSalesPrice(mapMinSkuPrice.get(inventoryInfo.getGoodsNo()).get().getProxyPrice(), true));
                 });
 
 
@@ -669,21 +736,22 @@ public class SyncInventory {
                 intersectionList.size()));
 
 
+        //System.out.println();
 
-        Logger.info(String.format("销量小于[%d]-只要仓库有货,取最低价格.",OrderCatConfig.getProductSalesLimitCount()));
-        intersectionList.parallelStream()
-                .filter(inventoryInfo -> inventoryInfo.getWareHouseID() != null)
-                .filter(inventoryInfo -> inventoryInfo.getSalesCount() < OrderCatConfig.getProductSalesLimitCount())
-                .forEach(inventoryInfo -> {
-                    Optional<InventoryInfo> op = whSizePriceMap.get(inventoryInfo.getGoodsNo() + ":" + inventoryInfo.getSize1());
-                    if(op.isPresent()){
-                        if(op.get().getWareHouseID() == inventoryInfo.getWareHouseID()){
-                            inventoryInfo.setPurchasePrice(OcBigDecimalUtils.purchasePrice(op.get().getProxyPrice(), false));
-                        }
-                    }
-                });
+        //if(goodsNo)
 
-
+//        Logger.info(String.format("销量小于[%d]-只要仓库有货,取最低价格.",OrderCatConfig.getProductSalesLimitCount()));
+//        intersectionList.parallelStream()
+//                .filter(inventoryInfo -> inventoryInfo.getWareHouseID() != null)
+//                .filter(inventoryInfo -> inventoryInfo.getSalesCount() < OrderCatConfig.getProductSalesLimitCount())
+//                .forEach(inventoryInfo -> {
+//                    Optional<InventoryInfo> op = whSizePriceMap.get(inventoryInfo.getGoodsNo() + ":" + inventoryInfo.getSize1());
+//                    if(op.isPresent()){
+//                        if(op.get().getWareHouseID() == inventoryInfo.getWareHouseID()){
+//                            inventoryInfo.setSalesPrice(OcBigDecimalUtils.toSalesPrice(op.get().getProxyPrice(), false));
+//                        }
+//                    }
+//                });
 
 
 //        Logger.info(String.format("过滤SKU大于最大SKU*[%d]百分比.", SKU_MULTIPLY_RATE));
@@ -695,49 +763,62 @@ public class SyncInventory {
 //
 //        Logger.info(String.format("过滤SKU大于最大SKU*[%d]百分比后的，记录数:[%d]", SKU_MULTIPLY_RATE, intersectionList.size()));
 //        intersectionList = intersectionList.parallelStream()
-//                .filter(inventoryInfo -> inventoryInfo.getPurchasePrice() != null)
+//                .filter(inventoryInfo -> inventoryInfo.getSalesPrice() != null)
 //                .filter(inventoryInfo -> inventoryInfo.getSalesCount()<20)
 //                .collect(toList());
 
 
-        Logger.info("开始插入数据库");
+        Logger.info(String.format("正在输出结果"));
 
-        OcInventoryInfo ocInventoryInfo;
-        for (InventoryInfo i1 : intersectionList) {
-            ocInventoryInfo = new OcInventoryInfoImpl();
-            ocInventoryInfo.setAddTime(LocalDateTime.now());
-            ocInventoryInfo.setNumIid(String.valueOf(i1.getNumIid()));
-            ocInventoryInfo.setBrand(i1.getBrand().name());
-            ocInventoryInfo.setCate(i1.getCate());
-            ocInventoryInfo.setDiscount(i1.getDiscount());
-            ocInventoryInfo.setProxyPrice(i1.getProxyPrice());
-            ocInventoryInfo.setExecJobId(execJobId.intValue());
-            ocInventoryInfo.setDivision(i1.getDivision());
-            ocInventoryInfo.setGoodsNo(i1.getGoodsNo());
-            ocInventoryInfo.setPurchasePrice(i1.getPurchasePrice());
-            ocInventoryInfo.setEndT(i1.getEndT());
-            ocInventoryInfo.setExpressName(i1.getExpressName());
-            ocInventoryInfo.setMark(i1.getMark());
-            ocInventoryInfo.setReturnRate(i1.getReturnRate());
-            ocInventoryInfo.setRetrunDesc(i1.getRetrunDesc());
-            ocInventoryInfo.setPickDate(i1.getPickDate().name());
-            ocInventoryInfo.setPickRate(i1.getPickRate());
-            ocInventoryInfo.setNum2(Integer.valueOf(i1.getNum2()));
-            ocInventoryInfo.setSize1(i1.getSize1());
-            ocInventoryInfo.setSize2(i1.getSize2());
-            ocInventoryInfo.setSalesCount(i1.getSalesCount().intValue());
-            ocInventoryInfo.setQuarter(i1.getQuarter());
-            ocInventoryInfo.setSex(i1.getSex().name());
-            ocInventoryInfo.setWarehouseId(i1.getWareHouseID());
-            ocInventoryInfo.setWarehouseName(i1.getWarehouseName());
-            ocInventoryInfo.setWarehouseUpdateTime(i1.getUpdateTime());
-            ocInventoryInfo.setThedtime(i1.getThedtime());
-            ocInventoryInfo.setMarketprice(new BigDecimal(i1.getMarketprice()));
+        List<InventoryInfo> csvList = intersectionList.parallelStream()
+                .filter(inventoryInfo -> inventoryInfo.getSalesPrice() != null).collect(toList());
 
-            ocInventoryInfoManager.persist(ocInventoryInfo);
-        }
+        writeWithCsvInventoryWriter(csvList);
 
-        Logger.info("插入数据库结束");
+        Logger.info(String.format("正在输出结果list.size:[%d]", csvList.size()));
+
+
+//        Logger.info("开始插入数据库");
+//
+//        ocInventoryInfoManager.stream()
+//                .forEach(ocInventoryInfoManager.remover());
+//
+//        OcInventoryInfo ocInventoryInfo;
+//        for (InventoryInfo i1 : intersectionList) {
+//            ocInventoryInfo = new OcInventoryInfoImpl();
+//            ocInventoryInfo.setAddTime(LocalDateTime.now());
+//            ocInventoryInfo.setNumIid(String.valueOf(i1.getNumIid()));
+//            ocInventoryInfo.setBrand(i1.getBrand().name());
+//            ocInventoryInfo.setCate(i1.getCate());
+//            ocInventoryInfo.setDiscount(i1.getDiscount());
+//            ocInventoryInfo.setProxyPrice(i1.getProxyPrice());
+//            ocInventoryInfo.setExecJobId(execJobId.intValue());
+//            ocInventoryInfo.setDivision(i1.getDivision());
+//            ocInventoryInfo.setGoodsNo(i1.getGoodsNo());
+//            ocInventoryInfo.setSalesPrice(i1.getSalesPrice());
+//            ocInventoryInfo.setEndT(i1.getEndT());
+//            ocInventoryInfo.setExpressName(i1.getExpressName());
+//            ocInventoryInfo.setMark(i1.getMark());
+//            ocInventoryInfo.setReturnRate(i1.getReturnRate());
+//            ocInventoryInfo.setRetrunDesc(i1.getRetrunDesc());
+//            ocInventoryInfo.setPickDate(i1.getPickDate().name());
+//            ocInventoryInfo.setPickRate(i1.getPickRate());
+//            ocInventoryInfo.setNum2(Integer.valueOf(i1.getNum2()));
+//            ocInventoryInfo.setSize1(i1.getSize1());
+//            ocInventoryInfo.setSize2(i1.getSize2());
+//            ocInventoryInfo.setSalesCount(i1.getSalesCount().intValue());
+//            ocInventoryInfo.setQuarter(i1.getQuarter());
+//            ocInventoryInfo.setSex(i1.getSex().name());
+//            ocInventoryInfo.setWarehouseId(i1.getWareHouseID());
+//            ocInventoryInfo.setWarehouseName(i1.getWarehouseName());
+//            ocInventoryInfo.setWarehouseUpdateTime(i1.getUpdateTime());
+//            ocInventoryInfo.setThedtime(i1.getThedtime());
+//            ocInventoryInfo.setMarketprice(new BigDecimal(i1.getMarketprice()));
+//
+//            ocInventoryInfoManager.persist(ocInventoryInfo);
+//        }
+//
+//        Logger.info("插入数据库结束");
         //删除
         delDataGatheringFile(OrderCatConfig.getInventoryGroupIwhfile());
 
@@ -752,6 +833,10 @@ public class SyncInventory {
      */
     private boolean filterAvgPriceAbove(InventoryInfo inventoryInfo, Map<String, Double> avgPriceMap) {
         boolean rt = true;
+//        if(inventoryInfo.getGoodsNo().equals("819474-405")){
+//            System.out.println();
+//        }
+
         BigDecimal avgPrice = getAvgPrice(avgPriceMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID());
         avgPrice = avgPrice.add(avgPrice.multiply(BigDecimal.valueOf(OrderCatConfig.getAvgPriceAboveRate() / 100)));
         if (inventoryInfo.getProxyPrice().compareTo(avgPrice) == 1) {
@@ -766,7 +851,8 @@ public class SyncInventory {
     private boolean filterPickRate(InventoryInfo inventoryInfo, Map<String, Integer> quarterMap, PickRateDelCondition pickRateDelCondition) {
         boolean rt = true;
         if (inventoryInfo.getPickRate() >= pickRateDelCondition.getLlPickRate() && inventoryInfo.getPickRate() <= pickRateDelCondition.getUlPickRate()) {
-            if (getWareHouseQuarter(quarterMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID()) >= pickRateDelCondition.getRepertory()) {
+            if (getWareHouseQuarter(quarterMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID())
+                    > pickRateDelCondition.getRepertory()) {//库存大于指定库存数在保留
                 rt = true;
             } else {
                 rt = false;
@@ -790,8 +876,10 @@ public class SyncInventory {
     }
 
     private Long getMaxSkuAvgCount(Map<String, Optional<GoodsInventoryInfo>> maxSize1Map, String goodsNo) {
+
+
         GoodsInventoryInfo goodsInventoryInfo = maxSize1Map.get(goodsNo).get();
-        double t = (double)OrderCatConfig.getSkuMultiplyRate() / 100;
+        double t = (double) OrderCatConfig.getSkuMultiplyRate() / 100;
         Long rt = Math.round(goodsInventoryInfo.getSizeCount() * t);
         return rt;
     }
@@ -799,6 +887,10 @@ public class SyncInventory {
     private Long getSize1Count(Map<String, Long> size1Map, String goodsNo, Integer wareHouseID) {
 //        GoodsInventoryInfo goodsInventoryInfo = maxSize1Map.get(goodsNo).get();
 //        double rt = goodsInventoryInfo.getSizeCount()*(60/100);
+//        if(goodsNo.equals("819474-405") && wareHouseID.intValue() == 234){
+//            System.out.println(size1Map.get(goodsNo + ":" + wareHouseID));
+//        }
+
         return size1Map.get(goodsNo + ":" + wareHouseID);
     }
 
@@ -812,7 +904,7 @@ public class SyncInventory {
     private void delDataGatheringFile(String fileName) throws Exception {
         String dfileStr = OrderCatConfig.getOrderCatOutPutPath() + fileName;
         File dfile = new File(dfileStr);
-        if(dfile.exists()){
+        if (dfile.exists()) {
             FileUtils.forceDelete(dfile);
         }
         Logger.debug("if exists:" + dfile.exists() + " onExit del:" + dfileStr);

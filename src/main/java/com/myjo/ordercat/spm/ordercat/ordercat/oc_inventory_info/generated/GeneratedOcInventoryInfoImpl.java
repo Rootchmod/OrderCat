@@ -397,7 +397,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
         sj.add("pickDate = "            + Objects.toString(OptionalUtil.unwrap(getPickDate())));
         sj.add("thedtime = "            + Objects.toString(OptionalUtil.unwrap(getThedtime())));
         sj.add("proxyPrice = "          + Objects.toString(OptionalUtil.unwrap(getProxyPrice())));
-        sj.add("purchasePrice = "       + Objects.toString(OptionalUtil.unwrap(getPurchasePrice())));
+        sj.add("toSalesPrice = "       + Objects.toString(OptionalUtil.unwrap(getPurchasePrice())));
         sj.add("salesCount = "          + Objects.toString(OptionalUtil.unwrap(getSalesCount())));
         sj.add("expressName = "         + Objects.toString(OptionalUtil.unwrap(getExpressName())));
         sj.add("retrunDesc = "          + Objects.toString(OptionalUtil.unwrap(getRetrunDesc())));

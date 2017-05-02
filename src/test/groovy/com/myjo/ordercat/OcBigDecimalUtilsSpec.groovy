@@ -1,7 +1,5 @@
 package com.myjo.ordercat
 
-import com.myjo.ordercat.config.OrderCatConfig
-import com.myjo.ordercat.http.TianmaSportHttp
 import com.myjo.ordercat.utils.OcBigDecimalUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -27,8 +25,8 @@ class OcBigDecimalUtilsSpec extends Specification {
 
     def "OcBigDecimalUtils.purchasePrice"(){
         when:
-        def ff = OcBigDecimalUtils.purchasePrice(new BigDecimal("500"),true);
-        def ff1 = OcBigDecimalUtils.purchasePrice(new BigDecimal("495.02"),false);
+        def ff = OcBigDecimalUtils.toSalesPrice(new BigDecimal("500"),true);
+        def ff1 = OcBigDecimalUtils.toSalesPrice(new BigDecimal("495.02"),false);
 
         then:
         ff.toString() == "589";

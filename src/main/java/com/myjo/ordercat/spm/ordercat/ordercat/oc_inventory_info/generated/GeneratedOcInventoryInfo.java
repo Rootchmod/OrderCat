@@ -515,11 +515,11 @@ public interface GeneratedOcInventoryInfo {
     Optional<BigDecimal> getProxyPrice();
     
     /**
-     * Returns the purchasePrice of this OcInventoryInfo. The purchasePrice
+     * Returns the toSalesPrice of this OcInventoryInfo. The toSalesPrice
      * field corresponds to the database column
-     * ordercat.ordercat.oc_inventory_info.purchasePrice.
+     * ordercat.ordercat.oc_inventory_info.toSalesPrice.
      * 
-     * @return the purchasePrice of this OcInventoryInfo
+     * @return the toSalesPrice of this OcInventoryInfo
      */
     Optional<BigDecimal> getPurchasePrice();
     
@@ -778,9 +778,9 @@ public interface GeneratedOcInventoryInfo {
     OcInventoryInfo setProxyPrice(BigDecimal proxyPrice);
     
     /**
-     * Sets the purchasePrice of this OcInventoryInfo. The purchasePrice field
+     * Sets the toSalesPrice of this OcInventoryInfo. The toSalesPrice field
      * corresponds to the database column
-     * ordercat.ordercat.oc_inventory_info.purchasePrice.
+     * ordercat.ordercat.oc_inventory_info.toSalesPrice.
      * 
      * @param purchasePrice to set of this OcInventoryInfo
      * @return              this OcInventoryInfo instance
@@ -894,7 +894,7 @@ public interface GeneratedOcInventoryInfo {
         PICK_DATE             ("pickDate"),
         THEDTIME              ("thedtime"),
         PROXY_PRICE           ("proxyPrice"),
-        PURCHASE_PRICE        ("purchasePrice"),
+        PURCHASE_PRICE        ("toSalesPrice"),
         SALES_COUNT           ("salesCount"),
         EXPRESS_NAME          ("expressName"),
         RETRUN_DESC           ("retrunDesc"),

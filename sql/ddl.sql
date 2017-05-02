@@ -53,7 +53,7 @@ CREATE TABLE `oc_inventory_info` (
   `pickDate` varchar(255) COMMENT '配货时间',
   `thedtime` varchar(255) COMMENT '发货时效,单位:小时',
   `proxyPrice` decimal(25,10) COMMENT '代理价',
-  `purchasePrice` decimal(25,10) COMMENT '销售价',
+  `salesPrice` decimal(25,10) COMMENT '销售价',
   `salesCount` int(11) COMMENT '销售价',
   `expressName` varchar(255)  COMMENT '快递公司',
   `retrunDesc` varchar(2000)  COMMENT '-',

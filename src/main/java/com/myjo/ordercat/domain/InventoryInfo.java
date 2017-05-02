@@ -34,7 +34,7 @@ public class InventoryInfo {
     private PickDate pickDate;//配货时间
     private String thedtime;
     private BigDecimal proxyPrice;
-    private BigDecimal purchasePrice;
+    private BigDecimal salesPrice;
     private Long salesCount;
     private String expressName;
     private String retrunDesc;
@@ -305,12 +305,12 @@ public class InventoryInfo {
         this.numIid = numIid;
     }
 
-    public BigDecimal getPurchasePrice() {
-        return purchasePrice;
+    public BigDecimal getSalesPrice() {
+        return salesPrice;
     }
 
-    public void setPurchasePrice(BigDecimal purchasePrice) {
-        this.purchasePrice = purchasePrice;
+    public void setSalesPrice(BigDecimal salesPrice) {
+        this.salesPrice = salesPrice;
     }
 
     public Long getSalesCount() {

@@ -2,6 +2,7 @@ package com.myjo.ordercat;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.mashape.unirest.http.Unirest;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.handle.ExecuteHandle;
@@ -53,6 +54,10 @@ public class Main {
                 .withUsername(OrderCatConfig.getDBUsername())
                 .withPassword(OrderCatConfig.getDBPassword())
                 .build();
+
+        //设置超时时间
+        Unirest.setTimeouts(300*1000,300*1000);
+
 
         OcWarehouseInfoManager ocWarehouseInfoManager = app.getOrThrow(OcWarehouseInfoManager.class);
         OcJobExecInfoManager ocJobExecInfoManager = app.getOrThrow(OcJobExecInfoManager.class);

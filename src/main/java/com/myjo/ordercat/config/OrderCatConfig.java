@@ -2,6 +2,7 @@ package com.myjo.ordercat.config;
 
 import com.myjo.ordercat.domain.InventoryQueryCondition;
 import com.myjo.ordercat.domain.PickRateDelCondition;
+import com.myjo.ordercat.domain.SalesPriceCalculate;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
@@ -50,6 +51,30 @@ public class OrderCatConfig {
 //
 //        //Logger.debug(config.origin().resource());
 //    }
+
+
+
+//    //销量大于等于[20],销售价格算法
+//    sales_price_gt_calculate = {divide="0.9",add="25"}
+//    //销量小于[20],销售价格算法
+//    sales_price_lt_calculate = {divide="0.93",add="25"}
+//    //尾数替换为'9'
+//    sales_price_end_replace = "9"
+
+
+
+
+    public static String getSalesPriceEndReplace(){
+        return config.getString(String.format(SYNC_INVENTORY, "sales_price_end_replace"));
+    }
+
+    public static SalesPriceCalculate getSalesPriceGtCalculate(){
+        return ConfigBeanFactory.create(config.getObject(String.format(SYNC_INVENTORY, "sales_price_gt_calculate")).toConfig(),SalesPriceCalculate.class);
+    }
+    public static SalesPriceCalculate getSalesPriceLtCalculate(){
+        return ConfigBeanFactory.create(config.getObject(String.format(SYNC_INVENTORY, "sales_price_lt_calculate")).toConfig(),SalesPriceCalculate.class);
+    }
+
 
 
     public static String getTaobaoApiUrl(){
