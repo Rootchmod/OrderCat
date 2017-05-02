@@ -652,22 +652,10 @@ public class SyncInventory {
                 );
 
 
-        for (PickRateDelCondition pickRateDelCondition : OrderCatConfig.getPickRateDelConditions()) {
-            Logger.info(String.format("配货率在[%d]-[%d]百分比,并且库存小[%d]进行删除.",
-                    pickRateDelCondition.getLlPickRate(),
-                    pickRateDelCondition.getUlPickRate(),
-                    pickRateDelCondition.getRepertory()));
+        Logger.info(String.format("根据配货率与库存过滤"));
+        intersectionList = InventoryDataOperate.filterPickRateList(intersectionList,quarterMap);
+        Logger.info(String.format("根据配货率与库存过滤-size:[%d]",intersectionList.size()));
 
-            intersectionList = intersectionList.parallelStream().
-                    filter(inventoryInfo -> filterPickRate(inventoryInfo, quarterMap, pickRateDelCondition))
-                    .collect(Collectors.toList());
-
-            Logger.info(String.format("配货率在[%d]-[%d]百分比,并且库存小[%d]进行删除后的记录数为:[%d]",
-                    pickRateDelCondition.getLlPickRate(),
-                    pickRateDelCondition.getUlPickRate(),
-                    pickRateDelCondition.getRepertory(),
-                    intersectionList.size()));
-        }
 
 
         intersectionList.parallelStream().forEach(inventoryInfo -> {
@@ -848,18 +836,19 @@ public class SyncInventory {
     }
 
 
-    private boolean filterPickRate(InventoryInfo inventoryInfo, Map<String, Integer> quarterMap, PickRateDelCondition pickRateDelCondition) {
-        boolean rt = true;
-        if (inventoryInfo.getPickRate() >= pickRateDelCondition.getLlPickRate() && inventoryInfo.getPickRate() <= pickRateDelCondition.getUlPickRate()) {
-            if (getWareHouseQuarter(quarterMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID())
-                    > pickRateDelCondition.getRepertory()) {//库存大于指定库存数在保留
-                rt = true;
-            } else {
-                rt = false;
-            }
-        }
-        return rt;
-    }
+//    private boolean filterPickRate(InventoryInfo inventoryInfo, Map<String, Integer> quarterMap, PickRateDelCondition pickRateDelCondition) {
+//        boolean rt = true;
+//        if (inventoryInfo.getPickRate() >= pickRateDelCondition.getLlPickRate() &&
+//                inventoryInfo.getPickRate() <= pickRateDelCondition.getUlPickRate()) {
+//            if (getWareHouseQuarter(quarterMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID())
+//                    > pickRateDelCondition.getRepertory()) {//库存大于指定库存数在保留
+//                rt = true;
+//            } else {
+//                rt = false;
+//            }
+//        }
+//        return rt;
+//    }
 
     private BigDecimal getAvgPrice(Map<String, Double> avgPriceMap, String goodsNo, Integer wareHouseID) {
 
@@ -871,9 +860,9 @@ public class SyncInventory {
     }
 
 
-    private Integer getWareHouseQuarter(Map<String, Integer> quarterMap, String goodsNo, Integer wareHouseID) {
-        return quarterMap.get(goodsNo + ":" + wareHouseID);
-    }
+//    private Integer getWareHouseQuarter(Map<String, Integer> quarterMap, String goodsNo, Integer wareHouseID) {
+//        return quarterMap.get(goodsNo + ":" + wareHouseID);
+//    }
 
     private Long getMaxSkuAvgCount(Map<String, Optional<GoodsInventoryInfo>> maxSize1Map, String goodsNo) {
 
