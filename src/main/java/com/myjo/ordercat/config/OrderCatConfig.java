@@ -25,7 +25,7 @@ public class OrderCatConfig {
     private static final String SYNC_INVENTORY = "sync-inventory.%s";
     private static final String DATABASE = "database.%s";
     private static final String TAOBAO_API = "taobao-api.%s";
-    private static final String SCHEDULER_CRON = "scheduler-cron.%";
+    private static final String SCHEDULER_CRON = "scheduler-cron.%s";
 
 
     private static Config config;

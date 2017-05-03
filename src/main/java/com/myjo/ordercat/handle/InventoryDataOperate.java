@@ -34,15 +34,15 @@ public class InventoryDataOperate {
         return distinctWarehouseList;
     }
 
-    private static Integer getWareHouseQuarter(Map<String, Integer> quarterMap, String goodsNo, Integer wareHouseID) {
-        return quarterMap.get(goodsNo + ":" + wareHouseID);
+    private static Integer getWareHouseQuarter(Map<String, Integer> quarterMap, String goodsNo, Integer wareHouseID,String size1) {
+        return quarterMap.get(goodsNo + ":" + wareHouseID +":"+size1);
     }
 
     private static boolean filterPickRate(InventoryInfo inventoryInfo, Map<String, Integer> quarterMap, PickRateDelCondition pickRateDelCondition) {
         boolean rt = true;
         if (inventoryInfo.getPickRate() >= pickRateDelCondition.getLlPickRate() &&
                 inventoryInfo.getPickRate() <= pickRateDelCondition.getUlPickRate()) {
-            if (getWareHouseQuarter(quarterMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID())
+            if (getWareHouseQuarter(quarterMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID(),inventoryInfo.getSize1())
                     > pickRateDelCondition.getRepertory()) {//库存大于指定库存数在保留
                 rt = true;
             } else {

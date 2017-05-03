@@ -142,6 +142,10 @@ public class Main {
                     .build();
             sched.scheduleJob(job1, trigger1);
 
+
+            sched.start();
+
+
         }
 
 

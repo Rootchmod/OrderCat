@@ -590,7 +590,7 @@ public class SyncInventory {
                 .filter(p -> p.getWareHouseID() != null)
                 .collect(
                         groupingBy(
-                                i -> i.getGoodsNo() + ":" + i.getWareHouseID(),
+                                i -> i.getGoodsNo() + ":" + i.getWareHouseID()+ ":"+ i.getSize1(),
                                 summingInt(p -> Integer.parseInt(p.getNum2()))
                         ));
 
@@ -835,19 +835,7 @@ public class SyncInventory {
     }
 
 
-//    private boolean filterPickRate(InventoryInfo inventoryInfo, Map<String, Integer> quarterMap, PickRateDelCondition pickRateDelCondition) {
-//        boolean rt = true;
-//        if (inventoryInfo.getPickRate() >= pickRateDelCondition.getLlPickRate() &&
-//                inventoryInfo.getPickRate() <= pickRateDelCondition.getUlPickRate()) {
-//            if (getWareHouseQuarter(quarterMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID())
-//                    > pickRateDelCondition.getRepertory()) {//库存大于指定库存数在保留
-//                rt = true;
-//            } else {
-//                rt = false;
-//            }
-//        }
-//        return rt;
-//    }
+
 
     private BigDecimal getAvgPrice(Map<String, Double> avgPriceMap, String goodsNo, Integer wareHouseID) {
 
@@ -858,10 +846,6 @@ public class SyncInventory {
         }
     }
 
-
-//    private Integer getWareHouseQuarter(Map<String, Integer> quarterMap, String goodsNo, Integer wareHouseID) {
-//        return quarterMap.get(goodsNo + ":" + wareHouseID);
-//    }
 
     private Long getMaxSkuAvgCount(Map<String, Optional<GoodsInventoryInfo>> maxSize1Map, String goodsNo) {
 
