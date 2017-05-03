@@ -1,8 +1,5 @@
 package com.myjo.ordercat.http;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.ItemsOnSale;
 import com.myjo.ordercat.domain.PageResult;
@@ -85,10 +82,10 @@ public class TaoBaoHttp {
         ItemsOnsaleGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
 
 
-       // List<Item> list1 = rsp.getItems();
+        // List<Item> list1 = rsp.getItems();
 //        JSONObject object = JSON.parseObject(rsp.getBody());
 
-  //      JSONObject items_onsale_get_response = object.getJSONObject("items_onsale_get_response");
+        //      JSONObject items_onsale_get_response = object.getJSONObject("items_onsale_get_response");
 //        JSONObject items = items_onsale_get_response.getJSONObject("items");
 //        JSONArray itemArray = items.getJSONArray("item");
 //
@@ -111,12 +108,6 @@ public class TaoBaoHttp {
     }
 
 
-
-    //taobao.items.seller.list.get (批量获取商品详细信息)
-
-
-
-
     //taobao.item.skus.get (根据商品ID列表获取SKU信息)
 
     public List<Item> getTaobaoItemsOnSale() throws Exception {
@@ -128,9 +119,9 @@ public class TaoBaoHttp {
         do {
             pageResult = getTaobaoItemsOnSale(pageNo, pageSize);
             rtlist.addAll(pageResult.getRows());
-            Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double)pageResult.getTotal() / pageSize));
+            Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
             //++pageNo;
-        } while (Math.ceil((double)pageResult.getTotal() / pageSize) >= ( ++pageNo));
+        } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
 
         return rtlist;
     }
@@ -153,7 +144,7 @@ public class TaoBaoHttp {
                         .mapToObj(i -> list.subList(indexes[i], indexes[i + 1]))
                         .collect(Collectors.toList());
 
-        for(List<Item> list1 :subLists){
+        for (List<Item> list1 : subLists) {
             rtlist.addAll(taoBaoItemSkus(list1));
         }
         //list.stream().limit()
@@ -178,7 +169,7 @@ public class TaoBaoHttp {
         req.setNumIids(NumIidStr);
         //req.setNumIids(numIid.toString());
         ItemSkusGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-        if(rsp.isSuccess() == true){
+        if (rsp.isSuccess() == true) {
             rtlist.addAll(rsp.getSkus());
         }
 
@@ -186,8 +177,7 @@ public class TaoBaoHttp {
     }
 
 
-
-    public void test() throws Exception{
+    public void test() throws Exception {
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         ItemsSellerListGetRequest req = new ItemsSellerListGetRequest();
         req.setFields("num_iid,title,nick,approve_status,num,sku,sold_quantity");
@@ -216,24 +206,24 @@ public class TaoBaoHttp {
     //    ALL_CLOSED：所有关闭的交易（包含：TRADE_CLOSED、TRADE_CLOSED_BY_TAOBAO）
 
 
-    public List<Trade> getSoldTrades(Date begin, Date end,TradeStatus status) throws Exception {
+    public List<Trade> getSoldTrades(Date begin, Date end, TradeStatus status) throws Exception {
         long pageNo = 1l;
         long pageSize = 100l;
         List<Trade> rtlist = new ArrayList<>();
 
         PageResult<Trade> pageResult;
         do {
-            pageResult = getSoldTrades(begin,end,status,pageNo, pageSize);
+            pageResult = getSoldTrades(begin, end, status, pageNo, pageSize);
             rtlist.addAll(pageResult.getRows());
-            Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double)pageResult.getTotal() / pageSize));
+            Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
             //++pageNo;
-        } while (Math.ceil((double)pageResult.getTotal() / pageSize) >= ( ++pageNo));
+        } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
 
         return rtlist;
     }
 
 
-    public PageResult<Trade> getSoldTrades(Date begin, Date end,TradeStatus status,Long pageNo,Long pageSize)throws Exception{
+    public PageResult<Trade> getSoldTrades(Date begin, Date end, TradeStatus status, Long pageNo, Long pageSize) throws Exception {
         PageResult<Trade> pr = new PageResult();
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradesSoldGetRequest req = new TradesSoldGetRequest();
@@ -242,7 +232,7 @@ public class TaoBaoHttp {
         req.setEndCreated(end);
         req.setStatus(status.toString());
 
-       // req.setType("game_equipment");
+        // req.setType("game_equipment");
         //req.setExtType("service");
         //req.setRateStatus("TRADE_FINISHED");
         //req.setTag("time_card");
@@ -250,7 +240,7 @@ public class TaoBaoHttp {
         req.setPageSize(pageSize);
         //req.setUseHasNext(true);
         TradesSoldGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-        if(rsp.isSuccess()){
+        if (rsp.isSuccess()) {
             pr.setRows(rsp.getTrades());
             pr.setTotal(rsp.getTotalResults());
         }

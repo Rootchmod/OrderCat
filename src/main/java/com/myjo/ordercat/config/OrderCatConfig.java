@@ -31,6 +31,13 @@ public class OrderCatConfig {
 
     static {
         config = ConfigFactory.load("oc.conf");
+//        config.checkValid(ConfigFactory.defaultReference(),
+//                "tianma-sport",
+//                "order-cat",
+//                "data-gathering",
+//                "sync-inventory",
+//                "database",
+//                "taobao-api");
     }
 
     // we have a constructor allowing the app to provide a custom Config
@@ -40,6 +47,13 @@ public class OrderCatConfig {
 
     public static void init(String cs) throws Exception{
         config = ConfigFactory.parseFile(new File(cs));
+//        config.checkValid(ConfigFactory.defaultReference(),
+//                "tianma-sport",
+//                "order-cat",
+//                "data-gathering",
+//                "sync-inventory",
+//                "database",
+//                "taobao-api");
         //config = ConfigFactory.parseFile(new File(config));
     }
 
