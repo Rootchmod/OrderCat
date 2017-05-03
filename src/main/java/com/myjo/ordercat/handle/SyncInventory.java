@@ -565,7 +565,6 @@ public class SyncInventory {
 
         Logger.info(String.format("配货率低于[%d]百分比,进行删除后的记录数:[%d].", OrderCatConfig.getPickRateLessThanDelLimit(), intersectionList.size()));
 
-
         //尺码换算
         Logger.info("进行尺码换算");
         intersectionList.parallelStream()
@@ -593,6 +592,12 @@ public class SyncInventory {
                                 i -> i.getGoodsNo() + ":" + i.getWareHouseID()+ ":"+ i.getSize1(),
                                 summingInt(p -> Integer.parseInt(p.getNum2()))
                         ));
+
+        Logger.info(String.format("根据配货率与库存过滤"));
+        intersectionList = InventoryDataOperate.filterPickRateList(intersectionList,quarterMap);
+        Logger.info(String.format("根据配货率与库存过滤-size:[%d]",intersectionList.size()));
+
+
 
         //所有仓库，对应尺码最低价格
         Map<String, Optional<InventoryInfo>> whSizePriceMap = intersectionList
@@ -652,9 +657,7 @@ public class SyncInventory {
                 );
 
 
-        Logger.info(String.format("根据配货率与库存过滤"));
-        intersectionList = InventoryDataOperate.filterPickRateList(intersectionList,quarterMap);
-        Logger.info(String.format("根据配货率与库存过滤-size:[%d]",intersectionList.size()));
+
 
 
         intersectionList.parallelStream().forEach(inventoryInfo -> {
