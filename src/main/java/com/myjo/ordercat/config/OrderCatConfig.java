@@ -25,6 +25,8 @@ public class OrderCatConfig {
     private static final String SYNC_INVENTORY = "sync-inventory.%s";
     private static final String DATABASE = "database.%s";
     private static final String TAOBAO_API = "taobao-api.%s";
+    private static final String SCHEDULER_CRON = "scheduler-cron.%";
+
 
     private static Config config;
 
@@ -57,23 +59,17 @@ public class OrderCatConfig {
         //config = ConfigFactory.parseFile(new File(config));
     }
 
-//    public OrderCatConfig() {
-//        this(ConfigFactory.load("oc.conf"));
-//
-//        // config.checkValid(ConfigFactory.load("oc.conf"), "tianmasport");
-//
-//
-//        //Logger.debug(config.origin().resource());
-//    }
 
 
+    //syncWarehouseJob_trigger_cron
+    public static String getSyncWarehouseJobTriggerCron(){
+        return config.getString(String.format(SCHEDULER_CRON, "syncWarehouseJob_trigger_cron"));
+    }
 
-//    //销量大于等于[20],销售价格算法
-//    sales_price_gt_calculate = {divide="0.9",add="25"}
-//    //销量小于[20],销售价格算法
-//    sales_price_lt_calculate = {divide="0.93",add="25"}
-//    //尾数替换为'9'
-//    sales_price_end_replace = "9"
+    //syncTaoBaoInventoryJob_trigger_cron
+    public static String getSyncTaoBaoInventoryJobTriggerCron(){
+        return config.getString(String.format(SCHEDULER_CRON, "syncTaoBaoInventoryJob_trigger_cron"));
+    }
 
 
 

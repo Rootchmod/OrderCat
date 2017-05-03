@@ -657,7 +657,6 @@ public class SyncInventory {
         Logger.info(String.format("根据配货率与库存过滤-size:[%d]",intersectionList.size()));
 
 
-
         intersectionList.parallelStream().forEach(inventoryInfo -> {
             long rt = 0;
             if (tradesMap.get(inventoryInfo.getNumIid()) != null) {

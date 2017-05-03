@@ -11,6 +11,8 @@ import com.myjo.ordercat.handle.SyncTaoBaoInventoryHandle;
 import com.myjo.ordercat.handle.SyncWarehouseHandle;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
+import com.myjo.ordercat.job.SyncTaoBaoInventoryJob;
+import com.myjo.ordercat.job.SyncWarehouseJob;
 import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager;
@@ -19,11 +21,17 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfo
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 
 /**
@@ -87,37 +95,59 @@ public class Main {
 
 
         ExecuteHandle eh;
+        eh = new SyncWarehouseHandle(syncInventory);
+        eh.setJobName("SyncWarehouseJob");
+        eh.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+        ExecuteHandle eh1;
+        eh1 = new SyncTaoBaoInventoryHandle(syncInventory);
+        eh1.setJobName("SyncTaoBaoInventory");
+        eh1.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
         if (action.equals("SyncSalesInfoJob")) {
 
-
         } else if (action.equals("SyncWarehouseJob")) {
-            eh = new SyncWarehouseHandle(syncInventory);
-            eh.setJobName("SyncWarehouseJob");
-            eh.setOcJobExecInfoManager(ocJobExecInfoManager);
             eh.exec();
         } else if (action.equals("SyncTaoBaoInventory")) {
-            eh = new SyncTaoBaoInventoryHandle(syncInventory);
-            eh.setJobName("SyncTaoBaoInventory");
-            eh.setOcJobExecInfoManager(ocJobExecInfoManager);
-            eh.exec();
+            eh1.exec();
         } else if (action.equals("JobStart")) {
-//            SchedulerFactory sf = new StdSchedulerFactory();
-//            Scheduler sched = sf.getScheduler();
-//
-//            JobDetail job = newJob(SyncWarehouseJob.class)
-//                    .withIdentity("SyncWarehouseJob", "myjo")
-//                    .build();
-//
-//            CronTrigger trigger = newTrigger()
-//                    .withIdentity("SyncWarehouseJobTrigger", "myjo")
-//                    .withSchedule(cronSchedule("0/20 * * * * ?"))
-//                    .build();
-//            sched.scheduleJob(job, trigger);
+            SchedulerFactory sf = new StdSchedulerFactory();
+            Scheduler sched = sf.getScheduler();
+
+            //SyncWarehouseJob
+            JobDataMap map1 = new JobDataMap();
+            map1.put("SyncWarehouseHandle",eh);
+            map1.put("SyncTaoBaoInventoryHandle",eh1);
+            JobDetail job = newJob(SyncWarehouseJob.class)
+                    .usingJobData(map1)
+                    .withIdentity("SyncWarehouseJob", "myjo")
+                    .build();
+            CronTrigger trigger = newTrigger()
+                    .withIdentity("SyncWarehouseJobTrigger", "myjo")
+                    .withSchedule(cronSchedule(OrderCatConfig.getSyncWarehouseJobTriggerCron()))
+                    .build();
+            sched.scheduleJob(job, trigger);
+
+
+            //SyncTaoBaoInventoryJob
+            JobDetail job1 = newJob(SyncTaoBaoInventoryJob.class)
+                    .usingJobData(map1)
+                    .withIdentity("SyncTaoBaoInventoryJob", "myjo")
+                    .build();
+
+            CronTrigger trigger1 = newTrigger()
+                    .withIdentity("SyncTaoBaoInventoryJob", "myjo")
+                    .withSchedule(cronSchedule(OrderCatConfig.getSyncTaoBaoInventoryJobTriggerCron()))
+                    .build();
+            sched.scheduleJob(job1, trigger1);
 
         }
 
 
     }
+
+
 
 
 }

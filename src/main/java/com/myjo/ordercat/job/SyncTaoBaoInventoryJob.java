@@ -7,15 +7,16 @@ import java.util.Date;
 
 @PersistJobDataAfterExecution
 @DisallowConcurrentExecution
-public class SyncWarehouseJob implements Job {
+public class SyncTaoBaoInventoryJob implements Job {
 
 
-    public SyncWarehouseJob() {
+
+    public SyncTaoBaoInventoryJob() {
     }
     public void execute(JobExecutionContext context)
         throws JobExecutionException {
         JobDataMap map = context.getJobDetail().getJobDataMap();
-        ExecuteHandle eh =  (ExecuteHandle) map.get("SyncWarehouseHandle");
+        ExecuteHandle eh =  (ExecuteHandle) map.get("SyncTaoBaoInventoryHandle");
         eh.exec();
     }
 }
