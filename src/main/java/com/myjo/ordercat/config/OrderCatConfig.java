@@ -72,6 +72,12 @@ public class OrderCatConfig {
     }
 
 
+    public static String getSyncSalesInfoJobTriggerCron(){
+        return config.getString(String.format(SCHEDULER_CRON, "syncSalesInfoJob_trigger_cron"));
+    }
+
+
+
 
 
     public static String getSalesPriceEndReplace(){

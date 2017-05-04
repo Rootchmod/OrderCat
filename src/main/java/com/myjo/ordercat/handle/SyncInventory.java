@@ -8,12 +8,16 @@ import com.myjo.ordercat.http.TianmaSportHttp;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfo;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import com.myjo.ordercat.utils.OcBigDecimalUtils;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
-import com.myjo.ordercat.utils.SizeUtils;
+import com.myjo.ordercat.utils.OcSizeUtils;
+import com.myjo.ordercat.utils.OcStringUtils;
 import com.taobao.api.domain.Item;
 import com.taobao.api.domain.Sku;
 import com.taobao.api.domain.Trade;
@@ -67,6 +71,8 @@ public class SyncInventory {
     private OcJobExecInfoManager ocJobExecInfoManager;
 
     private OcInventoryInfoManager ocInventoryInfoManager;
+
+    private OcSalesInfoManager ocSalesInfoManager;
 
     public SyncInventory(TianmaSportHttp tianmaSportHttp, TaoBaoHttp taoBaoHttp) {
 
@@ -216,12 +222,14 @@ public class SyncInventory {
         Optional<OcJobExecInfo> oexecJob = ocJobExecInfoManager.stream()
                 .filter(OcJobExecInfo.STATUS.equal(JobStatus.SUCCESS.toString())
                         .and(OcJobExecInfo.JOB_NAME.equal(jobName))
-                ).sorted(OcJobExecInfo.JOB_NAME.comparator()).findFirst();
+                ).sorted(OcJobExecInfo.ID.comparator().reversed()).findFirst();
 
         if (oexecJob.isPresent()) {
             execJobId = (int) oexecJob.get().getId();
+
+
         } else {
-            throw new OCException("对不起,没有找到库存配合率信息!");
+            throw new OCException(String.format("对不起,没有找到对应的执行信息信息[%s]!",jobName));
         }
         return execJobId;
     }
@@ -424,6 +432,61 @@ public class SyncInventory {
 
     }
 
+
+    public void syncSalesInfo(Long execJobId) throws Exception {
+
+        LocalDateTime lend = LocalDateTime.now();
+        LocalDateTime lbegin = lend.minusMonths(1);
+        Date begin = OcDateTimeUtils.localDateTime2Date(lbegin);
+        Date end = OcDateTimeUtils.localDateTime2Date(lend);
+
+        List<Trade> trades = new ArrayList<>();
+        for (TradeStatus ts : TradeStatus.JY_CG) {
+            Logger.info(String.format("获取Taobao店铺销量[%s]-[%s],[%s]",
+                    OcDateTimeUtils.localDateTime2String(lbegin),
+                    OcDateTimeUtils.localDateTime2String(lend),
+                    ts.toString()
+            ));
+            trades.addAll(taoBaoHttp.getSoldTrades(begin, end, ts));
+            Logger.info(String.format("获取Taobao店铺销量[%s]-list.size:[%d]",
+                    ts.toString(),
+                    trades.size()
+            ));
+        }
+        trades = trades.parallelStream()
+                .filter(trade -> trade.getNumIid() != null)
+                .collect(toList());
+
+        Logger.info(String.format("获取Taobao店铺销量-过滤掉NumIid为空的记录后:%d", trades.size()));
+
+
+        Map<Long, Long> tradesMap = trades
+                .parallelStream()
+                .collect(
+                        groupingBy(
+                                i -> i.getNumIid(),
+                                summingLong(p -> p.getNum()))
+                );
+
+
+        Logger.info(String.format("获取Taobao店铺销量-按商品编码分组后.size:%d", tradesMap.size()));
+
+
+        Logger.info(String.format("销量信息插入数据库"));
+        OcSalesInfo ocSalesInfo;
+        for (Map.Entry<Long, Long> entry : tradesMap.entrySet()) {
+            ocSalesInfo = new OcSalesInfoImpl();
+            ocSalesInfo.setNumIid(String.valueOf(entry.getKey()));
+            ocSalesInfo.setSalesCount(entry.getValue().intValue());
+            ocSalesInfo.setExecJobId(execJobId.intValue());
+            ocSalesInfo.setAddTime(LocalDateTime.now());
+
+            ocSalesInfoManager.persist(ocSalesInfo);
+
+        }
+        Logger.info(String.format("商品销量同步完成"));
+    }
+
     public void syncTaoBaoInventory(Long execJobId) throws Exception {
 
         //删除
@@ -450,44 +513,30 @@ public class SyncInventory {
         if (skus.size() == 0) {
             throw new OCException("获取Taobao店铺SKU信息为空");
         }
-
         Logger.info("获取Taobao店铺SKU-list.size:" + skus.size());
 
 
-        LocalDateTime lend = LocalDateTime.now();
-        LocalDateTime lbegin = lend.minusMonths(1);
-        Date begin = OcDateTimeUtils.localDateTime2Date(lbegin);
-        Date end = OcDateTimeUtils.localDateTime2Date(lend);
 
-        List<Trade> trades = new ArrayList<>();
-        for (TradeStatus ts : TradeStatus.JY_CG) {
-            Logger.info(String.format("获取Taobao店铺销量[%s]-[%s],[%s]",
-                    OcDateTimeUtils.localDateTime2String(lbegin),
-                    OcDateTimeUtils.localDateTime2String(lend),
-                    ts.toString()
-            ));
-            trades.addAll(taoBaoHttp.getSoldTrades(begin, end, ts));
-            Logger.info(String.format("获取Taobao店铺销量[%s]-list.size:[%d]",
-                    ts.toString(),
-                    trades.size()
-            ));
-        }
+        Integer salesJobId = getJobID(JobName.SYNC_WAREHOUSE_JOB.getValue());
+        Logger.info(String.format("同步销量信息最后一次执行ID:[%d]",salesJobId.intValue()));
 
 
-        trades = trades.parallelStream()
-                .filter(trade -> trade.getNumIid() != null)
-                .collect(toList());
-
-        Logger.info(String.format("获取Taobao店铺销量-过滤掉NumIid为空的记录后:%d", trades.size()));
-
-
-        Map<Long, Long> tradesMap = trades
-                .parallelStream()
+        Map<String, OcSalesInfo> tradesMap = ocSalesInfoManager.stream()
+                .filter(OcSalesInfo.EXEC_JOB_ID.equal(salesJobId))
                 .collect(
-                        groupingBy(
-                                i -> i.getNumIid(),
-                                summingLong(p -> p.getNum()))
+                        Collectors.toMap(o -> o.getNumIid().get(),
+                                Function.identity())
                 );
+
+
+
+//        Map<Long, Long> tradesMap = trades
+//                .parallelStream()
+//                .collect(
+//                        groupingBy(
+//                                i -> i.getNumIid(),
+//                                summingLong(p -> p.getNum()))
+//                );
 
 
 //        Logger.info(tradesMap.get(542657513149L));//月销量215
@@ -515,7 +564,9 @@ public class SyncInventory {
 
         Logger.info("对库存信息进行配货率匹配");
 
-        Integer whExecJobId = getJobID("SyncWarehouseJob");
+        Integer whExecJobId = getJobID(JobName.SYNC_WAREHOUSE_JOB.getValue());
+
+        Logger.info(String.format("同步仓库信息最后一次执行ID:[%d]",whExecJobId.intValue()));
 
 
         //查询仓库信息
@@ -568,12 +619,12 @@ public class SyncInventory {
         //尺码换算
         Logger.info("进行尺码换算");
         intersectionList.parallelStream()
-                .filter(inventoryInfo -> inventoryInfo.getSize1().indexOf("Y") < 0)//儿童鞋，暂时不做计算
                 .filter(inventoryInfo -> inventoryInfo.getDivision().equals("鞋"))
+                .filter(inventoryInfo -> OcStringUtils.isNumeric(inventoryInfo.getSize1()))//儿童鞋，暂时不做计算
                 .filter(inventoryInfo -> Double.valueOf(inventoryInfo.getSize1()) <= 18)
                 .forEach(inventoryInfo -> {
                     inventoryInfo.setSize1(
-                            SizeUtils.getShoeSize1BySize2(
+                            OcSizeUtils.getShoeSize1BySize2(
                                     inventoryInfo.getBrand(),
                                     inventoryInfo.getSex(),
                                     inventoryInfo.getSize1()
@@ -596,6 +647,26 @@ public class SyncInventory {
         Logger.info(String.format("根据配货率与库存过滤"));
         intersectionList = InventoryDataOperate.filterPickRateList(intersectionList,quarterMap);
         Logger.info(String.format("根据配货率与库存过滤-size:[%d]",intersectionList.size()));
+
+
+        //商品-平均价格
+        Map<String, Double> avgPriceMap = intersectionList
+                .parallelStream()
+                .filter(p -> p.getWareHouseID() != null)
+                .collect(
+                        groupingBy(
+                                i -> i.getGoodsNo(),
+                                averagingDouble((InventoryInfo x) ->
+                                        x.getProxyPrice().doubleValue()
+                                )
+                        )
+                );
+
+        Logger.info(String.format("过滤平均采购价格"));
+        intersectionList = InventoryDataOperate.filterAvgPriceList(intersectionList,avgPriceMap);
+        Logger.info(String.format("过滤平均采购价格-size:[%d]",intersectionList.size()));
+
+
 
 
 
@@ -643,27 +714,13 @@ public class SyncInventory {
                         )
                 );
 
-        //商品-平均价格
-        Map<String, Double> avgPriceMap = intersectionList
-                .parallelStream()
-                .filter(p -> p.getWareHouseID() != null)
-                .collect(
-                        groupingBy(
-                                i -> i.getGoodsNo(),
-                                averagingDouble((InventoryInfo x) ->
-                                        x.getProxyPrice().doubleValue()
-                                )
-                        )
-                );
 
-
-
-
-
+        //赋值销量信息
         intersectionList.parallelStream().forEach(inventoryInfo -> {
             long rt = 0;
-            if (tradesMap.get(inventoryInfo.getNumIid()) != null) {
-                rt = tradesMap.get(inventoryInfo.getNumIid());
+            String numIid =  String.valueOf(inventoryInfo.getNumIid().toString());
+            if (tradesMap.get(numIid) != null) {
+                rt = tradesMap.get(numIid).getSalesCount().getAsInt();
             }
             inventoryInfo.setSalesCount(rt);
         });
@@ -692,7 +749,7 @@ public class SyncInventory {
 
         Map<String, Optional<InventoryInfo>> mapMinSkuPrice = intersectionList.parallelStream()
                 .filter(inventoryInfo -> inventoryInfo.getWareHouseID() != null)
-                .filter(inventoryInfo -> filterAvgPriceAbove(inventoryInfo, avgPriceMap))
+                //.filter(inventoryInfo -> filterAvgPriceAbove(inventoryInfo, avgPriceMap))
                 .filter(inventoryInfo ->
                         getSize1Count(size1Map, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID()) >=
                                 getMaxSkuAvgCount(maxSize1Map, inventoryInfo.getGoodsNo()))
@@ -707,7 +764,7 @@ public class SyncInventory {
         intersectionList.parallelStream()
                 .filter(inventoryInfo -> inventoryInfo.getWareHouseID() != null)
                 .filter(inventoryInfo -> mapMinSkuPrice.get(inventoryInfo.getGoodsNo()) != null)
-                .filter(inventoryInfo -> filterAvgPriceAbove(inventoryInfo, avgPriceMap))
+                //.filter(inventoryInfo -> filterAvgPriceAbove(inventoryInfo, avgPriceMap))
                 .filter(inventoryInfo -> inventoryInfo.getSalesCount() >= OrderCatConfig.getProductSalesLimitCount())
                 .filter(inventoryInfo ->
                         inventoryInfo.getProxyPrice().compareTo(mapMinSkuPrice.get(inventoryInfo.getGoodsNo()).get().getProxyPrice()) <= 0
@@ -814,40 +871,40 @@ public class SyncInventory {
 
     }
 
-    /**
-     * 计算高于平均采购价
-     *
-     * @param inventoryInfo
-     * @param avgPriceMap
-     * @return
-     */
-    private boolean filterAvgPriceAbove(InventoryInfo inventoryInfo, Map<String, Double> avgPriceMap) {
-        boolean rt = true;
-//        if(inventoryInfo.getGoodsNo().equals("819474-405")){
-//            System.out.println();
+//    /**
+//     * 计算高于平均采购价
+//     *
+//     * @param inventoryInfo
+//     * @param avgPriceMap
+//     * @return
+//     */
+//    private boolean filterAvgPriceAbove(InventoryInfo inventoryInfo, Map<String, Double> avgPriceMap) {
+//        boolean rt = true;
+////        if(inventoryInfo.getGoodsNo().equals("819474-405")){
+////            System.out.println();
+////        }
+//
+//        BigDecimal avgPrice = getAvgPrice(avgPriceMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID());
+//        avgPrice = avgPrice.add(avgPrice.multiply(BigDecimal.valueOf(OrderCatConfig.getAvgPriceAboveRate() / 100)));
+//        if (inventoryInfo.getProxyPrice().compareTo(avgPrice) == 1) {
+//            rt = false;
+//        } else {
+//            rt = true;
 //        }
-
-        BigDecimal avgPrice = getAvgPrice(avgPriceMap, inventoryInfo.getGoodsNo(), inventoryInfo.getWareHouseID());
-        avgPrice = avgPrice.add(avgPrice.multiply(BigDecimal.valueOf(OrderCatConfig.getAvgPriceAboveRate() / 100)));
-        if (inventoryInfo.getProxyPrice().compareTo(avgPrice) == 1) {
-            rt = false;
-        } else {
-            rt = true;
-        }
-        return rt;
-    }
+//        return rt;
+//    }
 
 
 
 
-    private BigDecimal getAvgPrice(Map<String, Double> avgPriceMap, String goodsNo, Integer wareHouseID) {
-
-        if (avgPriceMap.get(goodsNo) != null) {
-            return BigDecimal.valueOf(avgPriceMap.get(goodsNo));
-        } else {
-            return BigDecimal.ZERO;
-        }
-    }
+//    private BigDecimal getAvgPrice(Map<String, Double> avgPriceMap, String goodsNo, Integer wareHouseID) {
+//
+//        if (avgPriceMap.get(goodsNo) != null) {
+//            return BigDecimal.valueOf(avgPriceMap.get(goodsNo));
+//        } else {
+//            return BigDecimal.ZERO;
+//        }
+//    }
 
 
     private Long getMaxSkuAvgCount(Map<String, Optional<GoodsInventoryInfo>> maxSize1Map, String goodsNo) {
@@ -909,5 +966,13 @@ public class SyncInventory {
 
     public void setOcInventoryInfoManager(OcInventoryInfoManager ocInventoryInfoManager) {
         this.ocInventoryInfoManager = ocInventoryInfoManager;
+    }
+
+    public OcSalesInfoManager getOcSalesInfoManager() {
+        return ocSalesInfoManager;
+    }
+
+    public void setOcSalesInfoManager(OcSalesInfoManager ocSalesInfoManager) {
+        this.ocSalesInfoManager = ocSalesInfoManager;
     }
 }

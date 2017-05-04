@@ -2,6 +2,7 @@ package com.myjo.ordercat
 
 import com.myjo.ordercat.domain.InventoryInfo
 import com.myjo.ordercat.handle.InventoryDataOperate
+import com.myjo.ordercat.utils.OcStringUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import spock.lang.Specification
@@ -77,6 +78,34 @@ class InventoryDataOperateSpec extends Specification {
         list.size() == 2
 
     }
+    def "OcStringUtils.isNumeric"(){
+        when:
+            def f = OcStringUtils.isNumeric("443.2")
+            def f1 = OcStringUtils.isNumeric("12C")
+            def f2 = OcStringUtils.isNumeric("-44.2")
+        then:
+            f == true
+            f1 == false
+            f2 == true
+
+    }
+
+
+    def "OcStringUtils.filterAvgPriceList"(){
+        when:
+        def f = OcStringUtils.isNumeric("443.2")
+        def f1 = OcStringUtils.isNumeric("12C")
+        def f2 = OcStringUtils.isNumeric("-44.2")
+        then:
+        f == true
+        f1 == false
+        f2 == true
+
+    }
+
+
+
+
 
 //    def "config"() {
 //        when:

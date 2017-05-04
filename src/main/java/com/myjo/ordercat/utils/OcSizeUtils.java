@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by lee5hx on 17/4/26.
  */
-public class SizeUtils {
+public class OcSizeUtils {
 
     private static Map<Sex, List<Size>> shoeSizeMap = new HashMap();
 

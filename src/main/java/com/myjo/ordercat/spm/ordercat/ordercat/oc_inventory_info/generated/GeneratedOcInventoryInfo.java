@@ -31,6 +31,17 @@ public interface GeneratedOcInventoryInfo {
     
     /**
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
+     * obtained using the {@link OcInventoryInfo#getPurchasePrice()} method.
+     */
+    final ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> PURCHASE_PRICE = ComparableField.create(
+        Identifier.PURCHASE_PRICE,
+        o -> OptionalUtil.unwrap(o.getPurchasePrice()),
+        OcInventoryInfo::setPurchasePrice,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getId()} method.
      */
     final LongField<OcInventoryInfo, Long> ID = LongField.create(
@@ -241,12 +252,12 @@ public interface GeneratedOcInventoryInfo {
     );
     /**
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
-     * obtained using the {@link OcInventoryInfo#getPurchasePrice()} method.
+     * obtained using the {@link OcInventoryInfo#getSalesPrice()} method.
      */
-    final ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> PURCHASE_PRICE = ComparableField.create(
-        Identifier.PURCHASE_PRICE,
-        o -> OptionalUtil.unwrap(o.getPurchasePrice()),
-        OcInventoryInfo::setPurchasePrice,
+    final ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> SALES_PRICE = ComparableField.create(
+        Identifier.SALES_PRICE,
+        o -> OptionalUtil.unwrap(o.getSalesPrice()),
+        OcInventoryInfo::setSalesPrice,
         TypeMapper.identity(), 
         false
     );
@@ -349,6 +360,15 @@ public interface GeneratedOcInventoryInfo {
         TypeMapper.identity(), 
         false
     );
+    
+    /**
+     * Returns the purchasePrice of this OcInventoryInfo. The purchasePrice
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_inventory_info.purchasePrice.
+     * 
+     * @return the purchasePrice of this OcInventoryInfo
+     */
+    Optional<BigDecimal> getPurchasePrice();
     
     /**
      * Returns the id of this OcInventoryInfo. The id field corresponds to the
@@ -515,13 +535,13 @@ public interface GeneratedOcInventoryInfo {
     Optional<BigDecimal> getProxyPrice();
     
     /**
-     * Returns the purchasePrice of this OcInventoryInfo. The purchasePrice
-     * field corresponds to the database column
-     * ordercat.ordercat.oc_inventory_info.purchasePrice.
+     * Returns the salesPrice of this OcInventoryInfo. The salesPrice field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_inventory_info.salesPrice.
      * 
-     * @return the purchasePrice of this OcInventoryInfo
+     * @return the salesPrice of this OcInventoryInfo
      */
-    Optional<BigDecimal> getPurchasePrice();
+    Optional<BigDecimal> getSalesPrice();
     
     /**
      * Returns the salesCount of this OcInventoryInfo. The salesCount field
@@ -600,6 +620,16 @@ public interface GeneratedOcInventoryInfo {
      * @return the execJobId of this OcInventoryInfo
      */
     OptionalInt getExecJobId();
+    
+    /**
+     * Sets the purchasePrice of this OcInventoryInfo. The purchasePrice field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_inventory_info.purchasePrice.
+     * 
+     * @param purchasePrice to set of this OcInventoryInfo
+     * @return              this OcInventoryInfo instance
+     */
+    OcInventoryInfo setPurchasePrice(BigDecimal purchasePrice);
     
     /**
      * Sets the id of this OcInventoryInfo. The id field corresponds to the
@@ -778,14 +808,14 @@ public interface GeneratedOcInventoryInfo {
     OcInventoryInfo setProxyPrice(BigDecimal proxyPrice);
     
     /**
-     * Sets the purchasePrice of this OcInventoryInfo. The purchasePrice field
+     * Sets the salesPrice of this OcInventoryInfo. The salesPrice field
      * corresponds to the database column
-     * ordercat.ordercat.oc_inventory_info.purchasePrice.
+     * ordercat.ordercat.oc_inventory_info.salesPrice.
      * 
-     * @param purchasePrice to set of this OcInventoryInfo
-     * @return              this OcInventoryInfo instance
+     * @param salesPrice to set of this OcInventoryInfo
+     * @return           this OcInventoryInfo instance
      */
-    OcInventoryInfo setPurchasePrice(BigDecimal purchasePrice);
+    OcInventoryInfo setSalesPrice(BigDecimal salesPrice);
     
     /**
      * Sets the salesCount of this OcInventoryInfo. The salesCount field
@@ -875,6 +905,7 @@ public interface GeneratedOcInventoryInfo {
     
     enum Identifier implements ColumnIdentifier<OcInventoryInfo> {
         
+        PURCHASE_PRICE        ("purchasePrice"),
         ID                    ("id"),
         GOODS_NO              ("goodsNo"),
         WAREHOUSE_ID          ("warehouse_id"),
@@ -894,7 +925,7 @@ public interface GeneratedOcInventoryInfo {
         PICK_DATE             ("pickDate"),
         THEDTIME              ("thedtime"),
         PROXY_PRICE           ("proxyPrice"),
-        PURCHASE_PRICE        ("purchasePrice"),
+        SALES_PRICE           ("salesPrice"),
         SALES_COUNT           ("salesCount"),
         EXPRESS_NAME          ("expressName"),
         RETRUN_DESC           ("retrunDesc"),

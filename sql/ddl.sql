@@ -32,6 +32,26 @@ CREATE TABLE `oc_job_exec_info` (
   KEY `IDX_JOB_NAME` (`job_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='job执行信息表';
 
+ALTER TABLE oc_job_exec_info ADD COLUMN `error_message` TEXT AFTER `status`;
+
+
+
+
+DROP TABLE oc_sales_info;
+CREATE TABLE `oc_sales_info` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `numIid` varchar(255) COMMENT '淘宝商品编码',
+  `sales_count` int(11) DEFAULT NULL COMMENT '销量',
+  `exec_job_id` int(11) DEFAULT NULL COMMENT '执行任务ID',
+  `add_time` timestamp NOT NULL COMMENT '添加日期',
+  PRIMARY KEY (`id`),
+  KEY `IDX_JOB_ID` (`exec_job_id`),
+  KEY `IDX_NUM_IID` (`numIid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='销量信息';
+
+
+
+
 DROP TABLE oc_inventory_info;
 CREATE TABLE `oc_inventory_info` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

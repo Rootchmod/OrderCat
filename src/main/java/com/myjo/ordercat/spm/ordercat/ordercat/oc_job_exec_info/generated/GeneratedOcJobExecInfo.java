@@ -13,6 +13,7 @@ import com.speedment.runtime.typemapper.time.TimestampToLocalDateTimeMapper;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.OptionalLong;
 
 /**
  * The generated base for the {@link
@@ -75,7 +76,7 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getElapsed()} method.
      */
-    final StringField<OcJobExecInfo, String> ELAPSED = StringField.create(
+    final ComparableField<OcJobExecInfo, Long, Long> ELAPSED = ComparableField.create(
         Identifier.ELAPSED,
         o -> OptionalUtil.unwrap(o.getElapsed()),
         OcJobExecInfo::setElapsed,
@@ -90,6 +91,17 @@ public interface GeneratedOcJobExecInfo {
         Identifier.STATUS,
         OcJobExecInfo::getStatus,
         OcJobExecInfo::setStatus,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcJobExecInfo} field that can be
+     * obtained using the {@link OcJobExecInfo#getErrorMessage()} method.
+     */
+    final StringField<OcJobExecInfo, String> ERROR_MESSAGE = StringField.create(
+        Identifier.ERROR_MESSAGE,
+        o -> OptionalUtil.unwrap(o.getErrorMessage()),
+        OcJobExecInfo::setErrorMessage,
         TypeMapper.identity(), 
         false
     );
@@ -133,7 +145,7 @@ public interface GeneratedOcJobExecInfo {
      * 
      * @return the elapsed of this OcJobExecInfo
      */
-    Optional<String> getElapsed();
+    OptionalLong getElapsed();
     
     /**
      * Returns the status of this OcJobExecInfo. The status field corresponds to
@@ -142,6 +154,15 @@ public interface GeneratedOcJobExecInfo {
      * @return the status of this OcJobExecInfo
      */
     String getStatus();
+    
+    /**
+     * Returns the errorMessage of this OcJobExecInfo. The errorMessage field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_job_exec_info.error_message.
+     * 
+     * @return the errorMessage of this OcJobExecInfo
+     */
+    Optional<String> getErrorMessage();
     
     /**
      * Sets the id of this OcJobExecInfo. The id field corresponds to the
@@ -186,7 +207,7 @@ public interface GeneratedOcJobExecInfo {
      * @param elapsed to set of this OcJobExecInfo
      * @return        this OcJobExecInfo instance
      */
-    OcJobExecInfo setElapsed(String elapsed);
+    OcJobExecInfo setElapsed(Long elapsed);
     
     /**
      * Sets the status of this OcJobExecInfo. The status field corresponds to
@@ -197,14 +218,25 @@ public interface GeneratedOcJobExecInfo {
      */
     OcJobExecInfo setStatus(String status);
     
+    /**
+     * Sets the errorMessage of this OcJobExecInfo. The errorMessage field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_job_exec_info.error_message.
+     * 
+     * @param errorMessage to set of this OcJobExecInfo
+     * @return             this OcJobExecInfo instance
+     */
+    OcJobExecInfo setErrorMessage(String errorMessage);
+    
     enum Identifier implements ColumnIdentifier<OcJobExecInfo> {
         
-        ID         ("id"),
-        JOB_NAME   ("job_name"),
-        BEGIN_TIME ("begin_time"),
-        END_TIME   ("end_time"),
-        ELAPSED    ("elapsed"),
-        STATUS     ("status");
+        ID            ("id"),
+        JOB_NAME      ("job_name"),
+        BEGIN_TIME    ("begin_time"),
+        END_TIME      ("end_time"),
+        ELAPSED       ("elapsed"),
+        STATUS        ("status"),
+        ERROR_MESSAGE ("error_message");
         
         private final String columnName;
         private final TableIdentifier<OcJobExecInfo> tableIdentifier;

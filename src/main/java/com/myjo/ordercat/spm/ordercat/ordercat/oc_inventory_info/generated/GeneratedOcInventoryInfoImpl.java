@@ -22,6 +22,7 @@ import java.util.StringJoiner;
 @GeneratedCode("Speedment")
 public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     
+    private BigDecimal purchasePrice;
     private long id;
     private String goodsNo;
     private Integer warehouseId;
@@ -41,7 +42,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     private String pickDate;
     private String thedtime;
     private BigDecimal proxyPrice;
-    private BigDecimal purchasePrice;
+    private BigDecimal salesPrice;
     private Integer salesCount;
     private String expressName;
     private String retrunDesc;
@@ -54,6 +55,11 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     
     protected GeneratedOcInventoryInfoImpl() {
         
+    }
+    
+    @Override
+    public Optional<BigDecimal> getPurchasePrice() {
+        return Optional.ofNullable(purchasePrice);
     }
     
     @Override
@@ -152,8 +158,8 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     }
     
     @Override
-    public Optional<BigDecimal> getPurchasePrice() {
-        return Optional.ofNullable(purchasePrice);
+    public Optional<BigDecimal> getSalesPrice() {
+        return Optional.ofNullable(salesPrice);
     }
     
     @Override
@@ -199,6 +205,12 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     @Override
     public OptionalInt getExecJobId() {
         return OptionalUtil.ofNullable(execJobId);
+    }
+    
+    @Override
+    public OcInventoryInfo setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
+        return this;
     }
     
     @Override
@@ -316,8 +328,8 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     }
     
     @Override
-    public OcInventoryInfo setPurchasePrice(BigDecimal purchasePrice) {
-        this.purchasePrice = purchasePrice;
+    public OcInventoryInfo setSalesPrice(BigDecimal salesPrice) {
+        this.salesPrice = salesPrice;
         return this;
     }
     
@@ -378,6 +390,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     @Override
     public String toString() {
         final StringJoiner sj = new StringJoiner(", ", "{ ", " }");
+        sj.add("purchasePrice = "       + Objects.toString(OptionalUtil.unwrap(getPurchasePrice())));
         sj.add("id = "                  + Objects.toString(getId()));
         sj.add("goodsNo = "             + Objects.toString(OptionalUtil.unwrap(getGoodsNo())));
         sj.add("warehouseId = "         + Objects.toString(OptionalUtil.unwrap(getWarehouseId())));
@@ -397,7 +410,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
         sj.add("pickDate = "            + Objects.toString(OptionalUtil.unwrap(getPickDate())));
         sj.add("thedtime = "            + Objects.toString(OptionalUtil.unwrap(getThedtime())));
         sj.add("proxyPrice = "          + Objects.toString(OptionalUtil.unwrap(getProxyPrice())));
-        sj.add("purchasePrice = "       + Objects.toString(OptionalUtil.unwrap(getPurchasePrice())));
+        sj.add("salesPrice = "          + Objects.toString(OptionalUtil.unwrap(getSalesPrice())));
         sj.add("salesCount = "          + Objects.toString(OptionalUtil.unwrap(getSalesCount())));
         sj.add("expressName = "         + Objects.toString(OptionalUtil.unwrap(getExpressName())));
         sj.add("retrunDesc = "          + Objects.toString(OptionalUtil.unwrap(getRetrunDesc())));
@@ -415,6 +428,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
         if (this == that) { return true; }
         if (!(that instanceof OcInventoryInfo)) { return false; }
         final OcInventoryInfo thatOcInventoryInfo = (OcInventoryInfo)that;
+        if (!Objects.equals(this.getPurchasePrice(), thatOcInventoryInfo.getPurchasePrice())) {return false; }
         if (this.getId() != thatOcInventoryInfo.getId()) {return false; }
         if (!Objects.equals(this.getGoodsNo(), thatOcInventoryInfo.getGoodsNo())) {return false; }
         if (!Objects.equals(this.getWarehouseId(), thatOcInventoryInfo.getWarehouseId())) {return false; }
@@ -434,7 +448,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
         if (!Objects.equals(this.getPickDate(), thatOcInventoryInfo.getPickDate())) {return false; }
         if (!Objects.equals(this.getThedtime(), thatOcInventoryInfo.getThedtime())) {return false; }
         if (!Objects.equals(this.getProxyPrice(), thatOcInventoryInfo.getProxyPrice())) {return false; }
-        if (!Objects.equals(this.getPurchasePrice(), thatOcInventoryInfo.getPurchasePrice())) {return false; }
+        if (!Objects.equals(this.getSalesPrice(), thatOcInventoryInfo.getSalesPrice())) {return false; }
         if (!Objects.equals(this.getSalesCount(), thatOcInventoryInfo.getSalesCount())) {return false; }
         if (!Objects.equals(this.getExpressName(), thatOcInventoryInfo.getExpressName())) {return false; }
         if (!Objects.equals(this.getRetrunDesc(), thatOcInventoryInfo.getRetrunDesc())) {return false; }
@@ -450,6 +464,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     @Override
     public int hashCode() {
         int hash = 7;
+        hash = 31 * hash + Objects.hashCode(getPurchasePrice());
         hash = 31 * hash + Long.hashCode(getId());
         hash = 31 * hash + Objects.hashCode(getGoodsNo());
         hash = 31 * hash + Objects.hashCode(getWarehouseId());
@@ -469,7 +484,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
         hash = 31 * hash + Objects.hashCode(getPickDate());
         hash = 31 * hash + Objects.hashCode(getThedtime());
         hash = 31 * hash + Objects.hashCode(getProxyPrice());
-        hash = 31 * hash + Objects.hashCode(getPurchasePrice());
+        hash = 31 * hash + Objects.hashCode(getSalesPrice());
         hash = 31 * hash + Objects.hashCode(getSalesCount());
         hash = 31 * hash + Objects.hashCode(getExpressName());
         hash = 31 * hash + Objects.hashCode(getRetrunDesc());

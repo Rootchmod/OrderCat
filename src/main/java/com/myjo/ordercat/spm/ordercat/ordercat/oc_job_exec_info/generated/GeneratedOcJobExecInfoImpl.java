@@ -6,6 +6,7 @@ import com.speedment.runtime.core.util.OptionalUtil;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.StringJoiner;
 
 /**
@@ -24,8 +25,9 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
     private String jobName;
     private LocalDateTime beginTime;
     private LocalDateTime endTime;
-    private String elapsed;
+    private Long elapsed;
     private String status;
+    private String errorMessage;
     
     protected GeneratedOcJobExecInfoImpl() {
         
@@ -52,13 +54,18 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
     }
     
     @Override
-    public Optional<String> getElapsed() {
-        return Optional.ofNullable(elapsed);
+    public OptionalLong getElapsed() {
+        return OptionalUtil.ofNullable(elapsed);
     }
     
     @Override
     public String getStatus() {
         return status;
+    }
+    
+    @Override
+    public Optional<String> getErrorMessage() {
+        return Optional.ofNullable(errorMessage);
     }
     
     @Override
@@ -86,7 +93,7 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
     }
     
     @Override
-    public OcJobExecInfo setElapsed(String elapsed) {
+    public OcJobExecInfo setElapsed(Long elapsed) {
         this.elapsed = elapsed;
         return this;
     }
@@ -98,14 +105,21 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
     }
     
     @Override
+    public OcJobExecInfo setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+        return this;
+    }
+    
+    @Override
     public String toString() {
         final StringJoiner sj = new StringJoiner(", ", "{ ", " }");
-        sj.add("id = "        + Objects.toString(getId()));
-        sj.add("jobName = "   + Objects.toString(OptionalUtil.unwrap(getJobName())));
-        sj.add("beginTime = " + Objects.toString(getBeginTime()));
-        sj.add("endTime = "   + Objects.toString(OptionalUtil.unwrap(getEndTime())));
-        sj.add("elapsed = "   + Objects.toString(OptionalUtil.unwrap(getElapsed())));
-        sj.add("status = "    + Objects.toString(getStatus()));
+        sj.add("id = "           + Objects.toString(getId()));
+        sj.add("jobName = "      + Objects.toString(OptionalUtil.unwrap(getJobName())));
+        sj.add("beginTime = "    + Objects.toString(getBeginTime()));
+        sj.add("endTime = "      + Objects.toString(OptionalUtil.unwrap(getEndTime())));
+        sj.add("elapsed = "      + Objects.toString(OptionalUtil.unwrap(getElapsed())));
+        sj.add("status = "       + Objects.toString(getStatus()));
+        sj.add("errorMessage = " + Objects.toString(OptionalUtil.unwrap(getErrorMessage())));
         return "OcJobExecInfoImpl " + sj.toString();
     }
     
@@ -120,6 +134,7 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
         if (!Objects.equals(this.getEndTime(), thatOcJobExecInfo.getEndTime())) {return false; }
         if (!Objects.equals(this.getElapsed(), thatOcJobExecInfo.getElapsed())) {return false; }
         if (!Objects.equals(this.getStatus(), thatOcJobExecInfo.getStatus())) {return false; }
+        if (!Objects.equals(this.getErrorMessage(), thatOcJobExecInfo.getErrorMessage())) {return false; }
         return true;
     }
     
@@ -132,6 +147,7 @@ public abstract class GeneratedOcJobExecInfoImpl implements OcJobExecInfo {
         hash = 31 * hash + Objects.hashCode(getEndTime());
         hash = 31 * hash + Objects.hashCode(getElapsed());
         hash = 31 * hash + Objects.hashCode(getStatus());
+        hash = 31 * hash + Objects.hashCode(getErrorMessage());
         return hash;
     }
 }

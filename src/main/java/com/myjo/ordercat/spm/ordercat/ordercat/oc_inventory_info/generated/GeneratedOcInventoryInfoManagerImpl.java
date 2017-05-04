@@ -34,6 +34,7 @@ public abstract class GeneratedOcInventoryInfoManagerImpl extends AbstractManage
     @Override
     public Stream<Field<OcInventoryInfo>> fields() {
         return Stream.of(
+            OcInventoryInfo.PURCHASE_PRICE,
             OcInventoryInfo.ID,
             OcInventoryInfo.GOODS_NO,
             OcInventoryInfo.WAREHOUSE_ID,
@@ -53,7 +54,7 @@ public abstract class GeneratedOcInventoryInfoManagerImpl extends AbstractManage
             OcInventoryInfo.PICK_DATE,
             OcInventoryInfo.THEDTIME,
             OcInventoryInfo.PROXY_PRICE,
-            OcInventoryInfo.PURCHASE_PRICE,
+            OcInventoryInfo.SALES_PRICE,
             OcInventoryInfo.SALES_COUNT,
             OcInventoryInfo.EXPRESS_NAME,
             OcInventoryInfo.RETRUN_DESC,

@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import static com.speedment.common.injector.State.RESOLVED;
+import static com.speedment.runtime.core.internal.util.sql.ResultSetUtil.*;
 
 /**
  * The generated Sql Adapter for a {@link
@@ -48,12 +49,13 @@ public abstract class GeneratedOcJobExecInfoSqlAdapter {
     protected OcJobExecInfo apply(ResultSet resultSet) throws SpeedmentException {
         final OcJobExecInfo entity = createEntity();
         try {
-            entity.setId(        resultSet.getLong(1)                             );
-            entity.setJobName(   resultSet.getString(2)                           );
-            entity.setBeginTime( beginTimeHelper.apply(resultSet.getTimestamp(3)) );
-            entity.setEndTime(   endTimeHelper.apply(resultSet.getTimestamp(4))   );
-            entity.setElapsed(   resultSet.getString(5)                           );
-            entity.setStatus(    resultSet.getString(6)                           );
+            entity.setId(           resultSet.getLong(1)                             );
+            entity.setJobName(      resultSet.getString(2)                           );
+            entity.setBeginTime(    beginTimeHelper.apply(resultSet.getTimestamp(3)) );
+            entity.setEndTime(      endTimeHelper.apply(resultSet.getTimestamp(4))   );
+            entity.setElapsed(      getLong(resultSet, 5)                            );
+            entity.setStatus(       resultSet.getString(6)                           );
+            entity.setErrorMessage( resultSet.getString(7)                           );
         } catch (final SQLException sqle) {
             throw new SpeedmentException(sqle);
         }

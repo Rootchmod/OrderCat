@@ -7,6 +7,8 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfo
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoSqlAdapter;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManagerImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoSqlAdapter;
 import com.speedment.common.injector.Injector;
@@ -30,9 +32,11 @@ public abstract class GeneratedOrdercatApplicationBuilder extends AbstractApplic
         super(OrdercatApplicationImpl.class, GeneratedOrdercatMetadata.class);
         withManager(OcInventoryInfoManagerImpl.class);
         withManager(OcJobExecInfoManagerImpl.class);
+        withManager(OcSalesInfoManagerImpl.class);
         withManager(OcWarehouseInfoManagerImpl.class);
         withComponent(OcInventoryInfoSqlAdapter.class);
         withComponent(OcJobExecInfoSqlAdapter.class);
+        withComponent(OcSalesInfoSqlAdapter.class);
         withComponent(OcWarehouseInfoSqlAdapter.class);
     }
     

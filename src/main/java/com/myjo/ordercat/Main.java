@@ -4,19 +4,19 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.mashape.unirest.http.Unirest;
 import com.myjo.ordercat.config.OrderCatConfig;
+import com.myjo.ordercat.domain.JobName;
 import com.myjo.ordercat.exception.OCException;
-import com.myjo.ordercat.handle.ExecuteHandle;
-import com.myjo.ordercat.handle.SyncInventory;
-import com.myjo.ordercat.handle.SyncTaoBaoInventoryHandle;
-import com.myjo.ordercat.handle.SyncWarehouseHandle;
+import com.myjo.ordercat.handle.*;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
+import com.myjo.ordercat.job.SyncSalesInfoJob;
 import com.myjo.ordercat.job.SyncTaoBaoInventoryJob;
 import com.myjo.ordercat.job.SyncWarehouseJob;
 import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,6 +70,9 @@ public class Main {
         OcWarehouseInfoManager ocWarehouseInfoManager = app.getOrThrow(OcWarehouseInfoManager.class);
         OcJobExecInfoManager ocJobExecInfoManager = app.getOrThrow(OcJobExecInfoManager.class);
         OcInventoryInfoManager ocInventoryInfoManager = app.getOrThrow(OcInventoryInfoManager.class);
+        OcSalesInfoManager ocSalesInfoManager = app.getOrThrow(OcSalesInfoManager.class);
+
+
 
         Map<String, String> map = new HashMap<>();
 
@@ -79,6 +82,7 @@ public class Main {
         syncInventory.setOcInventoryInfoManager(ocInventoryInfoManager);
         syncInventory.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         syncInventory.setOcJobExecInfoManager(ocJobExecInfoManager);
+        syncInventory.setOcSalesInfoManager(ocSalesInfoManager);
 
 
         tianmaSportHttp.getVerifyCodeImage();
@@ -96,20 +100,29 @@ public class Main {
 
         ExecuteHandle eh;
         eh = new SyncWarehouseHandle(syncInventory);
-        eh.setJobName("SyncWarehouseJob");
+        eh.setJobName(JobName.SYNC_WAREHOUSE_JOB.getValue());
         eh.setOcJobExecInfoManager(ocJobExecInfoManager);
 
         ExecuteHandle eh1;
         eh1 = new SyncTaoBaoInventoryHandle(syncInventory);
-        eh1.setJobName("SyncTaoBaoInventory");
+        eh1.setJobName(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue());
         eh1.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
-        if (action.equals("SyncSalesInfoJob")) {
+        ExecuteHandle eh2;
+        eh2 = new SyncSalesInfoHandle(syncInventory);
+        eh2.setJobName(JobName.SYNC_SALES_INFO_JOB.getValue());
+        eh2.setOcJobExecInfoManager(ocJobExecInfoManager);
 
-        } else if (action.equals("SyncWarehouseJob")) {
+
+
+
+
+        if (action.equals(JobName.SYNC_SALES_INFO_JOB.getValue())) {
+            eh2.exec();
+        } else if (action.equals(JobName.SYNC_WAREHOUSE_JOB.getValue())) {
             eh.exec();
-        } else if (action.equals("SyncTaoBaoInventory")) {
+        } else if (action.equals(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue())) {
             eh1.exec();
         } else if (action.equals("JobStart")) {
             SchedulerFactory sf = new StdSchedulerFactory();
@@ -119,12 +132,13 @@ public class Main {
             JobDataMap map1 = new JobDataMap();
             map1.put("SyncWarehouseHandle",eh);
             map1.put("SyncTaoBaoInventoryHandle",eh1);
+            map1.put("SyncSalesInfoHandle",eh2);
             JobDetail job = newJob(SyncWarehouseJob.class)
                     .usingJobData(map1)
-                    .withIdentity("SyncWarehouseJob", "myjo")
+                    .withIdentity(JobName.SYNC_WAREHOUSE_JOB.getValue(), "myjo")
                     .build();
             CronTrigger trigger = newTrigger()
-                    .withIdentity("SyncWarehouseJobTrigger", "myjo")
+                    .withIdentity(JobName.SYNC_WAREHOUSE_JOB.getValue()+"Trigger", "myjo")
                     .withSchedule(cronSchedule(OrderCatConfig.getSyncWarehouseJobTriggerCron()))
                     .build();
             sched.scheduleJob(job, trigger);
@@ -133,14 +147,29 @@ public class Main {
             //SyncTaoBaoInventoryJob
             JobDetail job1 = newJob(SyncTaoBaoInventoryJob.class)
                     .usingJobData(map1)
-                    .withIdentity("SyncTaoBaoInventoryJob", "myjo")
+                    .withIdentity(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue(), "myjo")
                     .build();
 
             CronTrigger trigger1 = newTrigger()
-                    .withIdentity("SyncTaoBaoInventoryJob", "myjo")
+                    .withIdentity(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue()+"Trigger", "myjo")
                     .withSchedule(cronSchedule(OrderCatConfig.getSyncTaoBaoInventoryJobTriggerCron()))
                     .build();
             sched.scheduleJob(job1, trigger1);
+
+
+
+            //SyncSalesInfoJob
+            JobDetail job2 = newJob(SyncSalesInfoJob.class)
+                    .usingJobData(map1)
+                    .withIdentity(JobName.SYNC_SALES_INFO_JOB.getValue(), "myjo")
+                    .build();
+
+            CronTrigger trigger2 = newTrigger()
+                    .withIdentity(JobName.SYNC_SALES_INFO_JOB.getValue()+"Trigger", "myjo")
+                    .withSchedule(cronSchedule(OrderCatConfig.getSyncSalesInfoJobTriggerCron()))
+                    .build();
+            sched.scheduleJob(job2, trigger2);
+
 
 
             sched.start();

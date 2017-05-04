@@ -4,7 +4,12 @@ import com.myjo.ordercat.domain.JobStatus;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
+import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -36,26 +41,34 @@ public abstract class ExecuteHandle {
         try {
             exec(execJobId);
             end = LocalDateTime.now();
-            String elapsedString = String.valueOf(Duration.between(begin,end).getSeconds());
+            long elapsed = Duration.between(begin,end).getSeconds();
             ocJobExecInfoManager.stream()
                     .filter(OcJobExecInfo.ID.equal(execJobId))
                     .map(OcJobExecInfo.STATUS
                             .setTo(JobStatus.SUCCESS.toString())
                             .andThen(OcJobExecInfo.END_TIME.setTo(end))
-                            .andThen(OcJobExecInfo.ELAPSED.setTo(elapsedString)))
+                            .andThen(OcJobExecInfo.ELAPSED.setTo(elapsed)))
                     .forEach(ocJobExecInfoManager.updater());
         } catch (Exception e) {
 
             end = LocalDateTime.now();
-            String elapsedString = String.valueOf(Duration.between(begin,end).getSeconds());
+            long elapsed = Duration.between(begin,end).getSeconds();
+
+            e.printStackTrace();
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+
             ocJobExecInfoManager.stream()
                     .filter(OcJobExecInfo.ID.equal(execJobId))
                     .map(OcJobExecInfo.STATUS
                             .setTo(JobStatus.FAILURE.toString())
                             .andThen(OcJobExecInfo.END_TIME.setTo(end))
-                            .andThen(OcJobExecInfo.ELAPSED.setTo(elapsedString)))
+                            .andThen(OcJobExecInfo.ERROR_MESSAGE.setTo(sw.toString()))
+                            .andThen(OcJobExecInfo.ELAPSED.setTo(elapsed)))
                     .forEach(ocJobExecInfoManager.updater());
-            e.printStackTrace();
         }finally {
 
         }
