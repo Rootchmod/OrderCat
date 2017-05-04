@@ -74,25 +74,6 @@ public class InventoryDataOperate {
         return intersectionList;
     }
 
-//    /**
-//     * 计算高于平均采购价
-//     *
-//     * @param inventoryInfo
-//     * @param avgPriceMap
-//     * @return
-//     */
-//    private static boolean filterAvgPriceAbove(InventoryInfo inventoryInfo, Map<String, Double> avgPriceMap) {
-//        boolean rt;
-//        BigDecimal avgPrice = getAvgPrice(avgPriceMap, inventoryInfo.getGoodsNo());
-//        avgPrice = avgPrice.add(avgPrice.multiply(BigDecimal.valueOf(OrderCatConfig.getAvgPriceAboveRate() / 100)));
-//        if (inventoryInfo.getProxyPrice().compareTo(avgPrice) == 1) {
-//            rt = false;
-//        } else {
-//            rt = true;
-//        }
-//        return rt;
-//    }
-
     public static BigDecimal getAvgPrice(Map<String, Double> avgPriceMap, String goodsNo) {
 
         if (avgPriceMap.get(goodsNo) != null) {
@@ -108,9 +89,4 @@ public class InventoryDataOperate {
                 .collect(Collectors.toList());
         return intersectionList;
     }
-
-
-
-
-
 }
