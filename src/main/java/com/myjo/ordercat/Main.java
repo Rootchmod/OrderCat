@@ -158,7 +158,7 @@ public class Main {
 
 
 
-            //SyncSalesInfoJob
+            //SyncTaoBaoInventoryJob
             JobDetail job2 = newJob(SyncSalesInfoJob.class)
                     .usingJobData(map1)
                     .withIdentity(JobName.SYNC_SALES_INFO_JOB.getValue(), "myjo")

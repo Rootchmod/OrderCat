@@ -1,13 +1,19 @@
 package com.myjo.ordercat
 
 import com.myjo.ordercat.config.OrderCatConfig
+import com.myjo.ordercat.domain.JobName
+import com.myjo.ordercat.handle.ExecuteHandle
 import com.myjo.ordercat.handle.SyncInventory
+import com.myjo.ordercat.handle.SyncSalesInfoHandle
+import com.myjo.ordercat.handle.SyncTaoBaoInventoryHandle
+import com.myjo.ordercat.handle.SyncWarehouseHandle
 import com.myjo.ordercat.http.TaoBaoHttp
 import com.myjo.ordercat.http.TianmaSportHttp
 import com.myjo.ordercat.spm.OrdercatApplication
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.LogManager
@@ -25,7 +31,9 @@ class SyncInventorySpec extends Specification {
     private static final Logger Logger = LogManager.getLogger(SyncInventorySpec.class);
 
     private static SyncInventory si;
-
+    private static ExecuteHandle eh;
+    private static ExecuteHandle eh1;
+    private static ExecuteHandle eh2;
 
     def setup() {
 
@@ -38,6 +46,8 @@ class SyncInventorySpec extends Specification {
         OcWarehouseInfoManager ocWarehouseInfoManager = app.getOrThrow(OcWarehouseInfoManager.class);
         OcJobExecInfoManager ocJobExecInfoManager = app.getOrThrow(OcJobExecInfoManager.class);
         OcInventoryInfoManager ocInventoryInfoManager = app.getOrThrow(OcInventoryInfoManager.class);
+        OcSalesInfoManager ocSalesInfoManager = app.getOrThrow(OcSalesInfoManager.class);
+
 
         Map<String,String> map = new HashMap<>();
 
@@ -47,7 +57,28 @@ class SyncInventorySpec extends Specification {
         si.setOcInventoryInfoManager(ocInventoryInfoManager);
         si.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         si.setOcJobExecInfoManager(ocJobExecInfoManager);
+        si.setOcSalesInfoManager(ocSalesInfoManager);
 
+
+
+
+        //ExecuteHandle eh;
+        eh = new SyncWarehouseHandle(si);
+        eh.setJobName(JobName.SYNC_WAREHOUSE_JOB.getValue());
+        eh.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
+
+        //ExecuteHandle eh1;
+        eh1 = new SyncTaoBaoInventoryHandle(si);
+        eh1.setJobName(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue());
+        eh1.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
+        //ExecuteHandle eh2;
+        eh2 = new SyncSalesInfoHandle(si);
+        eh2.setJobName(JobName.SYNC_SALES_INFO_JOB.getValue());
+        eh2.setOcJobExecInfoManager(ocJobExecInfoManager);
 
         tianmaSportHttp.getVerifyCodeImage();
 
@@ -64,7 +95,7 @@ class SyncInventorySpec extends Specification {
 
     def "syncWarehouseInfo"() {
         when:
-        si.syncWarehouseInfo();
+        eh.exec()
         then:
         "ok" == "ok";
     }
@@ -72,7 +103,14 @@ class SyncInventorySpec extends Specification {
 
     def "syncTaoBaoInventory"() {
         when:
-        si.syncTaoBaoInventory(10L);
+        eh1.exec()
+        then:
+        "ok" == "ok";
+    }
+
+    def "syncSalesInfo"() {
+        when:
+        eh2.exec()
         then:
         "ok" == "ok";
     }

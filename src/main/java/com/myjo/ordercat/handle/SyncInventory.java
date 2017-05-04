@@ -657,13 +657,11 @@ public class SyncInventory {
 
 
 
-
-
-
         //商品-平均价格
         Map<String, Double> avgPriceMap = intersectionList
                 .parallelStream()
                 .filter(p -> p.getWareHouseID() != null)
+                .filter(InventoryInfo.distinctByField(inventoryInfo1 -> inventoryInfo1.getWareHouseID()+":"+inventoryInfo1.getGoodsNo()))
                 .collect(
                         groupingBy(
                                 i -> i.getGoodsNo(),
@@ -681,12 +679,25 @@ public class SyncInventory {
         });
 
 
+
         Logger.info(String.format("过滤平均采购价格"));
         intersectionList = InventoryDataOperate.filterAvgPriceList(intersectionList);
         Logger.info(String.format("过滤平均采购价格-size:[%d]",intersectionList.size()));
 
 
+//        intersectionList.parallelStream().forEach(inventoryInfo -> {
+//            if(inventoryInfo.getGoodsNo().equals("818099-007")){
+//                System.out.println(
+//                        inventoryInfo.getWarehouseName()+"---"
+//                                +inventoryInfo.getProxyPrice().toPlainString()+"---"
+//                                +inventoryInfo.getAvgPrice()
+//                );
+//            }
+//        });
 
+
+        //470.37 + 653.91 +664.9 + 686.88 + 686.88 +692.37 = 3855.31
+        //(470.37*2) + (653.91*5) +(664.9*1) + (686.88*6) + (686.88*4) +(692.37*6) = 15,898.21
 
 
         //所有仓库，对应尺码最低价格
