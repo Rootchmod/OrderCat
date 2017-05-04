@@ -37,9 +37,9 @@ class TaoBaoSpec extends Specification {
 
 
 
-    def "test"(){
+    def "itemcatsGetRequest"(){
         when:
-        taoBaoHttp.test();
+        taoBaoHttp.itemcatsGetRequest();
 
         then:
         "ok" == "ok"

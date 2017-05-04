@@ -77,7 +77,7 @@ public class TaoBaoHttp {
         //req.setStartModified(StringUtils.parseDateTime("2000-01-01 00:00:00"));
         //req.setEndModified(new Date());
 
-        req.setIsCspu(true);
+        //req.setIsCspu(true);
 //        req.setIsCombine(true);
         ItemsOnsaleGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
 

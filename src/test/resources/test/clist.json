@@ -1,0 +1,593 @@
+{
+  "sellercats_list_get_response": {
+    "seller_cats": {
+      "seller_cat": [
+        {
+          "cid": 1248372067,
+          "name": "品牌专区",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248372069,
+          "name": "Nike",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248372070,
+          "name": "Adidas",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 2,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248372071,
+          "name": "Puma",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 3,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248372072,
+          "name": "Reebok",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 4,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248372073,
+          "name": "Converse",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 5,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278389891,
+          "name": "kappa",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 6,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278389892,
+          "name": "361度",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 7,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278389893,
+          "name": "探路者",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 8,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278389894,
+          "name": "第一户外",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 9,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278389895,
+          "name": "乔丹",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 10,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278389896,
+          "name": "赛琪",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 11,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278389897,
+          "name": "rax",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 12,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278389898,
+          "name": "天伦天",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 13,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278389899,
+          "name": "左丹狼",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 14,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278410864,
+          "name": "pony",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 15,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278410865,
+          "name": "李宁",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 16,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278410866,
+          "name": "双星",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 17,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278410537,
+          "name": "Topsky",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 18,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278410538,
+          "name": "贵人鸟",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 19,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278410539,
+          "name": "鸿星尔克",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 20,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278410540,
+          "name": "金鸡",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 21,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278410541,
+          "name": "喜攀登",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 22,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278411796,
+          "name": "德尔惠",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 23,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278498432,
+          "name": "HUMBGO",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 24,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278503744,
+          "name": "PLAYBOY",
+          "parent_cid": 1248372067,
+          "pic_url": "",
+          "sort_order": 25,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248415566,
+          "name": "最新到货",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 2,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248415568,
+          "name": "04月25日到货",
+          "parent_cid": 1248415566,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1272818708,
+          "name": "04月06日到货",
+          "parent_cid": 1248415566,
+          "pic_url": "",
+          "sort_order": 2,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1267444426,
+          "name": "03月27日到货",
+          "parent_cid": 1248415566,
+          "pic_url": "",
+          "sort_order": 3,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248415567,
+          "name": "03月09日到货",
+          "parent_cid": 1248415566,
+          "pic_url": "",
+          "sort_order": 4,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248415570,
+          "name": "02月21日到货",
+          "parent_cid": 1248415566,
+          "pic_url": "",
+          "sort_order": 5,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248415569,
+          "name": "02月05日到货",
+          "parent_cid": 1248415566,
+          "pic_url": "",
+          "sort_order": 6,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416362,
+          "name": "运动分类",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 3,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416363,
+          "name": "篮球",
+          "parent_cid": 1248416362,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416364,
+          "name": "跑步",
+          "parent_cid": 1248416362,
+          "pic_url": "",
+          "sort_order": 2,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416365,
+          "name": "运动休闲",
+          "parent_cid": 1248416362,
+          "pic_url": "",
+          "sort_order": 3,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416366,
+          "name": "足球",
+          "parent_cid": 1248416362,
+          "pic_url": "",
+          "sort_order": 4,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416367,
+          "name": "男子运动鞋",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 4,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416368,
+          "name": "篮球鞋",
+          "parent_cid": 1248416367,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416369,
+          "name": "跑步鞋",
+          "parent_cid": 1248416367,
+          "pic_url": "",
+          "sort_order": 2,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416370,
+          "name": "休闲鞋",
+          "parent_cid": 1248416367,
+          "pic_url": "",
+          "sort_order": 3,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416371,
+          "name": "足球鞋",
+          "parent_cid": 1248416367,
+          "pic_url": "",
+          "sort_order": 4,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416372,
+          "name": "运动拖鞋",
+          "parent_cid": 1248416367,
+          "pic_url": "",
+          "sort_order": 5,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416373,
+          "name": "男子服装",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 5,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1315741526,
+          "name": "T恤",
+          "parent_cid": 1248416373,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1315741527,
+          "name": "POLO衫",
+          "parent_cid": 1248416373,
+          "pic_url": "",
+          "sort_order": 2,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1315741528,
+          "name": "背心",
+          "parent_cid": 1248416373,
+          "pic_url": "",
+          "sort_order": 3,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1315741529,
+          "name": "紧身上衣",
+          "parent_cid": 1248416373,
+          "pic_url": "",
+          "sort_order": 4,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416374,
+          "name": "羽绒服",
+          "parent_cid": 1248416373,
+          "pic_url": "",
+          "sort_order": 5,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416376,
+          "name": "棉服",
+          "parent_cid": 1248416373,
+          "pic_url": "",
+          "sort_order": 6,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248416377,
+          "name": "长袖外套",
+          "parent_cid": 1248416373,
+          "pic_url": "",
+          "sort_order": 7,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1278386035,
+          "name": "长裤",
+          "parent_cid": 1248416373,
+          "pic_url": "",
+          "sort_order": 8,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417351,
+          "name": "女子运动鞋",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 6,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417352,
+          "name": "跑步鞋",
+          "parent_cid": 1248417351,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417353,
+          "name": "休闲鞋",
+          "parent_cid": 1248417351,
+          "pic_url": "",
+          "sort_order": 2,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417354,
+          "name": "篮球鞋",
+          "parent_cid": 1248417351,
+          "pic_url": "",
+          "sort_order": 3,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417355,
+          "name": "运动拖鞋",
+          "parent_cid": 1248417351,
+          "pic_url": "",
+          "sort_order": 4,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417356,
+          "name": "女子服装",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 7,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417357,
+          "name": "羽绒服",
+          "parent_cid": 1248417356,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417358,
+          "name": "棉服",
+          "parent_cid": 1248417356,
+          "pic_url": "",
+          "sort_order": 2,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417359,
+          "name": "长袖外套",
+          "parent_cid": 1248417356,
+          "pic_url": "",
+          "sort_order": 3,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417360,
+          "name": "长裤",
+          "parent_cid": 1248417356,
+          "pic_url": "",
+          "sort_order": 4,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417362,
+          "name": "运动配件",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 8,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417363,
+          "name": "包类",
+          "parent_cid": 1248417362,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417364,
+          "name": "球类",
+          "parent_cid": 1248417362,
+          "pic_url": "",
+          "sort_order": 2,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417365,
+          "name": "运动袜",
+          "parent_cid": 1248417362,
+          "pic_url": "",
+          "sort_order": 3,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417366,
+          "name": "其他",
+          "parent_cid": 1248417362,
+          "pic_url": "",
+          "sort_order": 4,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417367,
+          "name": "紧身衣专区",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 9,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417368,
+          "name": "紧身衣专区",
+          "parent_cid": 1248417367,
+          "pic_url": "",
+          "sort_order": 1,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1248417369,
+          "name": "限量款",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 10,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1282880675,
+          "name": "麦巨自营",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 11,
+          "type": "manual_type"
+        },
+        {
+          "cid": 1316012271,
+          "name": "麦巨",
+          "parent_cid": 0,
+          "pic_url": "",
+          "sort_order": 12,
+          "type": "manual_type"
+        }
+      ]
+    },
+    "request_id": "rxvklz3ph7iq"
+  }
+}
