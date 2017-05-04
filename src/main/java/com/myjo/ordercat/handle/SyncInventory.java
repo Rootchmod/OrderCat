@@ -526,6 +526,10 @@ public class SyncInventory {
                                 Function.identity())
                 );
 
+        if(tradesMap == null ||tradesMap.size() == 0){
+            throw new OCException("淘宝销量信息为空,请检查!");
+        }
+
 
 
 //        Map<Long, Long> tradesMap = trades
@@ -575,6 +579,10 @@ public class SyncInventory {
                         Collectors.toMap(o -> o.getWarehouseName(),
                                 Function.identity())
                 );
+
+        if(warehouseMap == null || warehouseMap.size() == 0){
+            throw new OCException("仓库信息为空,请检查!");
+        }
         Logger.info("仓库记录数-warehouseMap.size:" + warehouseMap.size());
 
 
