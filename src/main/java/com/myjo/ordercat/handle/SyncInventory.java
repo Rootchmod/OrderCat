@@ -190,6 +190,7 @@ public class SyncInventory {
                     "thedtime",
                     "proxyPrice",
                     "salesPrice",
+                    "avgPrice",
                     "salesCount",
                     "expressName",
                     "retrunDesc",
@@ -527,7 +528,7 @@ public class SyncInventory {
                 );
 
         if(tradesMap == null ||tradesMap.size() == 0){
-            throw new OCException("淘宝销量信息为空,请检查!");
+            throw new OCException("淘宝销量表[oc_sales_info]信息为空,请检查!");
         }
 
 
@@ -581,7 +582,7 @@ public class SyncInventory {
                 );
 
         if(warehouseMap == null || warehouseMap.size() == 0){
-            throw new OCException("仓库信息为空,请检查!");
+            throw new OCException("仓库表[oc_warehouse_info]信息为空,请检查!");
         }
         Logger.info("仓库记录数-warehouseMap.size:" + warehouseMap.size());
 
@@ -655,6 +656,10 @@ public class SyncInventory {
         Logger.info(String.format("根据配货率与库存过滤-size:[%d]",intersectionList.size()));
 
 
+
+
+
+
         //商品-平均价格
         Map<String, Double> avgPriceMap = intersectionList
                 .parallelStream()
@@ -668,8 +673,16 @@ public class SyncInventory {
                         )
                 );
 
+        //赋值平均价格
+        intersectionList.parallelStream().forEach(inventoryInfo -> {
+            BigDecimal avgPrice = InventoryDataOperate.getAvgPrice(avgPriceMap, inventoryInfo.getGoodsNo());
+            avgPrice = avgPrice.add(avgPrice.multiply(BigDecimal.valueOf(OrderCatConfig.getAvgPriceAboveRate() / 100)));
+            inventoryInfo.setAvgPrice(avgPrice);
+        });
+
+
         Logger.info(String.format("过滤平均采购价格"));
-        intersectionList = InventoryDataOperate.filterAvgPriceList(intersectionList,avgPriceMap);
+        intersectionList = InventoryDataOperate.filterAvgPriceList(intersectionList);
         Logger.info(String.format("过滤平均采购价格-size:[%d]",intersectionList.size()));
 
 

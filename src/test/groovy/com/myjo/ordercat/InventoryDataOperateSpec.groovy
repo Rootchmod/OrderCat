@@ -35,6 +35,7 @@ class InventoryDataOperateSpec extends Specification {
         quarterMap.put("888888-100:1:42",6)
         quarterMap.put("888888-200:2:42",2)
         quarterMap.put("888888-300:3:43",1)
+        quarterMap.put("888888-500:5:43",1)
 
 
 
@@ -70,6 +71,14 @@ class InventoryDataOperateSpec extends Specification {
         t5.setPickRate(70)
         t5.setSize1("43")
         list.add(t5)
+
+
+        def t6 = new InventoryInfo()
+        t6.setGoodsNo("888888-500")
+        t6.setWareHouseID(5)
+        t6.setPickRate(65)
+        t6.setSize1("43")
+        list.add(t6)
 
 
         list = InventoryDataOperate.filterPickRateList(list,quarterMap);

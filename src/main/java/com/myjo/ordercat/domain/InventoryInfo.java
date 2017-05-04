@@ -43,6 +43,8 @@ public class InventoryInfo {
     private String mark;
     private Long numIid;
 
+    private BigDecimal avgPrice;
+
     //按照仓库去重复`
     public static <T> Predicate<T> distinctByField(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
@@ -319,5 +321,14 @@ public class InventoryInfo {
 
     public void setSalesCount(Long salesCount) {
         this.salesCount = salesCount;
+    }
+
+
+    public BigDecimal getAvgPrice() {
+        return avgPrice;
+    }
+
+    public void setAvgPrice(BigDecimal avgPrice) {
+        this.avgPrice = avgPrice;
     }
 }

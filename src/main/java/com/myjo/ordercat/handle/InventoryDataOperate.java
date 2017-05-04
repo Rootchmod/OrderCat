@@ -74,26 +74,26 @@ public class InventoryDataOperate {
         return intersectionList;
     }
 
-    /**
-     * 计算高于平均采购价
-     *
-     * @param inventoryInfo
-     * @param avgPriceMap
-     * @return
-     */
-    private static boolean filterAvgPriceAbove(InventoryInfo inventoryInfo, Map<String, Double> avgPriceMap) {
-        boolean rt;
-        BigDecimal avgPrice = getAvgPrice(avgPriceMap, inventoryInfo.getGoodsNo());
-        avgPrice = avgPrice.add(avgPrice.multiply(BigDecimal.valueOf(OrderCatConfig.getAvgPriceAboveRate() / 100)));
-        if (inventoryInfo.getProxyPrice().compareTo(avgPrice) == 1) {
-            rt = false;
-        } else {
-            rt = true;
-        }
-        return rt;
-    }
+//    /**
+//     * 计算高于平均采购价
+//     *
+//     * @param inventoryInfo
+//     * @param avgPriceMap
+//     * @return
+//     */
+//    private static boolean filterAvgPriceAbove(InventoryInfo inventoryInfo, Map<String, Double> avgPriceMap) {
+//        boolean rt;
+//        BigDecimal avgPrice = getAvgPrice(avgPriceMap, inventoryInfo.getGoodsNo());
+//        avgPrice = avgPrice.add(avgPrice.multiply(BigDecimal.valueOf(OrderCatConfig.getAvgPriceAboveRate() / 100)));
+//        if (inventoryInfo.getProxyPrice().compareTo(avgPrice) == 1) {
+//            rt = false;
+//        } else {
+//            rt = true;
+//        }
+//        return rt;
+//    }
 
-    private static BigDecimal getAvgPrice(Map<String, Double> avgPriceMap, String goodsNo) {
+    public static BigDecimal getAvgPrice(Map<String, Double> avgPriceMap, String goodsNo) {
 
         if (avgPriceMap.get(goodsNo) != null) {
             return BigDecimal.valueOf(avgPriceMap.get(goodsNo));
@@ -102,9 +102,9 @@ public class InventoryDataOperate {
         }
     }
 
-    public static List<InventoryInfo> filterAvgPriceList(List<InventoryInfo> intersectionList,Map<String, Double> avgPriceMap){
+    public static List<InventoryInfo> filterAvgPriceList(List<InventoryInfo> intersectionList){
         intersectionList = intersectionList.parallelStream()
-                .filter(inventoryInfo -> filterAvgPriceAbove(inventoryInfo, avgPriceMap))
+                .filter(inventoryInfo -> inventoryInfo.getProxyPrice().compareTo(inventoryInfo.getAvgPrice()) < 1)
                 .collect(Collectors.toList());
         return intersectionList;
     }
