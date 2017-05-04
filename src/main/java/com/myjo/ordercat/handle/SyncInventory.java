@@ -156,16 +156,16 @@ public class SyncInventory {
     }
 
 
-    private void writeWithCsvInventoryWriter(List<InventoryInfo> lists) throws Exception {
+    private void writeWithCsvInventoryWriter(List<InventoryInfo> lists,Long execJobId) throws Exception {
 
         ICsvBeanWriter beanWriter = null;
         try {
-            File file = new File(OrderCatConfig.getOrderCatOutPutPath() + "inventory_info_rt.csv");
+            File file = new File(OrderCatConfig.getOrderCatOutPutPath() + String.format("inventory_info_rt_%d.csv",execJobId.intValue()));
             if (file.exists()) {
                 FileUtils.forceDelete(file);
             }
 
-            beanWriter = new CsvBeanWriter(new FileWriter(OrderCatConfig.getOrderCatOutPutPath() + "inventory_info_rt.csv"),
+            beanWriter = new CsvBeanWriter(new FileWriter(OrderCatConfig.getOrderCatOutPutPath() + String.format("inventory_info_rt_%d.csv",execJobId.intValue())),
                     CsvPreference.STANDARD_PREFERENCE);
 
             // the header elements are used to map the bean values to each column (names must match)
@@ -226,8 +226,6 @@ public class SyncInventory {
 
         if (oexecJob.isPresent()) {
             execJobId = (int) oexecJob.get().getId();
-
-
         } else {
             throw new OCException(String.format("对不起,没有找到对应的执行信息信息[%s]!",jobName));
         }
@@ -517,7 +515,7 @@ public class SyncInventory {
 
 
 
-        Integer salesJobId = getJobID(JobName.SYNC_WAREHOUSE_JOB.getValue());
+        Integer salesJobId = getJobID(JobName.SYNC_SALES_INFO_JOB.getValue());
         Logger.info(String.format("同步销量信息最后一次执行ID:[%d]",salesJobId.intValue()));
 
 
@@ -820,7 +818,7 @@ public class SyncInventory {
         List<InventoryInfo> csvList = intersectionList.parallelStream()
                 .filter(inventoryInfo -> inventoryInfo.getSalesPrice() != null).collect(toList());
 
-        writeWithCsvInventoryWriter(csvList);
+        writeWithCsvInventoryWriter(csvList,execJobId);
 
         Logger.info(String.format("正在输出结果list.size:[%d]", csvList.size()));
 
