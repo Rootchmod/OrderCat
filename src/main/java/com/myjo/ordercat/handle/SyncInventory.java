@@ -496,6 +496,12 @@ public class SyncInventory {
         Logger.info("获取Taobao店铺SKU-list");
 
         List<Item> itemsOnSaleList = taoBaoHttp.getTaobaoItemsOnSale();
+        if (itemsOnSaleList.size() == 0) {
+            throw new OCException("麦巨自营类目下商品信息为空!");
+        }
+
+        Logger.info(String.format("麦巨自营类目下所有商品-list.size:%d",itemsOnSaleList.size()));
+
         List<Sku> skus = taoBaoHttp.getTaoBaoItemSkus(itemsOnSaleList);
 
         if (skus.size() == 0) {
