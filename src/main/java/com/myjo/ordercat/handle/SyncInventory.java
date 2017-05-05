@@ -605,8 +605,18 @@ public class SyncInventory {
 
         Logger.info(String.format("配货率低于[%d]百分比,进行删除后的记录数:[%d].", OrderCatConfig.getPickRateLessThanDelLimit(), intersectionList.size()));
 
-        //尺码换算
-        Logger.info("进行尺码换算");
+        Logger.info("进行[童鞋]尺码删除.");
+
+        intersectionList = intersectionList.parallelStream()
+                .filter(inventoryInfo -> inventoryInfo.getDivision().equals("鞋"))
+                .filter(inventoryInfo -> OcStringUtils.isNumeric(inventoryInfo.getSize1()))
+                .collect(toList());
+
+        Logger.info(String.format("进行[童鞋]尺码删除.size:[%d]",intersectionList.size()));
+
+
+        //鞋类-尺码换算
+        Logger.info("进行[鞋类]-尺码换算");
         intersectionList.parallelStream()
                 .filter(inventoryInfo -> inventoryInfo.getDivision().equals("鞋"))
                 .filter(inventoryInfo -> OcStringUtils.isNumeric(inventoryInfo.getSize1()))//儿童鞋，暂时不做计算
@@ -619,8 +629,25 @@ public class SyncInventory {
                                     inventoryInfo.getSize1()
                             ));
                 });
+        Logger.info("进行[鞋类]-尺码换算结束");
 
-        Logger.info("尺码换算结束");
+        //衣服-尺码换算
+//        Logger.info("进行[衣服类]-尺码换算");
+//        intersectionList.parallelStream()
+//                .filter(inventoryInfo -> inventoryInfo.getDivision().equals("服"))
+//                .filter(inventoryInfo -> OcStringUtils.isNumeric(inventoryInfo.getSize1()))//儿童鞋，暂时不做计算
+//                .filter(inventoryInfo -> Double.valueOf(inventoryInfo.getSize1()) <= 18)
+//                .forEach(inventoryInfo -> {
+//                    inventoryInfo.setSize1(
+//                            OcSizeUtils.getShoeSize1BySize2(
+//                                    inventoryInfo.getBrand(),
+//                                    inventoryInfo.getSex(),
+//                                    inventoryInfo.getSize1()
+//                            ));
+//                });
+//
+//
+//        Logger.info("进行[衣服类]-尺码换算结束");
 
 
         //库存汇总
@@ -784,11 +811,25 @@ public class SyncInventory {
 
         writeWithCsvInventoryWriter(csvList, execJobId);
 
-        Logger.info(String.format("正在输出结果list.size:[%d]", csvList.size()));
+        Logger.info(String.format("输出结果list.size:[%d]", csvList.size()));
+
+
+        Logger.info(String.format("开始同步淘宝库存与销售价格"));
+
+
+        skus = skus.parallelStream()
+                .filter(sku -> sku.getOuterId().indexOf("麦巨")==-1)
+                .collect(toList());
+
+
+        Logger.info(String.format("SKU-list中过滤掉商家编码中有[麦巨]的SKU:[%d]",skus.size()));
+
 
 
         //删除
         delDataGatheringFile(OrderCatConfig.getInventoryGroupIwhfile());
+
+        Logger.info(String.format("运行完成."));
 
     }
 

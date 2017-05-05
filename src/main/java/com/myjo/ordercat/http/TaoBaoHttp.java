@@ -32,7 +32,12 @@ public class TaoBaoHttp {
     //private static final String APP_KEY = OrderCatConfig.getTaobaoApiAppKey();
     //private static final String APP_SECRET = "7cb1d50fc70c7548b31d414c2adbae06";
     //private static final String SESSION_KEY = OrderCatConfig.getTaobaoApiSessionKey();
-    private static final Long CID = Long.parseLong("1282880675");
+    //
+
+    private static final Long CID = Long.parseLong("1282880675"); //麦巨自营
+   // private static final Long CID = Long.parseLong("1316012271");//测试类目
+
+
 
 
     public TaoBaoHttp() {
@@ -176,6 +181,31 @@ public class TaoBaoHttp {
         return rtlist;
     }
 
+
+
+
+
+    /**
+     * taobao.item.sku.update (更新SKU信息)
+     * @throws Exception
+     */
+    public void updateTaobaoItemSku() throws Exception{
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        ItemSkuUpdateRequest req = new ItemSkuUpdateRequest();
+        req.setNumIid(538953876187L);
+        req.setProperties("1627207:1200772712;20549:28388");
+        req.setQuantity(3L);
+        req.setPrice("207.02");
+        req.setOuterId("123456");
+        req.setItemPrice("204");
+        req.setLang("zh_CN");
+        req.setSpecId("123");
+        req.setBarcode("6903244981002");
+        req.setIgnorewarning(",ifd_warning,FakeCredit_Warning,");
+        ItemSkuUpdateResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+        System.out.println(rsp.getBody());
+
+    }
 
     public void test() throws Exception {
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());

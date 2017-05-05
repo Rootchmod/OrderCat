@@ -30,9 +30,9 @@ public class OcSizeUtils {
         shoeMalelist.add(new Size(Sex.MALE, "9",   "8",    "42.5", "27"));
         shoeMalelist.add(new Size(Sex.MALE, "9.5", "8.5",  "43",   "27.5"));
         shoeMalelist.add(new Size(Sex.MALE, "10",  "9",    "44",   "28"));
-        shoeMalelist.add(new Size(Sex.MALE, "10.", "9.5",  "44.5", "28.5"));
+        shoeMalelist.add(new Size(Sex.MALE, "10.5", "9.5",  "44.5", "28.5"));
         shoeMalelist.add(new Size(Sex.MALE, "11",  "10",   "45",   "29"));
-        shoeMalelist.add(new Size(Sex.MALE, "11.", "10.5", "45.5", "29.5"));
+        shoeMalelist.add(new Size(Sex.MALE, "11.5", "10.5", "45.5", "29.5"));
         shoeMalelist.add(new Size(Sex.MALE, "12",  "11",   "46",   "30"));
         shoeMalelist.add(new Size(Sex.MALE, "13",  "12",   "47.5", "31"));
         shoeMalelist.add(new Size(Sex.MALE, "14",  "13",   "48.5", "32"));
@@ -82,4 +82,27 @@ public class OcSizeUtils {
         }
         return rt;
     }
+
+    /**
+     * 鞋码换算
+     * @param brand
+     * @param sex
+     * @param size2
+     * @return
+     */
+    public static String getClothesSize1BySize2(Brand brand, Sex sex, String size2) {
+        String rt = "";
+        List<Size> shoeSizelist = shoeSizeMap.get(sex);
+        for(Size s :shoeSizelist){
+            if(brand == Brand.NIKE){
+                if(s.getUS().equals(size2.trim())){
+                    rt = s.getEurope();
+                    break;
+                }
+            }
+        }
+        return rt;
+    }
+
+
 }
