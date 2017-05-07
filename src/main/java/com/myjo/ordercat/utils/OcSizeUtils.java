@@ -16,7 +16,31 @@ public class OcSizeUtils {
 
     private static Map<Sex, List<Size>> shoeSizeMap = new HashMap();
 
+
+    private static Map<String,String> clothesSizeMap = new HashMap();
+
+
     static {
+
+
+        clothesSizeMap.put("XL","XL");
+        clothesSizeMap.put("XXL","XXL");
+        clothesSizeMap.put("XXXL","XXXL");
+        clothesSizeMap.put("XXXXL","XXXXL");
+        clothesSizeMap.put("XXXXXL","XXXXXL");
+        clothesSizeMap.put("1XL","XL");
+        clothesSizeMap.put("2XL","XXL");
+        clothesSizeMap.put("3XL","XXXL");
+        clothesSizeMap.put("4XL","XXXXL");
+        clothesSizeMap.put("5XL","XXXXXL");
+        clothesSizeMap.put("XS","XS");
+        clothesSizeMap.put("S","S");
+        clothesSizeMap.put("M","M");
+        clothesSizeMap.put("L","L");
+
+
+
+
         List<Size> shoeMalelist = new ArrayList();
         List<Size> shoeFemalelist = new ArrayList();
 
@@ -83,25 +107,12 @@ public class OcSizeUtils {
         return rt;
     }
 
-    /**
-     * 鞋码换算
-     * @param brand
-     * @param sex
-     * @param size2
-     * @return
-     */
-    public static String getClothesSize1BySize2(Brand brand, Sex sex, String size2) {
-        String rt = "";
-        List<Size> shoeSizelist = shoeSizeMap.get(sex);
-        for(Size s :shoeSizelist){
-            if(brand == Brand.NIKE){
-                if(s.getUS().equals(size2.trim())){
-                    rt = s.getEurope();
-                    break;
-                }
-            }
+    public static String getClothesConversionSize1(String size1) {
+        if(clothesSizeMap.get(size1) == null){
+            return "error_size["+size1+"]";
+        }else {
+            return clothesSizeMap.get(size1);
         }
-        return rt;
     }
 
 

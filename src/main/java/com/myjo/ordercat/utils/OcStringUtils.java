@@ -1,5 +1,7 @@
 package com.myjo.ordercat.utils;
 
+import com.myjo.ordercat.domain.InventoryInfo;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +21,21 @@ public class OcStringUtils {
             return false;
         }
         return true;
+    }
+
+
+    public static boolean isCssNumeric(InventoryInfo inventoryInfo){
+        boolean rt;
+        if(inventoryInfo.getDivision().equals("鞋")){
+            if(isNumeric(inventoryInfo.getSize1())){
+                rt = true;
+            }else {
+                rt = false;
+            }
+        }else {
+            rt = true;
+        }
+        return rt;
     }
 
 }

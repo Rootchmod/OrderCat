@@ -42,6 +42,7 @@ public class InventoryInfo {
     private String endT;
     private String mark;
     private Long numIid;
+    private Long skuId;
 
     private BigDecimal avgPrice;
 
@@ -330,5 +331,13 @@ public class InventoryInfo {
 
     public void setAvgPrice(BigDecimal avgPrice) {
         this.avgPrice = avgPrice;
+    }
+
+    public Long getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
     }
 }

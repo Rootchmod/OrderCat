@@ -45,6 +45,27 @@ class TaoBaoSpec extends Specification {
         "ok" == "ok"
     }
 
+
+
+    def "updateTmallItemPriceUpdate"(){
+        when:
+        taoBaoHttp.updateTmallItemPriceUpdate();
+
+        then:
+        "ok" == "ok"
+    }
+
+    def "updateTmallItemQuantityUpdate"(){
+        when:
+        taoBaoHttp.updateTmallItemQuantityUpdate();
+
+        then:
+        "ok" == "ok"
+    }
+
+
+
+
 //    def "config"() {
 //        when:
 //        Logger.info("getTianmaSportUserName:" + orderCatContext.getTianmaSportUserName())

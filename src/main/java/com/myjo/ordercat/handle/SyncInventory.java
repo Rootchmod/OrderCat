@@ -198,6 +198,7 @@ public class SyncInventory {
                     "endT",
                     "mark",
                     "numIid",
+                    "skuId"
             };
 
             //final CellProcessor[] processors = getProcessors();
@@ -484,7 +485,8 @@ public class SyncInventory {
         //抓取天马库存信息数据
         Logger.info("抓取天马库存信息数据");
         dataGathering(OrderCatConfig.getInventoryGroupIwhfile());
-        List<InventoryInfo> list = getInventoryInfoInCsv(OrderCatConfig.getInventoryGroupIwhfile());
+        List<InventoryInfo> list =
+                getInventoryInfoInCsv(OrderCatConfig.getInventoryGroupIwhfile());
 
         if (list.size() == 0) {
             throw new OCException("天马库存信息为空,请检测天马数据获取接口!");
@@ -500,7 +502,7 @@ public class SyncInventory {
             throw new OCException("麦巨自营类目下商品信息为空!");
         }
 
-        Logger.info(String.format("麦巨自营类目下所有商品-list.size:%d",itemsOnSaleList.size()));
+        Logger.info(String.format("麦巨自营类目下所有商品-list.size:%d", itemsOnSaleList.size()));
 
         List<Sku> skus = taoBaoHttp.getTaoBaoItemSkus(itemsOnSaleList);
 
@@ -528,24 +530,41 @@ public class SyncInventory {
 
         //按照SKU,在天马库存中进行过滤
         Logger.info("按照SKU,在天马库存中进行过滤");
-        Map<String, List<Sku>> inventoryInfoInCsvMap =
+        Map<String, List<Sku>> inventoryInfoInCsvNumIidMap =
                 skus.parallelStream()
                         .collect(Collectors.groupingBy(sku -> StringUtils.substringBeforeLast(sku.getOuterId(), "-")));
 
+        Map<String, Sku> inventoryInfoInCsvSkuIdMap =
+                skus.parallelStream()
+                        .filter(sku -> sku.getOuterId().indexOf("麦巨") == -1)
+                        .filter(sku -> sku.getOuterId().indexOf("临时") == -1)
+                        .collect(Collectors.toMap(o -> o.getOuterId(), Function.identity()));
+
+
+
         List<InventoryInfo> intersectionList = list.parallelStream()
+                .filter(inventoryInfo -> !inventoryInfo.getDiscount().equals("折扣"))
+                .filter(inventoryInfo -> new BigDecimal(inventoryInfo.getDiscount()).compareTo(BigDecimal.ZERO)==1)
+                .collect(Collectors.toList());
+
+        Logger.info(String.format("过滤折扣小于等于零的库存.size:[%d]", intersectionList.size()));
+
+        intersectionList = intersectionList.parallelStream()
                 //.filter(inventoryInfo -> inventoryInfo.getSize1().indexOf("Y")<0)
-                .filter(InventoryInfo.distinctBySkusMap(inventoryInfo -> inventoryInfo.getGoodsNo(), inventoryInfoInCsvMap))
+                .filter(InventoryInfo.distinctBySkusMap(inventoryInfo -> inventoryInfo.getGoodsNo(), inventoryInfoInCsvNumIidMap))
                 .collect(Collectors.toList());
         Logger.info("按照SKU,在天马库存中进行过滤后的条数:" + intersectionList.size());
+
+        intersectionList.parallelStream().forEach(inventoryInfo -> {
+            inventoryInfo.setNumIid(inventoryInfoInCsvNumIidMap.get(inventoryInfo.getGoodsNo()).get(0).getNumIid());
+        });
+
+
 
         // 对库存信息进行配货率匹配  lee5hx
 
 
-        intersectionList.parallelStream().forEach(inventoryInfo -> {
 
-            inventoryInfo.setNumIid(inventoryInfoInCsvMap.get(inventoryInfo.getGoodsNo()).get(0).getNumIid());
-
-        });
 
         Logger.info("对库存信息进行配货率匹配");
 
@@ -608,11 +627,11 @@ public class SyncInventory {
         Logger.info("进行[童鞋]尺码删除.");
 
         intersectionList = intersectionList.parallelStream()
-                .filter(inventoryInfo -> inventoryInfo.getDivision().equals("鞋"))
-                .filter(inventoryInfo -> OcStringUtils.isNumeric(inventoryInfo.getSize1()))
+                .filter(inventoryInfo -> OcStringUtils.isCssNumeric(inventoryInfo))
+                //.filter(inventoryInfo -> OcStringUtils.isNumeric(inventoryInfo.getSize1()))
                 .collect(toList());
 
-        Logger.info(String.format("进行[童鞋]尺码删除.size:[%d]",intersectionList.size()));
+        Logger.info(String.format("进行[童鞋]尺码删除.size:[%d]", intersectionList.size()));
 
 
         //鞋类-尺码换算
@@ -632,22 +651,28 @@ public class SyncInventory {
         Logger.info("进行[鞋类]-尺码换算结束");
 
         //衣服-尺码换算
-//        Logger.info("进行[衣服类]-尺码换算");
-//        intersectionList.parallelStream()
-//                .filter(inventoryInfo -> inventoryInfo.getDivision().equals("服"))
-//                .filter(inventoryInfo -> OcStringUtils.isNumeric(inventoryInfo.getSize1()))//儿童鞋，暂时不做计算
-//                .filter(inventoryInfo -> Double.valueOf(inventoryInfo.getSize1()) <= 18)
-//                .forEach(inventoryInfo -> {
-//                    inventoryInfo.setSize1(
-//                            OcSizeUtils.getShoeSize1BySize2(
-//                                    inventoryInfo.getBrand(),
-//                                    inventoryInfo.getSex(),
-//                                    inventoryInfo.getSize1()
-//                            ));
-//                });
-//
-//
-//        Logger.info("进行[衣服类]-尺码换算结束");
+        Logger.info("进行[衣服类]-尺码换算");
+        intersectionList.parallelStream()
+                .filter(inventoryInfo -> inventoryInfo.getDivision().equals("服"))
+                .forEach(inventoryInfo -> {
+                    inventoryInfo.setSize1(
+                            OcSizeUtils.getClothesConversionSize1(
+                                    inventoryInfo.getSize1()
+                            ));
+                });
+
+        Logger.info("进行[衣服类]-尺码换算结束");
+
+
+
+        intersectionList = intersectionList.parallelStream()
+                .filter(inventoryInfo -> inventoryInfo.getSize1().indexOf("error_size")==-1)
+                .collect(toList());
+
+        Logger.info(String.format("对错误尺码进行剔除-size:[%d]", intersectionList.size()));
+
+
+
 
 
         //库存汇总
@@ -663,6 +688,9 @@ public class SyncInventory {
         Logger.info(String.format("根据配货率与库存过滤"));
         intersectionList = InventoryDataOperate.filterPickRateList(intersectionList, quarterMap);
         Logger.info(String.format("根据配货率与库存过滤-size:[%d]", intersectionList.size()));
+
+
+
 
 
         //商品-平均价格
@@ -736,7 +764,7 @@ public class SyncInventory {
                 );
 
 
-        //赋值销量信息
+        // 赋值销量 与 SKU_ID 信息
         intersectionList.parallelStream().forEach(inventoryInfo -> {
             long rt = 0;
             String numIid = String.valueOf(inventoryInfo.getNumIid().toString());
@@ -744,6 +772,12 @@ public class SyncInventory {
                 rt = tradesMap.get(numIid).getSalesCount().getAsInt();
             }
             inventoryInfo.setSalesCount(rt);
+            if(inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1()) == null){
+                inventoryInfo.setSkuId(8888888888888888l);
+            }else {
+                inventoryInfo.setSkuId(inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1()).getSkuId());
+            }
+
         });
 
 
@@ -818,13 +852,43 @@ public class SyncInventory {
 
 
         skus = skus.parallelStream()
-                .filter(sku -> sku.getOuterId().indexOf("麦巨")==-1)
+                .filter(sku -> sku.getOuterId().indexOf("麦巨") == -1)
+                .filter(sku -> sku.getOuterId().indexOf("临时") == -1)
                 .collect(toList());
 
 
-        Logger.info(String.format("SKU-list中过滤掉商家编码中有[麦巨]的SKU:[%d]",skus.size()));
+        Logger.info(String.format("SKU-list中过滤掉商家编码中有[ 麦巨 or 临时 ]的SKU:[%d]", skus.size()));
 
 
+        Map<Long, InventoryInfo> csvListSukMap =
+                csvList.parallelStream()
+                        .collect(Collectors.toMap(o -> o.getSkuId(), Function.identity()));
+
+        Logger.info(String.format("csvListSukMap.size:[%d]", csvListSukMap.size()));
+
+
+        Map<Long, List<Sku>> skuNumIidMap =
+                skus.parallelStream()
+                        .collect(Collectors.groupingBy(sku -> sku.getNumIid()));
+
+
+        Logger.info(String.format("skuNumIidMap.size:[%d]", skuNumIidMap.size()));
+
+
+
+        if(csvListSukMap!=null&&csvListSukMap.size()>0){
+            int index = 1;
+            int size = skuNumIidMap.entrySet().size();
+            long itemId;
+            for (Map.Entry<Long, List<Sku>> entry : skuNumIidMap.entrySet()) {
+                itemId = entry.getKey().longValue();
+                Logger.info(String.format("开始同步-商品ID: [%d] 的SKU价格与库存.   %d / %d ", itemId, index, size));
+                taoBaoHttp.updateQuantityAndPriceTmall(itemId, entry.getValue(), csvListSukMap);
+                index++;
+            }
+        }else {
+            throw new OCException("csvListSukMap接口SKU映射为空!请检查!");
+        }
 
         //删除
         delDataGatheringFile(OrderCatConfig.getInventoryGroupIwhfile());
