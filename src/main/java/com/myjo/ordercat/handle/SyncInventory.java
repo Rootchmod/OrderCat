@@ -46,6 +46,7 @@ import static java.util.stream.Collectors.*;
 
 
 /**
+ * 同步库存相关
  * Created by lee5hx on 17/4/24.
  */
 public class SyncInventory {
@@ -534,17 +535,24 @@ public class SyncInventory {
                 skus.parallelStream()
                         .collect(Collectors.groupingBy(sku -> StringUtils.substringBeforeLast(sku.getOuterId(), "-")));
 
+        //skus.parallelStream().forEach(sku -> System.out.println(sku.getOuterId()+":"+sku.getNumIid()));
+
         Map<String, Sku> inventoryInfoInCsvSkuIdMap =
                 skus.parallelStream()
                         .filter(sku -> sku.getOuterId().indexOf("麦巨") == -1)
                         .filter(sku -> sku.getOuterId().indexOf("临时") == -1)
-                        .collect(Collectors.toMap(o -> o.getOuterId(), Function.identity()));
-
+                        .collect(Collectors.toMap(o -> o.getOuterId() + ":" + o.getNumIid(), Function.identity()
+//                                        ,
+//                                        (o1, o2) -> {
+//                                            System.out.println("duplicate key found:"+o1.getNumIid()+":"+o1.getOuterId());
+//                                            return o1;
+//                                        }
+                        ));
 
 
         List<InventoryInfo> intersectionList = list.parallelStream()
                 .filter(inventoryInfo -> !inventoryInfo.getDiscount().equals("折扣"))
-                .filter(inventoryInfo -> new BigDecimal(inventoryInfo.getDiscount()).compareTo(BigDecimal.ZERO)==1)
+                .filter(inventoryInfo -> new BigDecimal(inventoryInfo.getDiscount()).compareTo(BigDecimal.ZERO) == 1)
                 .collect(Collectors.toList());
 
         Logger.info(String.format("过滤折扣小于等于零的库存.size:[%d]", intersectionList.size()));
@@ -560,10 +568,7 @@ public class SyncInventory {
         });
 
 
-
         // 对库存信息进行配货率匹配  lee5hx
-
-
 
 
         Logger.info("对库存信息进行配货率匹配");
@@ -664,15 +669,11 @@ public class SyncInventory {
         Logger.info("进行[衣服类]-尺码换算结束");
 
 
-
         intersectionList = intersectionList.parallelStream()
-                .filter(inventoryInfo -> inventoryInfo.getSize1().indexOf("error_size")==-1)
+                .filter(inventoryInfo -> inventoryInfo.getSize1().indexOf("error_size") == -1)
                 .collect(toList());
 
         Logger.info(String.format("对错误尺码进行剔除-size:[%d]", intersectionList.size()));
-
-
-
 
 
         //库存汇总
@@ -688,9 +689,6 @@ public class SyncInventory {
         Logger.info(String.format("根据配货率与库存过滤"));
         intersectionList = InventoryDataOperate.filterPickRateList(intersectionList, quarterMap);
         Logger.info(String.format("根据配货率与库存过滤-size:[%d]", intersectionList.size()));
-
-
-
 
 
         //商品-平均价格
@@ -772,10 +770,10 @@ public class SyncInventory {
                 rt = tradesMap.get(numIid).getSalesCount().getAsInt();
             }
             inventoryInfo.setSalesCount(rt);
-            if(inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1()) == null){
+            if (inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1() + ":" + inventoryInfo.getNumIid()) == null) {
                 inventoryInfo.setSkuId(8888888888888888l);
-            }else {
-                inventoryInfo.setSkuId(inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1()).getSkuId());
+            } else {
+                inventoryInfo.setSkuId(inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1() + ":" + inventoryInfo.getNumIid()).getSkuId());
             }
 
         });
@@ -862,7 +860,13 @@ public class SyncInventory {
 
         Map<Long, InventoryInfo> csvListSukMap =
                 csvList.parallelStream()
-                        .collect(Collectors.toMap(o -> o.getSkuId(), Function.identity()));
+                        .collect(Collectors.toMap(o -> o.getSkuId(), Function.identity()
+                                ,
+                                (o1, o2) -> {
+                                    //System.out.println("duplicate key found:"+o1.getSkuId());
+                                    return o1;
+                                }
+                        ));
 
         Logger.info(String.format("csvListSukMap.size:[%d]", csvListSukMap.size()));
 
@@ -873,20 +877,32 @@ public class SyncInventory {
 
 
         Logger.info(String.format("skuNumIidMap.size:[%d]", skuNumIidMap.size()));
+        List<Sku> subSkuList = null;
+        List<InventoryInfo> subSkuIPriceList ;
+        //List<InventoryInfo> subSkuIQuantityList ;
 
 
+        if (csvListSukMap != null && csvListSukMap.size() > 0) {
 
-        if(csvListSukMap!=null&&csvListSukMap.size()>0){
             int index = 1;
             int size = skuNumIidMap.entrySet().size();
             long itemId;
             for (Map.Entry<Long, List<Sku>> entry : skuNumIidMap.entrySet()) {
+                subSkuIPriceList = new ArrayList<>();
                 itemId = entry.getKey().longValue();
+                subSkuList = entry.getValue();
+                subSkuIPriceList.addAll(
+                        subSkuList.stream()
+                                .map(sku -> csvListSukMap.get(sku.getSkuId()))
+                                .collect(Collectors.toList()));
+
                 Logger.info(String.format("开始同步-商品ID: [%d] 的SKU价格与库存.   %d / %d ", itemId, index, size));
-                taoBaoHttp.updateQuantityAndPriceTmall(itemId, entry.getValue(), csvListSukMap);
+                taoBaoHttp.updateQuantityAndPriceTmall(itemId,subSkuIPriceList,subSkuList, csvListSukMap);
+
+
                 index++;
             }
-        }else {
+        } else {
             throw new OCException("csvListSukMap接口SKU映射为空!请检查!");
         }
 
@@ -896,6 +912,9 @@ public class SyncInventory {
         Logger.info(String.format("运行完成."));
 
     }
+
+    //final Comparator<InventoryInfo> inventoryInfoComp = (p1, p2) -> p1.getSalesPrice().compareTo(p2.getSalesPrice());
+
 
     private Long getMaxSkuAvgCount(Map<String, Optional<GoodsInventoryInfo>> maxSize1Map, String goodsNo) {
         GoodsInventoryInfo goodsInventoryInfo = maxSize1Map.get(goodsNo).get();

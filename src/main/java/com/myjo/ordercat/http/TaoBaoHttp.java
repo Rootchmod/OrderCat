@@ -17,13 +17,8 @@ import com.taobao.api.response.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Created by lee5hx on 17/4/24.
@@ -40,7 +35,6 @@ public class TaoBaoHttp {
 
     //private static final Long CID = Long.parseLong("1282880675"); //麦巨自营
     private static final Long CID = Long.parseLong("1316012271");//测试类目
-
 
 
     public TaoBaoHttp() {
@@ -152,7 +146,7 @@ public class TaoBaoHttp {
 //                        .mapToObj(i -> list.subList(indexes[i], indexes[i + 1]))
 //                        .collect(Collectors.toList());
 
-        List<List<Item>> subLists  = OcListUtils.splitList(list,40);
+        List<List<Item>> subLists = OcListUtils.splitList(list, 40);
         for (List<Item> list1 : subLists) {
             rtlist.addAll(taoBaoItemSkus(list1));
         }
@@ -186,65 +180,104 @@ public class TaoBaoHttp {
     }
 
 
+    public void updateQuantityAndPriceTmall(Long itemId,
+                                            List<InventoryInfo> subSkuIPriceList,
+                                            List<Sku> skuList, Map<Long, InventoryInfo> csvListSukMap) throws Exception {
+        List<List<Sku>> subLists = OcListUtils.splitList(skuList, 19);
 
+        //过滤为空的SKU
+        subSkuIPriceList = subSkuIPriceList
+                .parallelStream()
+                .filter(inventoryInfo -> inventoryInfo != null)
+                .sorted((o1, o2) -> o2.getSalesPrice().compareTo(o1.getSalesPrice()))
+                .collect(Collectors.toList());
 
+        List<List<InventoryInfo>> subSkuIPriceLists =  OcListUtils.splitList(subSkuIPriceList, 19);
 
-    public void updateQuantityAndPriceTmall(Long itemId,List<Sku> skuList,Map<Long, InventoryInfo> csvListSukMap) throws Exception{
-        List<List<Sku>> subLists = OcListUtils.splitList(skuList,19);
-        for(List<Sku> list :subLists){
-            updateTmallItemQuantityUpdate(itemId,list,csvListSukMap);
-            updateTmallItemPriceUpdate(itemId,list,csvListSukMap);
+        for (List<Sku> list : subLists) {
+            updateTmallItemQuantityUpdate(itemId, list, csvListSukMap);
         }
+
+        String price = null;
+        Optional<InventoryInfo> dd;
+        for (List<InventoryInfo> list : subSkuIPriceLists) {
+
+            dd = list
+                    .parallelStream()
+                    .filter(inventoryInfo -> inventoryInfo != null)
+                    .min(
+                            (p1, p2) -> {
+                                return  p1.getSalesPrice().compareTo(p2.getSalesPrice());
+                            }
+                    );
+            if (dd.isPresent()) {
+                price = dd.get().getSalesPrice().toPlainString();
+            }
+
+            updateTmallItemPriceUpdate(itemId, list, csvListSukMap, price);
+        }
+
+
+
+
+
     }
 
 
     /**
      * tmall.item.price.update (天猫商品/SKU价格更新接口)
+     *
      * @throws Exception
      */
-    public Long updateTmallItemPriceUpdate(Long itemId,List<Sku> skuList,Map<Long, InventoryInfo> csvListSukMap) throws Exception{
+    public Long updateTmallItemPriceUpdate(Long itemId, List<InventoryInfo> list, Map<Long, InventoryInfo> csvListSukMap, String price) throws Exception {
 
         Long priceUpdateResult = 0l;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TmallItemPriceUpdateRequest req = new TmallItemPriceUpdateRequest();
         req.setItemId(itemId);
+        //req.setItemPrice(price);
 
         List<TmallItemPriceUpdateRequest.UpdateSkuPrice> list2 = new ArrayList<>();
         TmallItemPriceUpdateRequest.UpdateSkuPrice obj3;
-        InventoryInfo inventoryInfo;
-        for(Sku sku: skuList){
-            inventoryInfo = csvListSukMap.get(sku.getSkuId());
-            if(inventoryInfo!=null){
+        //InventoryInfo inventoryInfo;
+        for (InventoryInfo inventoryInfo1 : list) {
                 obj3 = new TmallItemPriceUpdateRequest.UpdateSkuPrice();
-                obj3.setSkuId(sku.getSkuId());
-                obj3.setPrice(inventoryInfo.getSalesPrice().toPlainString());
+                obj3.setSkuId(inventoryInfo1.getSkuId());
+                obj3.setPrice(inventoryInfo1.getSalesPrice().toPlainString());
+                //Logger.info(String.format("skuid:[%d] - 价格[%s]",inventoryInfo1.getSkuId(),inventoryInfo1.getSalesPrice().toPlainString()));
                 list2.add(obj3);
-            }
+
+        }
+
+        if (price != null ) {
+            Logger.info(String.format("[%d]-最小价格[%s]", itemId, price));
+            req.setItemPrice(price);
         }
         req.setSkuPrices(list2);
 
+
         TmallItemPriceUpdateRequest.UpdateItemPriceOption obj4 = new TmallItemPriceUpdateRequest.UpdateItemPriceOption();
         obj4.setIgnoreFakeCredit(true);
-       // obj4.setCurrencyType("CNY");
+        // obj4.setCurrencyType("CNY");
         req.setOptions(obj4);
         TmallItemPriceUpdateResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-        Logger.debug((rsp.getPriceUpdateResult()+":"+rsp.getBody()));
+        Logger.debug((rsp.getPriceUpdateResult() + ":" + rsp.getBody()));
 
-        if(rsp.isSuccess()){
+        if (rsp.isSuccess()) {
             priceUpdateResult = Long.valueOf(rsp.getPriceUpdateResult());
-        }else {
-            throw new OCException(rsp.getErrorCode()+":"+rsp.getMsg());
+        } else {
+            throw new OCException(rsp.getErrorCode() + ":" + rsp.getMsg());
         }
         return priceUpdateResult;
     }
 
 
-
     /**
      * tmall.item.quantity.update (天猫商品/SKU库存更新接口)
+     *
      * @throws Exception
      */
-    public Long updateTmallItemQuantityUpdate(Long itemId,List<Sku> skuList,Map<Long, InventoryInfo> csvListSukMap) throws Exception{
+    public Long updateTmallItemQuantityUpdate(Long itemId, List<Sku> skuList, Map<Long, InventoryInfo> csvListSukMap) throws Exception {
 
         Long quantityUpdateResult = 0l;
 
@@ -256,13 +289,18 @@ public class TaoBaoHttp {
 
         TmallItemQuantityUpdateRequest.UpdateSkuQuantity obj3;
         InventoryInfo inventoryInfo;
-        for(Sku sku: skuList){
+        for (Sku sku : skuList) {
             inventoryInfo = csvListSukMap.get(sku.getSkuId());
             obj3 = new TmallItemQuantityUpdateRequest.UpdateSkuQuantity();
             obj3.setSkuId(sku.getSkuId());
-            if(inventoryInfo!=null){
+//            if (sku.getSkuId().longValue() == 3467906683477L) {
+//                System.out.println(sku.getSkuId());
+//
+//            }
+
+            if (inventoryInfo != null) {
                 obj3.setQuantity(Long.valueOf(inventoryInfo.getNum2()));
-            }else {
+            } else {
                 obj3.setQuantity(0L);
             }
             list2.add(obj3);
@@ -274,26 +312,19 @@ public class TaoBaoHttp {
         req.setOptions(obj4);
         TmallItemQuantityUpdateResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
 
-        Logger.debug(rsp.getQuantityUpdateResult()+":"+rsp.getBody());
+        Logger.debug(rsp.getQuantityUpdateResult() + ":" + rsp.getBody());
 
-        if(rsp.isSuccess()){
+        if (rsp.isSuccess()) {
             quantityUpdateResult = Long.valueOf(rsp.getQuantityUpdateResult());
-        }else {
-            throw new OCException(rsp.getErrorCode()+":"+rsp.getMsg());
+        } else {
+            throw new OCException(rsp.getErrorCode() + ":" + rsp.getMsg());
         }
 
         return quantityUpdateResult;
     }
 
     public void test() throws Exception {
-        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
-        ItemsSellerListGetRequest req = new ItemsSellerListGetRequest();
-        req.setFields("num_iid,title,nick,approve_status,num,sku,sold_quantity");
-        req.setNumIids("543451776272");
-        ItemsSellerListGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
 
-        List<Item> list = rsp.getItems();
-        System.out.println(rsp.getErrorCode()+":"+rsp.getBody());
 
 
     }

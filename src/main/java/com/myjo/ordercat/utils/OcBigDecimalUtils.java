@@ -48,4 +48,7 @@ public class OcBigDecimalUtils {
         String a = lrtStr.substring(0, lrtStr.length() - 1);
         return new BigDecimal(a+OrderCatConfig.getSalesPriceEndReplace());
     }
+
+
+
 }
