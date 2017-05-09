@@ -230,6 +230,13 @@ public class OrderCatConfig {
         return config.getString(String.format(TIANMA_SPORT, "search_by_articleno_http_url"));
     }
 
+    public static String getTradeOrdersDataListHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "trade_orders_data_list_http_url"));
+    }
+
+
+
+
 
 
 

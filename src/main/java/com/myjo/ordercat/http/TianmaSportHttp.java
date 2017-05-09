@@ -7,6 +7,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.myjo.ordercat.domain.InventoryInfo;
 import com.myjo.ordercat.config.OrderCatConfig;
+import com.myjo.ordercat.domain.OrderStatus;
 import com.myjo.ordercat.domain.PickDate;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
 import org.apache.commons.io.FileUtils;
@@ -151,6 +152,10 @@ public class TianmaSportHttp {
         return vcfile;
     }
 
+
+
+
+
     public void inventoryDownGroup(String fileName,String brandName, String quarter) throws Exception {
         Logger.info("inventory_down_group_http_url: " + OrderCatConfig.getTianmaSportIDGHttpUrl());
         Logger.info("brandName: " + brandName);
@@ -294,6 +299,61 @@ public class TianmaSportHttp {
         }
         return list;
 
+    }
+
+
+
+
+    public void tradeOrderDataList(String startTime,String endTime, OrderStatus orderStatus) throws Exception {
+        Logger.info("inventory_down_group_http_url: " + OrderCatConfig.getTianmaSportIDGHttpUrl());
+        Logger.info(String.format("startTime:%s endTime:%s order_status:%s",startTime,endTime,orderStatus.getVal()));
+
+        String sessionId = map.get("seesion_id");
+        Logger.info("http tianmaSport login sessionId: " + sessionId);
+        HttpResponse<JsonNode> response = Unirest.post(OrderCatConfig.getTradeOrdersDataListHttpUrl())
+                .header("Host", "www.tianmasport.com")
+                .header("Connection", "keep-alive")
+                .header("Accept", "*/*")
+                .header("Origin", "http://www.tianmasport.com")
+                .header("X-Requested-With", "XMLHttpRequest")
+                .header("User-Agent", USER_AGENT)
+                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                .header("Referer", "http://www.tianmasport.com/ms/Inventory/grouPurchase.shtml")
+                .header("Accept-Encoding", "gzip, deflate")
+                .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+
+
+//        page:1
+//        rows:15
+//        status:50
+//        m_warehouse_name:
+//        goods_no:
+//        names:
+//        startTime:2017-02-08
+//        endsTime:
+//        size:
+//        outer_tid:
+//        order_id:
+                .field("page", "")
+                .field("rows", "")
+                .field("status","")
+                .field("m_warehouse_name", "")
+                .field("goods_no", "")
+                .field("names", "")
+                .field("startTime", "")
+                .field("endsTime", "")
+                .field("size", "")
+                .field("outer_tid", "")
+                .field("order_id", "")
+                .asJson();
+        int code = response.getStatus();
+        Logger.info("http-status:" + code);
+        Logger.info("http-status-text:" + response.getStatusText());
+        JSONObject rt = response.getBody().getObject();
+        Logger.info("inventoryDownGroup rt:" + rt);
+        if(rt.getBoolean("success") == true){
+
+        }
     }
 
 

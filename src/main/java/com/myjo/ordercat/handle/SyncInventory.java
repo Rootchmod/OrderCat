@@ -38,6 +38,7 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -860,7 +861,7 @@ public class SyncInventory {
 
         Map<Long, InventoryInfo> csvListSukMap =
                 csvList.parallelStream()
-                        .collect(Collectors.toMap(o -> o.getSkuId(), Function.identity()
+                        .collect(Collectors.toConcurrentMap(o -> o.getSkuId(), Function.identity()
                                 ,
                                 (o1, o2) -> {
                                     //System.out.println("duplicate key found:"+o1.getSkuId());
@@ -882,26 +883,34 @@ public class SyncInventory {
         //List<InventoryInfo> subSkuIQuantityList ;
 
 
+        Map<Long,List<InventoryInfo>> subSkuIPriceListMap = new ConcurrentHashMap<>();
+        long itemId;
+        for (Map.Entry<Long, List<Sku>> entry : skuNumIidMap.entrySet()) {
+            subSkuIPriceList = new ArrayList<>();
+            itemId = entry.getKey().longValue();
+
+            subSkuList = entry.getValue();
+            subSkuIPriceList.addAll(
+                    subSkuList.stream()
+                            .map(sku -> csvListSukMap.get(sku.getSkuId()))
+                            .collect(Collectors.toList()));
+
+            subSkuIPriceListMap.put(itemId,subSkuIPriceList);
+            //taoBaoHttp.updateQuantityAndPriceTmall(itemId,subSkuIPriceList,subSkuList, csvListSukMap);
+        }
+
+
+
         if (csvListSukMap != null && csvListSukMap.size() > 0) {
 
-            int index = 1;
-            int size = skuNumIidMap.entrySet().size();
-            long itemId;
-            for (Map.Entry<Long, List<Sku>> entry : skuNumIidMap.entrySet()) {
-                subSkuIPriceList = new ArrayList<>();
-                itemId = entry.getKey().longValue();
-                subSkuList = entry.getValue();
-                subSkuIPriceList.addAll(
-                        subSkuList.stream()
-                                .map(sku -> csvListSukMap.get(sku.getSkuId()))
-                                .collect(Collectors.toList()));
-
-                Logger.info(String.format("开始同步-商品ID: [%d] 的SKU价格与库存.   %d / %d ", itemId, index, size));
-                taoBaoHttp.updateQuantityAndPriceTmall(itemId,subSkuIPriceList,subSkuList, csvListSukMap);
-
-
-                index++;
-            }
+            skuNumIidMap.entrySet().parallelStream().forEach(longListEntry -> {
+                Logger.info(String.format("开始同步-商品ID: [%d] 的SKU价格与库存. ", longListEntry.getKey()));
+                try {
+                    taoBaoHttp.updateQuantityAndPriceTmall(longListEntry.getKey(),subSkuIPriceListMap.get(longListEntry.getKey()),longListEntry.getValue(), csvListSukMap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         } else {
             throw new OCException("csvListSukMap接口SKU映射为空!请检查!");
         }

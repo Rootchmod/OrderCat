@@ -83,7 +83,7 @@ public class TaoBaoHttp {
 //        req.setIsCombine(true);
         ItemsOnsaleGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
 
-
+        Logger.info(rsp.getBody());
         // List<Item> list1 = rsp.getItems();
 //        JSONObject object = JSON.parseObject(rsp.getBody());
 
@@ -250,7 +250,7 @@ public class TaoBaoHttp {
         }
 
         if (price != null ) {
-            Logger.info(String.format("[%d]-最小价格[%s]", itemId, price));
+            Logger.debug(String.format("[%d]-最小价格[%s]", itemId, price));
             req.setItemPrice(price);
         }
         req.setSkuPrices(list2);
