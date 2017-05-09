@@ -33,8 +33,8 @@ public class TaoBaoHttp {
     //private static final String SESSION_KEY = OrderCatConfig.getTaobaoApiSessionKey();
     //
 
-    //private static final Long CID = Long.parseLong("1282880675"); //麦巨自营
-    private static final Long CID = Long.parseLong("1316012271");//测试类目
+    private static final Long CID = Long.parseLong("1282880675"); //麦巨自营
+    //private static final Long CID = Long.parseLong("1316012271");//测试类目
 
 
     public TaoBaoHttp() {
