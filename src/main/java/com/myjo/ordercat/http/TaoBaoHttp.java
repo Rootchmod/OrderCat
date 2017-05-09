@@ -216,11 +216,6 @@ public class TaoBaoHttp {
 
             updateTmallItemPriceUpdate(itemId, list, csvListSukMap, price);
         }
-
-
-
-
-
     }
 
 

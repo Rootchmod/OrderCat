@@ -865,6 +865,7 @@ public class SyncInventory {
                                 ,
                                 (o1, o2) -> {
                                     //System.out.println("duplicate key found:"+o1.getSkuId());
+                                    o1.setNum2(String.valueOf(Integer.valueOf(o1.getNum2()) + Integer.valueOf(o2.getNum2()))); // 对库存进行累计(因为一个商品代码对应的多个SKU)
                                     return o1;
                                 }
                         ));
@@ -879,7 +880,7 @@ public class SyncInventory {
 
         Logger.info(String.format("skuNumIidMap.size:[%d]", skuNumIidMap.size()));
         List<Sku> subSkuList = null;
-        List<InventoryInfo> subSkuIPriceList ;
+        List<InventoryInfo> subSkuIPriceList ;//获取
         //List<InventoryInfo> subSkuIQuantityList ;
 
 
