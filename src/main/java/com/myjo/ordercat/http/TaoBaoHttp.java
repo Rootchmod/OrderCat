@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public class TaoBaoHttp {
 
-    private static final Logger Logger = LogManager.getLogger(TianmaSportHttp.class);
+    private static final Logger Logger = LogManager.getLogger(TaoBaoHttp.class);
     //private static final String URL = OrderCatConfig.getTaobaoApiUrl();
 
     //private static final String APP_KEY = OrderCatConfig.getTaobaoApiAppKey();
@@ -83,7 +83,7 @@ public class TaoBaoHttp {
 //        req.setIsCombine(true);
         ItemsOnsaleGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
 
-        Logger.info(rsp.getBody());
+        //Logger.info(rsp.getBody());
         // List<Item> list1 = rsp.getItems();
 //        JSONObject object = JSON.parseObject(rsp.getBody());
 
@@ -180,9 +180,10 @@ public class TaoBaoHttp {
     }
 
 
-    public void updateQuantityAndPriceTmall(Long itemId,
+    public void updateTmallQuantityAndPrice(Long itemId,
                                             List<InventoryInfo> subSkuIPriceList,
-                                            List<Sku> skuList, Map<Long, InventoryInfo> csvListSukMap) throws Exception {
+                                            List<Sku> skuList,
+                                            Map<String, InventoryInfo> csvListSukMap) throws Exception {
         List<List<Sku>> subLists = OcListUtils.splitList(skuList, 19);
 
         //过滤为空的SKU
@@ -195,25 +196,20 @@ public class TaoBaoHttp {
         List<List<InventoryInfo>> subSkuIPriceLists =  OcListUtils.splitList(subSkuIPriceList, 19);
 
         for (List<Sku> list : subLists) {
-            updateTmallItemQuantityUpdate(itemId, list, csvListSukMap);
+            updateTmallItemQuantityUpdate(itemId, list, csvListSukMap);//库存更新
         }
-
         String price = null;
         Optional<InventoryInfo> dd;
         for (List<InventoryInfo> list : subSkuIPriceLists) {
-
             dd = list
                     .parallelStream()
                     .filter(inventoryInfo -> inventoryInfo != null)
                     .min(
-                            (p1, p2) -> {
-                                return  p1.getSalesPrice().compareTo(p2.getSalesPrice());
-                            }
+                            (p1, p2) -> p1.getSalesPrice().compareTo(p2.getSalesPrice())
                     );
             if (dd.isPresent()) {
                 price = dd.get().getSalesPrice().toPlainString();
             }
-
             updateTmallItemPriceUpdate(itemId, list, csvListSukMap, price);
         }
     }
@@ -224,13 +220,17 @@ public class TaoBaoHttp {
      *
      * @throws Exception
      */
-    public Long updateTmallItemPriceUpdate(Long itemId, List<InventoryInfo> list, Map<Long, InventoryInfo> csvListSukMap, String price) throws Exception {
+    public Long updateTmallItemPriceUpdate(Long itemId, List<InventoryInfo> list, Map<String, InventoryInfo> csvListSukMap, String price) throws Exception {
 
         Long priceUpdateResult = 0l;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TmallItemPriceUpdateRequest req = new TmallItemPriceUpdateRequest();
         req.setItemId(itemId);
         //req.setItemPrice(price);
+
+//        if(itemId.longValue() == 549502452719L){
+//            System.out.println(itemId);
+//        }
 
         List<TmallItemPriceUpdateRequest.UpdateSkuPrice> list2 = new ArrayList<>();
         TmallItemPriceUpdateRequest.UpdateSkuPrice obj3;
@@ -272,7 +272,7 @@ public class TaoBaoHttp {
      *
      * @throws Exception
      */
-    public Long updateTmallItemQuantityUpdate(Long itemId, List<Sku> skuList, Map<Long, InventoryInfo> csvListSukMap) throws Exception {
+    public Long updateTmallItemQuantityUpdate(Long itemId, List<Sku> skuList, Map<String, InventoryInfo> csvListSukMap) throws Exception {
 
         Long quantityUpdateResult = 0l;
 
@@ -285,14 +285,13 @@ public class TaoBaoHttp {
         TmallItemQuantityUpdateRequest.UpdateSkuQuantity obj3;
         InventoryInfo inventoryInfo;
         for (Sku sku : skuList) {
-            inventoryInfo = csvListSukMap.get(sku.getSkuId());
+            inventoryInfo = csvListSukMap.get(sku.getOuterId());
             obj3 = new TmallItemQuantityUpdateRequest.UpdateSkuQuantity();
             obj3.setSkuId(sku.getSkuId());
-//            if (sku.getSkuId().longValue() == 3467906683477L) {
+//            if (sku.getSkuId().longValue() == 3421485762620L) {
 //                System.out.println(sku.getSkuId());
 //
 //            }
-
             if (inventoryInfo != null) {
                 obj3.setQuantity(Long.valueOf(inventoryInfo.getNum2()));
             } else {

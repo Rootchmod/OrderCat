@@ -84,6 +84,8 @@ class SyncInventorySpec extends Specification {
 
         String vcode = "1111";
 
+        Logger.error("test1",new Exception("11111"));
+
         JSONObject jsonObject = tianmaSportHttp.login(vcode);
 
         tianmaSportHttp.main_html();

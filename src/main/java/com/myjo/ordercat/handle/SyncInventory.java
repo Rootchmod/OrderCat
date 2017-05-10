@@ -763,7 +763,7 @@ public class SyncInventory {
                 );
 
 
-        // 赋值销量 与 SKU_ID 信息
+        // 赋值销量
         intersectionList.parallelStream().forEach(inventoryInfo -> {
             long rt = 0;
             String numIid = String.valueOf(inventoryInfo.getNumIid().toString());
@@ -771,11 +771,11 @@ public class SyncInventory {
                 rt = tradesMap.get(numIid).getSalesCount().getAsInt();
             }
             inventoryInfo.setSalesCount(rt);
-            if (inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1() + ":" + inventoryInfo.getNumIid()) == null) {
-                inventoryInfo.setSkuId(8888888888888888l);
-            } else {
-                inventoryInfo.setSkuId(inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1() + ":" + inventoryInfo.getNumIid()).getSkuId());
-            }
+//            if (inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1() + ":" + inventoryInfo.getNumIid()) == null) {
+//                inventoryInfo.setSkuId(8888888888888888l);
+//            } else {
+//                inventoryInfo.setSkuId(inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1() + ":" + inventoryInfo.getNumIid()).getSkuId());
+//            }
 
         });
 
@@ -859,9 +859,9 @@ public class SyncInventory {
         Logger.info(String.format("SKU-list中过滤掉商家编码中有[ 麦巨 or 临时 ]的SKU:[%d]", skus.size()));
 
 
-        Map<Long, InventoryInfo> csvListSukMap =
+        Map<String, InventoryInfo> csvListSukMap =
                 csvList.parallelStream()
-                        .collect(Collectors.toConcurrentMap(o -> o.getSkuId(), Function.identity()
+                        .collect(Collectors.toConcurrentMap(o -> o.getGoodsNo()+"-"+o.getSize1(), Function.identity()
                                 ,
                                 (o1, o2) -> {
                                     //System.out.println("duplicate key found:"+o1.getSkuId());
@@ -869,6 +869,9 @@ public class SyncInventory {
                                     return o1;
                                 }
                         ));
+
+
+        //System.out.println(csvListSukMap.get(3409869335638l).getNum2());
 
         Logger.info(String.format("csvListSukMap.size:[%d]", csvListSukMap.size()));
 
@@ -879,37 +882,53 @@ public class SyncInventory {
 
 
         Logger.info(String.format("skuNumIidMap.size:[%d]", skuNumIidMap.size()));
-        List<Sku> subSkuList = null;
+        List<Sku> subSkuList;
         List<InventoryInfo> subSkuIPriceList ;//获取
         //List<InventoryInfo> subSkuIQuantityList ;
-
-
+        //按照宝贝ID,汇总更新SKU需要的价格.
         Map<Long,List<InventoryInfo>> subSkuIPriceListMap = new ConcurrentHashMap<>();
-        long itemId;
+
         for (Map.Entry<Long, List<Sku>> entry : skuNumIidMap.entrySet()) {
             subSkuIPriceList = new ArrayList<>();
-            itemId = entry.getKey().longValue();
+            final long itemId = entry.getKey().longValue();
 
             subSkuList = entry.getValue();
             subSkuIPriceList.addAll(
                     subSkuList.stream()
-                            .map(sku -> csvListSukMap.get(sku.getSkuId()))
+                            .map(sku -> {
+                                InventoryInfo iv = csvListSukMap.get(sku.getOuterId());
+                                if(iv!=null){
+                                    if(iv.getNumIid().longValue() == itemId){ // 商品ID必须一致，因为按货号去会取到别的宝贝ID的信息
+                                        iv.setSkuId(sku.getSkuId());//赋值SKU,价格更新方面直接获取
+                                    }else {
+                                        iv = null;
+                                    }
+                                }
+                                return iv;
+                            })
                             .collect(Collectors.toList()));
 
             subSkuIPriceListMap.put(itemId,subSkuIPriceList);
-            //taoBaoHttp.updateQuantityAndPriceTmall(itemId,subSkuIPriceList,subSkuList, csvListSukMap);
         }
 
 
-
+        //更新淘宝库存与价格(接口调用)
         if (csvListSukMap != null && csvListSukMap.size() > 0) {
-
-            skuNumIidMap.entrySet().parallelStream().forEach(longListEntry -> {
+            skuNumIidMap.entrySet().parallelStream()
+                    //.filter(longListEntry -> longListEntry.getKey() == 538962836245l || longListEntry.getKey() == 537503925789l)
+                    //.filter(longListEntry -> longListEntry.getKey() == 535913995369l)
+                    .forEach(longListEntry -> {
                 Logger.info(String.format("开始同步-商品ID: [%d] 的SKU价格与库存. ", longListEntry.getKey()));
                 try {
-                    taoBaoHttp.updateQuantityAndPriceTmall(longListEntry.getKey(),subSkuIPriceListMap.get(longListEntry.getKey()),longListEntry.getValue(), csvListSukMap);
+                    taoBaoHttp.updateTmallQuantityAndPrice(
+                            longListEntry.getKey(),//商品ID
+                            subSkuIPriceListMap.get(longListEntry.getKey()),//需要更新的价格信息
+                            longListEntry.getValue(),//该商品ID下的，SKUlist
+                            csvListSukMap);//
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Logger.error(String.format("[%d]淘宝库存与价格更新失败:",longListEntry.getKey().longValue()),e);
+                    //e.printStackTrace();
+                    //throw new OCException(String.format("[%d]淘宝库存与价格更新失败:",longListEntry.getKey().longValue()),e);
                 }
             });
         } else {
