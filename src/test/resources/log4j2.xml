@@ -19,10 +19,15 @@
 
 
     <Loggers>
+
+
+
         <logger name="com.myjo.ordercat" level="info"/>
         <logger name="org.apache.http" level="info"/>
         <logger name="org.gradle.tooling" level="info"/>
         <logger name="org.eclipse.aether" level="info"/>
+        <logger name="org.quartz.core" level="info"/>
+
         <!--<Logger name="log4j.logger.org.apache.http" level="info"/>-->
         <Root level="all" >
             <appenderRef ref="STDOUT"/>

@@ -15,6 +15,17 @@ public class OcStringUtils {
 //    }
     private static final Pattern pattern = Pattern.compile("-?[0-9]+.?[0-9]+");
 
+
+
+    public static boolean isPatternMatcher(String pattern,String str){
+        Matcher isNum = Pattern.compile(pattern).matcher(str);
+        if(isNum.matches()){
+            return true;
+        }
+        return false;
+    }
+
+
     public static boolean isNumeric(String str){
         Matcher isNum = pattern.matcher(str);
         if( !isNum.matches() ){

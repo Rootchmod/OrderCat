@@ -64,6 +64,15 @@ class TaoBaoSpec extends Specification {
     }
 
 
+    def "test"(){
+        when:
+        taoBaoHttp.test();
+
+        then:
+        "ok" == "ok"
+    }
+
+
 
 
 //    def "config"() {

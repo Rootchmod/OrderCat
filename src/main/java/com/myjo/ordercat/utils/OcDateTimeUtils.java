@@ -14,6 +14,7 @@ import java.util.Locale;
 public class OcDateTimeUtils {
 
     public static final DateTimeFormatter OC_DATE_TIME;
+    public static final DateTimeFormatter OC_DATE;
 
     static {
         OC_DATE_TIME = new DateTimeFormatterBuilder()
@@ -22,19 +23,33 @@ public class OcDateTimeUtils {
                 .appendLiteral(" ")
                 .append(DateTimeFormatter.ISO_LOCAL_TIME)
                 .toFormatter(Locale.CHINESE);
+
+        OC_DATE = new DateTimeFormatterBuilder()
+                .parseCaseInsensitive()
+                .append(DateTimeFormatter.ISO_LOCAL_DATE)
+                .toFormatter(Locale.CHINESE);
     }
 
     /**
-     * 字符串转LocalDateTime
+     * 字符串转 LocalDateTime
      * @param dateTime
      * @return
      */
     public static LocalDateTime string2LocalDateTime(String dateTime){
-        return LocalDateTime.parse(dateTime, OcDateTimeUtils.OC_DATE_TIME);
+        return string2LocalDateTime(dateTime, OcDateTimeUtils.OC_DATE_TIME);
     }
 
+    public static LocalDateTime string2LocalDateTime(String dateTime,DateTimeFormatter dtf){
+        return LocalDateTime.parse(dateTime,dtf);
+    }
+
+
     public static String localDateTime2String(LocalDateTime dateTime){
-        return dateTime.format(OC_DATE_TIME);
+        return localDateTime2String(dateTime,OC_DATE_TIME);
+    }
+
+    public static String localDateTime2String(LocalDateTime dateTime,DateTimeFormatter dtf){
+        return dateTime.format(dtf);
     }
 
 

@@ -51,6 +51,25 @@ CREATE TABLE `oc_sales_info` (
 
 
 
+DROP TABLE oc_logistics_companies_info;
+CREATE TABLE `oc_logistics_companies_info` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lc_id` BIGINT DEFAULT NULL COMMENT '物流公司标识',
+  `lc_code` varchar(255) COMMENT '物流公司代码',
+  `lc_name` varchar(255) COMMENT '物流公司简称',
+  `lc_reg_mail_no` varchar(255) COMMENT '运单号验证正则表达式',
+  `lc_is_enable` TINYINT COMMENT '是否启用:1/0',
+  `exec_job_id` BIGINT DEFAULT NULL COMMENT '执行任务ID',
+  `add_time` timestamp NOT NULL COMMENT '添加日期',
+  PRIMARY KEY (`id`),
+  KEY `IDX_JOB_ID` (`exec_job_id`),
+  KEY `IDX_LC_ID` (`lc_id`),
+  KEY `IDX_LC_IS_ENABLE` (`lc_is_enable`),
+  KEY `IDX_LC_CODE` (`lc_code`),
+  KEY `IDX_LC_NAME` (`lc_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='物流公司信息';
+
+
 
 DROP TABLE oc_inventory_info;
 CREATE TABLE `oc_inventory_info` (

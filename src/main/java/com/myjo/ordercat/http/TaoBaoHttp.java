@@ -10,6 +10,7 @@ import com.myjo.ordercat.utils.OcListUtils;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.Item;
+import com.taobao.api.domain.LogisticsCompany;
 import com.taobao.api.domain.Sku;
 import com.taobao.api.domain.Trade;
 import com.taobao.api.request.*;
@@ -317,7 +318,52 @@ public class TaoBaoHttp {
         return quantityUpdateResult;
     }
 
+
+
+
+    //taobao.logistics.online.send
+
+//    public String sendTaobaoLogisticsOnline() throws Exception {
+//
+//        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+//        LogisticsOnlineSendRequest req = new LogisticsOnlineSendRequest();
+//        req.setSubTid("1,2,3");
+//        req.setTid(123456L);
+//        req.setIsSplit(0L);
+//        req.setOutSid("123456789");
+//        req.setCompanyCode("POST");
+//        req.setSenderId(123456L);
+//        req.setCancelId(123456L);
+//        req.setFeature("identCode=tid:aaa,bbb;machineCode=tid2:aaa");
+//        req.setSellerIp("192.168.1.10");
+//        LogisticsOnlineSendResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+//        System.out.println(rsp.getBody());
+//    }
+
+
+
+    /**
+     * taobao.logistics.companies.get (查询物流公司信息)
+     * @return
+     * @throws Exception
+     */
+    public List<LogisticsCompany> getTaoBaoLogisticsCompanies() throws Exception {
+        List<LogisticsCompany> list = new ArrayList<>();
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        LogisticsCompaniesGetRequest req = new LogisticsCompaniesGetRequest();
+        req.setFields("id,code,name,reg_mail_no");
+        req.setIsRecommended(true);
+        req.setOrderMode("offline");
+        LogisticsCompaniesGetResponse rsp = client.execute(req);
+        if(rsp.isSuccess()){
+            list = rsp.getLogisticsCompanies();
+        }
+        return list;
+    }
+
     public void test() throws Exception {
+
+
 
 
 

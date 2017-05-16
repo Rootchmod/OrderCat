@@ -5,10 +5,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import com.myjo.ordercat.domain.InventoryInfo;
 import com.myjo.ordercat.config.OrderCatConfig;
-import com.myjo.ordercat.domain.OrderStatus;
-import com.myjo.ordercat.domain.PickDate;
+import com.myjo.ordercat.domain.*;
+import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -109,7 +108,6 @@ public class TianmaSportHttp {
         rt = jsonResponse.getBody().getObject();
 
 
-
         Logger.info("login rt:" + rt);
         return rt;
     }
@@ -125,7 +123,7 @@ public class TianmaSportHttp {
         long millis = dt.getMillis();
         String vcfile = OrderCatConfig.getTianmaSportVcImageFileName();
         //IOUtils.toByteArray(inputStream);
-        File vfile = new File(OrderCatConfig.getOrderCatOutPutPath()+vcfile);
+        File vfile = new File(OrderCatConfig.getOrderCatOutPutPath() + vcfile);
 
         Logger.debug(millis);
         Logger.debug(dtStr);
@@ -153,10 +151,7 @@ public class TianmaSportHttp {
     }
 
 
-
-
-
-    public void inventoryDownGroup(String fileName,String brandName, String quarter) throws Exception {
+    public void inventoryDownGroup(String fileName, String brandName, String quarter) throws Exception {
         Logger.info("inventory_down_group_http_url: " + OrderCatConfig.getTianmaSportIDGHttpUrl());
         Logger.info("brandName: " + brandName);
         Logger.info("quarter: " + quarter);
@@ -194,18 +189,18 @@ public class TianmaSportHttp {
         Logger.info("http-status-text:" + response.getStatusText());
         JSONObject rt = response.getBody().getObject();
         Logger.info("inventoryDownGroup rt:" + rt);
-        if(rt.getBoolean("success") == true){
+        if (rt.getBoolean("success") == true) {
             String path = rt.getString("path");
             Logger.info("inventoryDownGroup return path:" + path);
-            dataDownLoad(path,fileName);
+            dataDownLoad(path, fileName);
         }
     }
 
 
-    public String dataDownLoad(String path,String fileName) throws Exception {
-        Logger.info("http data DownLoad:"+path);
+    public String dataDownLoad(String path, String fileName) throws Exception {
+        Logger.info("http data DownLoad:" + path);
 
-        String dfileStr = OrderCatConfig.getOrderCatOutPutPath()+fileName;
+        String dfileStr = OrderCatConfig.getOrderCatOutPutPath() + fileName;
         //IOUtils.toByteArray(inputStream);
         File dfile = new File(dfileStr);
 
@@ -222,12 +217,11 @@ public class TianmaSportHttp {
                         .asBinary();
 //                .field("file", new FileInputStream(vfile)), ContentType.APPLICATION_OCTET_STREAM, "image.jpg")
 //                .asJson();
-        FileUtils.writeByteArrayToFile(dfile, IOUtils.toByteArray(response.getBody()),true);
+        FileUtils.writeByteArrayToFile(dfile, IOUtils.toByteArray(response.getBody()), true);
 
         Logger.info("http data DownLoad:" + dfileStr);
         return dfileStr;
     }
-
 
 
     public List<InventoryInfo> getSearchByArticleno(String Articleno) throws Exception {
@@ -254,36 +248,36 @@ public class TianmaSportHttp {
         Logger.debug("http-status:" + code);
         Logger.debug("http-status-text:" + response.getStatusText());
 
-        if(code == 200){
+        if (code == 200) {
             String rt = response.getBody();
-            if(rt.indexOf("没有类似货号的商品!")>-1){
+            if (rt.indexOf("没有类似货号的商品!") > -1) {
                 return list;
             }
             Document doc = Jsoup.parse(rt);
             Element script = doc.select("script").get(1);
             String data = script.data();
             String bstr = "var data = $.parseJSON('";
-            int  bstr_index  = data.indexOf(bstr);
-            int  estr_index  = data.indexOf("');",bstr_index);
-            jsonstr = data.substring(bstr_index+bstr.length(),estr_index);
+            int bstr_index = data.indexOf(bstr);
+            int estr_index = data.indexOf("');", bstr_index);
+            jsonstr = data.substring(bstr_index + bstr.length(), estr_index);
             com.alibaba.fastjson.JSONObject object = JSON.parseObject(jsonstr);
             JSONArray array = object.getJSONArray("rows");
             com.alibaba.fastjson.JSONObject jsonObject;
             InventoryInfo inventoryInfo;
 
-            String dd1 ; //配货率
-            String dd2 ; //发货时效
-            for(int i=0;i<array.size();i++){
+            String dd1; //配货率
+            String dd2; //发货时效
+            for (int i = 0; i < array.size(); i++) {
 
                 jsonObject = array.getJSONObject(i);
-                dd1 = StringUtils.substringBeforeLast(jsonObject.getString("pickRate"),"%");
-                dd2 = StringUtils.substringAfterLast(jsonObject.getString("pickRate"),"发货时效:");
+                dd1 = StringUtils.substringBeforeLast(jsonObject.getString("pickRate"), "%");
+                dd2 = StringUtils.substringAfterLast(jsonObject.getString("pickRate"), "发货时效:");
 
                 inventoryInfo = new InventoryInfo();
                 inventoryInfo.setWareHouseID(Integer.valueOf(jsonObject.getString("wareHouseID")));
                 inventoryInfo.setWarehouseName(jsonObject.getString("wareHouseName"));
-                inventoryInfo.setPickRate(Integer.valueOf(dd1.replaceAll("配货率：","")));
-                inventoryInfo.setThedtime(dd2.replaceAll("小时",""));
+                inventoryInfo.setPickRate(Integer.valueOf(dd1.replaceAll("配货率：", "")));
+                inventoryInfo.setThedtime(dd2.replaceAll("小时", ""));
                 inventoryInfo.setPickDate(PickDate.valueOf(Integer.valueOf(jsonObject.getString("pick_date"))));
                 inventoryInfo.setMark(jsonObject.getString("mark"));
                 inventoryInfo.setRetrunDesc(jsonObject.getString("retrun_desc"));
@@ -302,11 +296,45 @@ public class TianmaSportHttp {
     }
 
 
+//    public List<Trade> getSoldTrades(Date begin, Date end, TradeStatus status) throws Exception {
+//        long pageNo = 1l;
+//        long pageSize = 100l;
+//        List<Trade> rtlist = new ArrayList<>();
+//
+//        PageResult<Trade> pageResult;
+//        do {
+//            pageResult = getSoldTrades(begin, end, status, pageNo, pageSize);
+//            rtlist.addAll(pageResult.getRows());
+//            Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
+//            //++pageNo;
+//        } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
+//
+//        return rtlist;
+//    }
+
+    public List<TianmaOrder> tradeOrderDataList(String startTime, String endTime, OrderStatus orderStatus) throws Exception {
+        List<TianmaOrder> rtlist = new ArrayList<>();
+        int pageNo = 1;
+        int pageSize = 300;
+
+        PageResult<TianmaOrder> pageResult;
+        do {
+            pageResult = tradeOrderDataList(startTime, endTime, orderStatus, pageNo, pageSize);
+            rtlist.addAll(pageResult.getRows());
+            Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
+        } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
+        return rtlist;
+    }
 
 
-    public void tradeOrderDataList(String startTime,String endTime, OrderStatus orderStatus) throws Exception {
+    public PageResult<TianmaOrder> tradeOrderDataList(String startTime, String endTime, OrderStatus orderStatus, Integer pageNo, Integer pageSize) throws Exception {
         Logger.info("inventory_down_group_http_url: " + OrderCatConfig.getTianmaSportIDGHttpUrl());
-        Logger.info(String.format("startTime:%s endTime:%s order_status:%s",startTime,endTime,orderStatus.getVal()));
+        Logger.info(String.format("startTime:%s endTime:%s order_status:%s", startTime, endTime, orderStatus.getVal()));
+
+        PageResult<TianmaOrder> pr = new PageResult();
+
+
+        List<TianmaOrder> orders = new ArrayList<>();
 
         String sessionId = map.get("seesion_id");
         Logger.info("http tianmaSport login sessionId: " + sessionId);
@@ -334,29 +362,58 @@ public class TianmaSportHttp {
 //        size:
 //        outer_tid:
 //        order_id:
-                .field("page", "")
-                .field("rows", "")
-                .field("status",orderStatus.getVal())
+
+//        sort:feed_back_time
+//        order:desc
+                .field("page", pageNo.intValue())
+                .field("rows", pageSize.intValue())
+                .field("status", orderStatus.getVal())
                 .field("m_warehouse_name", "")
                 .field("goods_no", "")
                 .field("names", "")
                 .field("startTime", startTime)
                 .field("endsTime", endTime)
                 .field("size", "")
+                .field("sort", "feed_back_time")
+                .field("order", "desc")
                 .field("outer_tid", "")
                 .field("order_id", "")
                 .asJson();
         int code = response.getStatus();
+
         Logger.info("http-status:" + code);
         Logger.info("http-status-text:" + response.getStatusText());
+
         JSONObject rt = response.getBody().getObject();
         Logger.info("inventoryDownGroup rt:" + rt);
-        if(rt.getBoolean("success") == true){
+        if (code == 200) {
+            pr.setTotal(rt.getInt("total"));
+            org.json.JSONArray rows = rt.getJSONArray("rows");
+            JSONObject order;
+            TianmaOrder tianmaOrder;
+            for (int i = 0; i < rows.length(); i++) {
+                tianmaOrder = new TianmaOrder();
+                order = rows.getJSONObject(i);
 
+                tianmaOrder.setCreated(order.get("created").toString());
+                tianmaOrder.setDeliveryName(order.get("delivery").toString());
+                tianmaOrder.setDeliveryNo(order.get("p_delivery_no").toString());
+                tianmaOrder.setFeedBackTime(order.get("feed_back_time").toString());
+                tianmaOrder.setName(order.get("name").toString());
+                tianmaOrder.setNoShipmentRemark(order.get("no_shipment_remark").toString());
+                tianmaOrder.setOrderId(order.get("order_id").toString());
+                tianmaOrder.setOuterOrderId(order.get("outer_order_id").toString());
+
+                orders.add(tianmaOrder);
+
+            }
+            pr.setRows(orders);
+        } else {
+
+            throw new OCException("获取天马反馈订单失败:" + code);
         }
+        return pr;
     }
-
-
 
 
 }

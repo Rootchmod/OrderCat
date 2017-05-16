@@ -9,29 +9,13 @@ import java.util.Date;
 
 @PersistJobDataAfterExecution
 @DisallowConcurrentExecution
-public class SyncWarehouseJob implements Job {
+public class SyncWarehouseJob extends OcBaseJob {
 
+    private static final Logger Logger = LogManager.getLogger(SyncWarehouseJob.class);
 
-    private static final Logger LOGGER = LogManager.getLogger(SyncWarehouseJob.class);
-
-
-    public SyncWarehouseJob() {
-    }
-    public void execute(JobExecutionContext context)
-        throws JobExecutionException {
-        JobDataMap map = context.getJobDetail().getJobDataMap();
-        ExecuteHandle eh =  (ExecuteHandle) map.get("SyncWarehouseHandle");
-        try {
-            eh.exec();
-        } catch (Exception e) {
-            LOGGER.info("--- Error in job!");
-            JobExecutionException e2 =
-                    new JobExecutionException(e);
-            // Quartz will automatically unschedule
-            // all triggers associated with this job
-            // so that it does not run again
-            e2.setUnscheduleAllTriggers(true);
-            throw e2;
-        }
+    @Override
+    protected ExecuteHandle execHandle(JobDataMap map) {
+        Logger.info("SyncWarehouseJob.execHandle");
+        return (ExecuteHandle) map.get("SyncWarehouseHandle");
     }
 }

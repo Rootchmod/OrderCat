@@ -16,6 +16,7 @@ import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import org.apache.logging.log4j.LogManager;
@@ -71,6 +72,8 @@ public class Main {
         OcJobExecInfoManager ocJobExecInfoManager = app.getOrThrow(OcJobExecInfoManager.class);
         OcInventoryInfoManager ocInventoryInfoManager = app.getOrThrow(OcInventoryInfoManager.class);
         OcSalesInfoManager ocSalesInfoManager = app.getOrThrow(OcSalesInfoManager.class);
+        OcLogisticsCompaniesInfoManager ocLogisticsCompaniesInfoManager = app.getOrThrow(OcLogisticsCompaniesInfoManager.class);
+
 
 
 
@@ -83,6 +86,11 @@ public class Main {
         syncInventory.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         syncInventory.setOcJobExecInfoManager(ocJobExecInfoManager);
         syncInventory.setOcSalesInfoManager(ocSalesInfoManager);
+
+        SendGoods sendGoods = new SendGoods(tianmaSportHttp, taoBaoHttp);
+        sendGoods.setOcLogisticsCompaniesInfoManager(ocLogisticsCompaniesInfoManager);
+
+
 
 
         tianmaSportHttp.getVerifyCodeImage();
@@ -169,6 +177,9 @@ public class Main {
                     .withSchedule(cronSchedule(OrderCatConfig.getSyncSalesInfoJobTriggerCron()))
                     .build();
             sched.scheduleJob(job2, trigger2);
+
+
+
 
 
 

@@ -7,13 +7,13 @@ import org.quartz.*;
 
 @PersistJobDataAfterExecution
 @DisallowConcurrentExecution
-public class SyncSalesInfoJob extends OcBaseJob {
+public class SyncLcJob extends OcBaseJob {
 
-    private static final Logger Logger = LogManager.getLogger(SyncSalesInfoJob.class);
+    private static final Logger Logger = LogManager.getLogger(SyncLcJob.class);
 
     @Override
     protected ExecuteHandle execHandle(JobDataMap map) {
-        Logger.info("SyncSalesInfoJob.execHandle");
-        return (ExecuteHandle) map.get("SyncSalesInfoHandle");
+        Logger.info("SyncLcJob.execHandle");
+        return (ExecuteHandle) map.get("SyncLcHandle");
     }
 }
