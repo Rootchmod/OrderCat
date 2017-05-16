@@ -540,6 +540,8 @@ public class SyncInventory {
                 .collect(Collectors.toList());
         Logger.info("按照SKU,在天马库存中进行过滤后的条数:" + intersectionList.size());
 
+
+        //赋值宝贝ID
         intersectionList.parallelStream().forEach(inventoryInfo -> {
             inventoryInfo.setNumIid(inventoryInfoInCsvNumIidMap.get(inventoryInfo.getGoodsNo()).get(0).getNumIid());
         });
