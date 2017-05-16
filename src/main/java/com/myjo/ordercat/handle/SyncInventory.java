@@ -526,20 +526,6 @@ public class SyncInventory {
                 skus.parallelStream()
                         .collect(Collectors.groupingBy(sku -> StringUtils.substringBeforeLast(sku.getOuterId(), "-")));
 
-        //skus.parallelStream().forEach(sku -> System.out.println(sku.getOuterId()+":"+sku.getNumIid()));
-
-        Map<String, Sku> inventoryInfoInCsvSkuIdMap =
-                skus.parallelStream()
-                        .filter(sku -> sku.getOuterId().indexOf("麦巨") == -1)
-                        .filter(sku -> sku.getOuterId().indexOf("临时") == -1)
-                        .collect(Collectors.toMap(o -> o.getOuterId() + ":" + o.getNumIid(), Function.identity()
-//                                        ,
-//                                        (o1, o2) -> {
-//                                            System.out.println("duplicate key found:"+o1.getNumIid()+":"+o1.getOuterId());
-//                                            return o1;
-//                                        }
-                        ));
-
 
         List<InventoryInfo> intersectionList = list.parallelStream()
                 .filter(inventoryInfo -> !inventoryInfo.getDiscount().equals("折扣"))
@@ -761,11 +747,6 @@ public class SyncInventory {
                 rt = tradesMap.get(numIid).getSalesCount().getAsInt();
             }
             inventoryInfo.setSalesCount(rt);
-//            if (inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1() + ":" + inventoryInfo.getNumIid()) == null) {
-//                inventoryInfo.setSkuId(8888888888888888l);
-//            } else {
-//                inventoryInfo.setSkuId(inventoryInfoInCsvSkuIdMap.get(inventoryInfo.getGoodsNo() + "-" + inventoryInfo.getSize1() + ":" + inventoryInfo.getNumIid()).getSkuId());
-//            }
 
         });
 

@@ -363,7 +363,13 @@ public class TaoBaoHttp {
 
     public void test() throws Exception {
 
-
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        WlbTmsorderQueryRequest req = new WlbTmsorderQueryRequest();
+        req.setOrderCode("3329466481674");
+        req.setPageNo(1L);
+        req.setPageSize(20L);
+        WlbTmsorderQueryResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+        System.out.println(rsp.getBody());
 
 
 
