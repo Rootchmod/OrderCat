@@ -22,6 +22,9 @@ import org.json.JSONObject
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import javax.script.ScriptEngine
+import javax.script.ScriptEngineManager
+
 /**
  * Created by lee5hx on 17/4/20.
  */
@@ -49,11 +52,15 @@ class SyncInventorySpec extends Specification {
         OcSalesInfoManager ocSalesInfoManager = app.getOrThrow(OcSalesInfoManager.class);
 
 
+
+        ScriptEngineManager m = new ScriptEngineManager();
+        ScriptEngine e = m.getEngineByName("nashorn");
+
         Map<String,String> map = new HashMap<>();
 
         TianmaSportHttp tianmaSportHttp = new TianmaSportHttp(map);
         TaoBaoHttp taoBaoHttp = new TaoBaoHttp();
-        si = new SyncInventory(tianmaSportHttp,taoBaoHttp);
+        si = new SyncInventory(tianmaSportHttp,taoBaoHttp,e);
         si.setOcInventoryInfoManager(ocInventoryInfoManager);
         si.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         si.setOcJobExecInfoManager(ocJobExecInfoManager);

@@ -25,6 +25,8 @@ import org.json.JSONObject;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -68,6 +70,8 @@ public class Main {
         Unirest.setTimeouts(300*1000,300*1000);
 
 
+
+        //speedment
         OcWarehouseInfoManager ocWarehouseInfoManager = app.getOrThrow(OcWarehouseInfoManager.class);
         OcJobExecInfoManager ocJobExecInfoManager = app.getOrThrow(OcJobExecInfoManager.class);
         OcInventoryInfoManager ocInventoryInfoManager = app.getOrThrow(OcInventoryInfoManager.class);
@@ -75,13 +79,17 @@ public class Main {
         OcLogisticsCompaniesInfoManager ocLogisticsCompaniesInfoManager = app.getOrThrow(OcLogisticsCompaniesInfoManager.class);
 
 
+        //脚本引擎
+        ScriptEngineManager m = new ScriptEngineManager();
+        ScriptEngine e = m.getEngineByName("nashorn");
 
 
         Map<String, String> map = new HashMap<>();
-
         TianmaSportHttp tianmaSportHttp = new TianmaSportHttp(map);
         TaoBaoHttp taoBaoHttp = new TaoBaoHttp();
-        SyncInventory syncInventory = new SyncInventory(tianmaSportHttp, taoBaoHttp);
+
+
+        SyncInventory syncInventory = new SyncInventory(tianmaSportHttp, taoBaoHttp,e);
         syncInventory.setOcInventoryInfoManager(ocInventoryInfoManager);
         syncInventory.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         syncInventory.setOcJobExecInfoManager(ocJobExecInfoManager);

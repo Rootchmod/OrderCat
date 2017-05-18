@@ -2,7 +2,7 @@ package com.myjo.ordercat.config;
 
 import com.myjo.ordercat.domain.InventoryQueryCondition;
 import com.myjo.ordercat.domain.PickRateDelCondition;
-import com.myjo.ordercat.domain.SalesPriceCalculate;
+import com.myjo.ordercat.domain.SalesPriceCalculatePolicy;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
@@ -84,11 +84,23 @@ public class OrderCatConfig {
         return config.getString(String.format(SYNC_INVENTORY, "sales_price_end_replace"));
     }
 
-    public static SalesPriceCalculate getSalesPriceGtCalculate(){
-        return ConfigBeanFactory.create(config.getObject(String.format(SYNC_INVENTORY, "sales_price_gt_calculate")).toConfig(),SalesPriceCalculate.class);
-    }
-    public static SalesPriceCalculate getSalesPriceLtCalculate(){
-        return ConfigBeanFactory.create(config.getObject(String.format(SYNC_INVENTORY, "sales_price_lt_calculate")).toConfig(),SalesPriceCalculate.class);
+//    public static SalesPriceCalculatePolicy getSalesPriceGtCalculate(){
+//        return ConfigBeanFactory.create(config.getObject(String.format(SYNC_INVENTORY, "sales_price_gt_calculate")).toConfig(),SalesPriceCalculatePolicy.class);
+//    }
+//    public static SalesPriceCalculatePolicy getSalesPriceLtCalculate(){
+//        return ConfigBeanFactory.create(config.getObject(String.format(SYNC_INVENTORY, "sales_price_lt_calculate")).toConfig(),SalesPriceCalculatePolicy.class);
+//    }
+
+
+    public static List<SalesPriceCalculatePolicy> getSalesPriceCalculatePolicys(){
+        List<SalesPriceCalculatePolicy> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(SYNC_INVENTORY, "sales_price_calculate_policy"));
+        SalesPriceCalculatePolicy spcp;
+        for(ConfigObject cb :list){
+            spcp = ConfigBeanFactory.create(cb.toConfig(),SalesPriceCalculatePolicy.class);
+            rtList.add(spcp);
+        }
+        return rtList;
     }
 
 
@@ -186,6 +198,11 @@ public class OrderCatConfig {
 
     public static String getOrderCatOutPutPath(){
         return config.getString(String.format(ORDER_CAT, "output_path"));
+    }
+
+
+    public static boolean isProduction(){
+        return config.getBoolean(String.format(ORDER_CAT, "is_production"));
     }
 
 

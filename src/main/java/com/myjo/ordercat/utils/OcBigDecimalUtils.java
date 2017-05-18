@@ -1,8 +1,10 @@
 package com.myjo.ordercat.utils;
 
 import com.myjo.ordercat.config.OrderCatConfig;
-import com.myjo.ordercat.domain.SalesPriceCalculate;
+import com.myjo.ordercat.domain.SalesPriceCalculatePolicy;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -29,26 +31,49 @@ public class OcBigDecimalUtils {
     }
 
     /**
-     * 获得销售价格
+     *
+     * @param e
      * @param proxyPrice
-     * @param isxl 大于20 = True 或小于20 = False
+     * @param equation
      * @return
      */
-    public static BigDecimal toSalesPrice(BigDecimal proxyPrice, boolean isxl) {
-        long lrt;
-        SalesPriceCalculate spc;
-        if(isxl){
-            spc = OrderCatConfig.getSalesPriceGtCalculate();
-            lrt = Math.round(divide(proxyPrice,new BigDecimal(spc.getDivide())).add(new BigDecimal(spc.getAdd())).doubleValue());
-        }else {
-            spc = OrderCatConfig.getSalesPriceLtCalculate();
-            lrt = Math.round(divide(proxyPrice,new BigDecimal(spc.getDivide())).add(new BigDecimal(spc.getAdd())).doubleValue());
+    public static BigDecimal toSalesPrice(ScriptEngine e, BigDecimal proxyPrice, String equation) {
+
+        BigDecimal salasPrice = null;
+        try {
+            //e.put("proxyPrice", proxyPrice.doubleValue());
+            //e.eval("var i = Math.round("+equation+");");//proxyPrice/0.9+25
+           // String ps = "proxyPrice";
+            String ps = "Math.round("+equation+");";
+
+            String evalStr = ps.replaceAll("proxyPrice",proxyPrice.toPlainString());
+            Object ddd  = e.eval(evalStr);
+            //Object ddd = e.get("i");
+            Double rt = (double)ddd;
+            String lrtStr = String.valueOf(rt.longValue());
+
+            String a = lrtStr.substring(0, lrtStr.length() - 1);
+            salasPrice = new BigDecimal(a+OrderCatConfig.getSalesPriceEndReplace());
+        } catch (final ScriptException se) {
+            se.printStackTrace();
         }
-        String lrtStr = String.valueOf(lrt);
-        String a = lrtStr.substring(0, lrtStr.length() - 1);
-        return new BigDecimal(a+OrderCatConfig.getSalesPriceEndReplace());
+
+        return salasPrice;
     }
 
+
+
+    public static boolean salesLimitCountJudge(ScriptEngine e, Long salesCount, String judge) {
+        boolean rt = false;
+        try {
+            String ps = "("+judge+")";
+            String evalStr = ps.replaceAll("salesCount",String.valueOf(salesCount.longValue()));
+            rt = ((Boolean) e.eval(evalStr)).booleanValue();
+        } catch (final ScriptException se) {
+            se.printStackTrace();
+        }
+        return rt;
+    }
 
 
 }
