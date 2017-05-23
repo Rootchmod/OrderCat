@@ -3,6 +3,8 @@ package com.myjo.ordercat.spm.generated;
 import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.OrdercatApplicationImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManagerImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManagerImpl;
@@ -11,6 +13,8 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLog
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoSqlAdapter;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManagerImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoSqlAdapter;
 import com.speedment.common.injector.Injector;
@@ -32,15 +36,19 @@ public abstract class GeneratedOrdercatApplicationBuilder extends AbstractApplic
     
     protected GeneratedOrdercatApplicationBuilder() {
         super(OrdercatApplicationImpl.class, GeneratedOrdercatMetadata.class);
+        withManager(OcFenxiaoCheckResultManagerImpl.class);
         withManager(OcInventoryInfoManagerImpl.class);
         withManager(OcJobExecInfoManagerImpl.class);
         withManager(OcLogisticsCompaniesInfoManagerImpl.class);
         withManager(OcSalesInfoManagerImpl.class);
+        withManager(OcSyncInventoryItemInfoManagerImpl.class);
         withManager(OcWarehouseInfoManagerImpl.class);
+        withComponent(OcFenxiaoCheckResultSqlAdapter.class);
         withComponent(OcInventoryInfoSqlAdapter.class);
         withComponent(OcJobExecInfoSqlAdapter.class);
         withComponent(OcLogisticsCompaniesInfoSqlAdapter.class);
         withComponent(OcSalesInfoSqlAdapter.class);
+        withComponent(OcSyncInventoryItemInfoSqlAdapter.class);
         withComponent(OcWarehouseInfoSqlAdapter.class);
     }
     

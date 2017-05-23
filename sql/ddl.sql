@@ -108,3 +108,42 @@ CREATE TABLE `oc_inventory_info` (
   KEY `IDX_NUMIID` (`numIid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='库存信息';
 
+
+
+DROP TABLE oc_sync_inventory_item_info;
+CREATE TABLE `oc_sync_inventory_item_info` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `numIid` varchar(255) COMMENT '淘宝商品编码',
+  `status` varchar(255) NOT NULL COMMENT '宝贝同步状态 ARE_SYNCHRONIZED("ARE_SYNCHRONIZED"),NOT_SYNCHRONIZED("NOT_SYNCHRONIZED")',
+  `add_time` timestamp NOT NULL COMMENT '添加日期',
+  PRIMARY KEY (`id`),
+  KEY `IDX_NUMIID` (`numIid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='同步宝贝信息';
+
+
+DROP TABLE oc_fenxiao_check_result;
+CREATE TABLE `oc_fenxiao_check_result` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tid` BIGINT DEFAULT NULL COMMENT '订单ID',
+  `refundId` BIGINT DEFAULT NULL COMMENT '退款ID',
+  `numIid` BIGINT DEFAULT NULL COMMENT '宝贝ID',
+  `title` varchar(1000) NOT NULL COMMENT '宝贝标题',
+  `fenxiaoId` BIGINT COMMENT '分销ID',
+  `supplier_nick` varchar(255) COMMENT '供应商nick',
+  `distributor_nick` varchar(255) COMMENT '分销商昵称',
+  `fenxiao_refund_status` varchar(255) COMMENT '分销退款状态 1：买家已经申请退款，等待卖家同意 2：卖家已经同意退款，等待买家退货 3：买家已经退货，等待卖家确认收货 4：退款关闭 5：退款成功 6：卖家拒绝退款 12：同意退款，待打款 9：没有申请退款 10：卖家拒绝确认收货',
+  `fenxiao_refund_fee` decimal(25,10) COMMENT '分销退款的金额',
+  `fenxiao_pay_sup_fee` decimal(25,10) COMMENT '分销-支付给供应商的金额',
+  `fenxiao_refund_desc` varchar(255)  COMMENT '分销-退款原因',
+  `fenxiao_refund_reason` varchar(255) COMMENT '分销-退款说明',
+  `status` varchar(255)  COMMENT '对账状态 NOT_FENXIAO("NOT_FENXIAO"),NOT_FENXIAO_REFUND("NOT_FENXIAO_REFUND"),NOT_FENXIAO("NOT_FENXIAO"),SUCCESS_REFUND("SUCCESS_REFUND")',
+  `remarks` TEXT COMMENT ' (json格式)',
+  `add_time` timestamp NOT NULL COMMENT '添加日期',
+  PRIMARY KEY (`id`),
+  KEY `IDX_NUMIID` (`numIid`),
+  KEY `IDX_REFUNDID` (`refundId`),
+  KEY `IDX_TID` (`tid`),
+  KEY `IDX_FENXIAOID` (`fenxiaoId`),
+  KEY `IDX_STATUS` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分销对账结果表';
+

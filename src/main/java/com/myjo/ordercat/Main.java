@@ -18,6 +18,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfo
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -74,9 +75,13 @@ public class Main {
         //speedment
         OcWarehouseInfoManager ocWarehouseInfoManager = app.getOrThrow(OcWarehouseInfoManager.class);
         OcJobExecInfoManager ocJobExecInfoManager = app.getOrThrow(OcJobExecInfoManager.class);
-        OcInventoryInfoManager ocInventoryInfoManager = app.getOrThrow(OcInventoryInfoManager.class);
+        //OcInventoryInfoManager ocInventoryInfoManager = app.getOrThrow(OcInventoryInfoManager.class);
         OcSalesInfoManager ocSalesInfoManager = app.getOrThrow(OcSalesInfoManager.class);
         OcLogisticsCompaniesInfoManager ocLogisticsCompaniesInfoManager = app.getOrThrow(OcLogisticsCompaniesInfoManager.class);
+        OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager = app.getOrThrow(OcSyncInventoryItemInfoManager.class);
+
+
+        Logger.info("初始化[speedment]-完成.");
 
 
         //脚本引擎
@@ -84,16 +89,24 @@ public class Main {
         ScriptEngine e = m.getEngineByName("nashorn");
 
 
+        Logger.info("初始化[nashorn]-js脚本引擎完成.");
+
+
+
         Map<String, String> map = new HashMap<>();
         TianmaSportHttp tianmaSportHttp = new TianmaSportHttp(map);
         TaoBaoHttp taoBaoHttp = new TaoBaoHttp();
 
+        Logger.info("初始化[TianmaSportHttp,TaoBaoHttp]-完成.");
+
+
 
         SyncInventory syncInventory = new SyncInventory(tianmaSportHttp, taoBaoHttp,e);
-        syncInventory.setOcInventoryInfoManager(ocInventoryInfoManager);
         syncInventory.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         syncInventory.setOcJobExecInfoManager(ocJobExecInfoManager);
         syncInventory.setOcSalesInfoManager(ocSalesInfoManager);
+        syncInventory.setOcSyncInventoryItemInfoManager(ocSyncInventoryItemInfoManager);
+
 
         SendGoods sendGoods = new SendGoods(tianmaSportHttp, taoBaoHttp);
         sendGoods.setOcLogisticsCompaniesInfoManager(ocLogisticsCompaniesInfoManager);

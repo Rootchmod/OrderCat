@@ -61,6 +61,10 @@ public class OcDateTimeUtils {
         return date;
     }
 
+    public static Date string2Date(String dateTime){
+        return localDateTime2Date(string2LocalDateTime(dateTime));
+    }
+
 
 
 

@@ -72,6 +72,26 @@ class TaoBaoSpec extends Specification {
         "ok" == "ok"
     }
 
+    def "getFenxiaoOrdersByTcOrderId"(){
+        when:
+        taoBaoHttp.getFenxiaoOrdersByTcOrderId(21025551809015459l);
+
+        then:
+        "ok" == "ok"
+    }
+
+    def "getFenxiaoRefundBySubOrderId"(){
+        when:
+        taoBaoHttp.getFenxiaoRefundBySubOrderId(21852580950739l);
+
+        then:
+        "ok" == "ok"
+    }
+
+
+
+
+
 
 
 

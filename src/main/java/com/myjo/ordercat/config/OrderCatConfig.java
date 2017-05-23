@@ -26,6 +26,8 @@ public class OrderCatConfig {
     private static final String DATABASE = "database.%s";
     private static final String TAOBAO_API = "taobao-api.%s";
     private static final String SCHEDULER_CRON = "scheduler-cron.%s";
+    private static final String ACCOUNT_CHECK = "account-check.%s";
+
 
 
     private static Config config;
@@ -57,6 +59,11 @@ public class OrderCatConfig {
 //                "database",
 //                "taobao-api");
         //config = ConfigFactory.parseFile(new File(config));
+    }
+
+
+    public static List<String> getFeixiaoNoCheckNumIidList(){
+        return config.getStringList(String.format(ACCOUNT_CHECK, "fenxiao_no_check_numIid_list"));
     }
 
 

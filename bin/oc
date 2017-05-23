@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-java -Dconfig.file=../conf/oc.conf -classpath ../lib/OrderCat.jar com.myjo.ordercat.Main  $*
+java -classpath ../lib/OrderCat.jar com.myjo.ordercat.ReadStdin

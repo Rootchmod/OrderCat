@@ -5,11 +5,22 @@
         <console name="STDOUT">
             <PatternLayout pattern="[%d][%-5.-5p][%-14.-14c{1}:%4L] %-22.-22M - %m%n"/>
         </console>
-        <RollingFile name="RollingFileError" fileName="E:\OrderCat\logs\error.log"
+        <!--<RollingFile name="RollingFileError" fileName="E:\OrderCat\logs\error.log"-->
+                     <!--filePattern="${sys:user.home}/logs/hpaasvc/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">-->
+            <!--<thresholdFilter level="ERROR"/>-->
+            <!--<patternLayout pattern="[%d][%-5.-5p][%-14.-14c{1}:%4L] %-22.-22M - %m%n"/>-->
+            <!--<policies>-->
+                <!--<sizeBasedTriggeringPolicy size="100 MB"/>-->
+            <!--</policies>-->
+        <!--</RollingFile>-->
+
+
+        <RollingFile name="RollingFileError" fileName="${sys:user.home}/logs/hpaasvc/error.log"
                      filePattern="${sys:user.home}/logs/hpaasvc/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">
             <thresholdFilter level="ERROR"/>
             <patternLayout pattern="[%d][%-5.-5p][%-14.-14c{1}:%4L] %-22.-22M - %m%n"/>
             <policies>
+
                 <sizeBasedTriggeringPolicy size="100 MB"/>
             </policies>
         </RollingFile>

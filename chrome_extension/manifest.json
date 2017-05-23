@@ -1,0 +1,9 @@
+{
+  "name": "com.myjo.ordercat",
+  "description": "OrderCat",
+  "path": "/Users/lee5hx/src/myjo/OrderCat/artifact/bin/oc_st",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://knldjmfmopnpolahpmmgbagdohdnhkik/"
+  ]
+}

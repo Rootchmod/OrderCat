@@ -1,0 +1,1379 @@
+{
+  "trades_sold_get_response": {
+    "has_next": true,
+    "trades": {
+      "trade": [
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 50012031,
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 540067928874,
+                "oid": "16863740814403916",
+                "outer_iid": "844382-300-",
+                "outer_sku_id": "844382-001-42.5",
+                "payment": "659.00",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i6\/TB1B.SiOXXXXXaCaVXXXD3z_pXX_060120.jpg",
+                "price": "649.00",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "sku_id": "3201635642592",
+                "sku_properties_name": "颜色分类:黑\/黑\/煤黑;鞋码:42.5",
+                "status": "WAIT_SELLER_SEND_GOODS",
+                "title": "正品耐克男鞋黑NIKE ZOOM KD 9 EP杜兰特9代气垫低帮篮球鞋844382",
+                "total_fee": "649.00"
+              }
+            ]
+          },
+          "payment": "659.00",
+          "status": "WAIT_SELLER_SEND_GOODS",
+          "tid": "16863740814403916",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 50015374,
+                "discount_fee": "0.00",
+                "is_daixiao": true,
+                "num": 1,
+                "num_iid": 540902156586,
+                "oid": "21149389410587087",
+                "outer_sku_id": "SX5481-900|L",
+                "payment": "59.00",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i7\/TB1fb04NVXXXXa.aXXXXh5kFFXX_093514.jpg",
+                "price": "59.00",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "sku_id": "3409027774991",
+                "sku_properties_name": "颜色分类:SX5481-900;尺码:L",
+                "status": "WAIT_BUYER_PAY",
+                "title": "Nike耐克短筒袜子男女通用毛巾底篮球袜吸汗纯棉透气运动袜SX5481",
+                "total_fee": "59.00"
+              },
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 50012036,
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 540069227362,
+                "oid": "21149389411587087",
+                "outer_iid": "806771-004-",
+                "outer_sku_id": "806771-040-41",
+                "payment": "1009.00",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/738840638\/TB2ydQ8krJkpuFjy1zcXXa5FFXa_!!738840638.png",
+                "price": "1009.00",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "sku_id": "3201647295706",
+                "sku_properties_name": "颜色分类:黑\/彩色\/深宝蓝\/超级蓝\/光辉蓝;鞋码:41",
+                "status": "WAIT_BUYER_PAY",
+                "title": "正品耐克男鞋Nike Air Max全掌气垫鞋运动鞋飞线透气跑步鞋806771",
+                "total_fee": "1009.00"
+              }
+            ]
+          },
+          "payment": "1083.00",
+          "status": "WAIT_BUYER_PAY",
+          "tid": "21149389409587087",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 50012036,
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 538875734092,
+                "oid": "21123870831989594",
+                "outer_iid": "831562-500-",
+                "outer_sku_id": "831562-001-36.5",
+                "payment": "509.00",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i6\/TB1rpmcOFXXXXXfXXXXRV829XXX_034521.jpg",
+                "price": "499.00",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "sku_id": "3259372561107",
+                "sku_properties_name": "颜色分类:黑\/白\/煤黑;鞋码:36.5",
+                "status": "WAIT_SELLER_SEND_GOODS",
+                "title": "正品耐克女鞋2017年春季新款NIKE AIR ZOOM气垫运动跑步鞋831562",
+                "total_fee": "499.00"
+              }
+            ]
+          },
+          "payment": "509.00",
+          "status": "WAIT_SELLER_SEND_GOODS",
+          "tid": "21123870831989594",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 50013933,
+                "discount_fee": "0.00",
+                "divide_order_fee": "89.00",
+                "is_daixiao": true,
+                "num": 1,
+                "num_iid": 536953697169,
+                "oid": "16877101772355255",
+                "outer_iid": "40-1H088",
+                "outer_sku_id": "0",
+                "payment": "89.00",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i5\/TB13bGZHFXXXXbyaXXXuabp.pXX_103655.jpg",
+                "price": "89.00",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "sku_id": "3205938920788",
+                "sku_properties_name": "颜色分类:水蓝(女);尺码:L",
+                "status": "WAIT_SELLER_SEND_GOODS",
+                "title": "Rax防风皮肤女风衣短款防晒衣泼水外套运动户外风衣40-1H088",
+                "total_fee": "89.00"
+              },
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 50013933,
+                "discount_fee": "0.00",
+                "divide_order_fee": "89.00",
+                "is_daixiao": true,
+                "num": 1,
+                "num_iid": 536953697169,
+                "oid": "16877101773355255",
+                "outer_iid": "40-1H088",
+                "outer_sku_id": "0",
+                "payment": "89.00",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i1\/793391563\/TB27CBWcXXXXXbHXpXXXXXXXXXX_!!793391563.jpg",
+                "price": "89.00",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "sku_id": "3205938920725",
+                "sku_properties_name": "颜色分类:粉红色(女);尺码:L",
+                "status": "WAIT_SELLER_SEND_GOODS",
+                "title": "Rax防风皮肤女风衣短款防晒衣泼水外套运动户外风衣40-1H088",
+                "total_fee": "89.00"
+              }
+            ]
+          },
+          "payment": "178.00",
+          "status": "WAIT_SELLER_SEND_GOODS",
+          "tid": "16877101771355255",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 50012036,
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 538869358126,
+                "oid": "16873221810909132",
+                "outer_iid": "806584-001-",
+                "outer_sku_id": "806584-600-40",
+                "part_mjz_discount": "0.00",
+                "payment": "389.00",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i6\/TB1DQhROFXXXXbDXFXXDkpA8VXX_031356.jpg",
+                "price": "379.00",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "sku_id": "3422287646784",
+                "sku_properties_name": "颜色分类:粉紫\/黑\/电子绿\/白;鞋码:40",
+                "status": "WAIT_SELLER_SEND_GOODS",
+                "title": "正品Nike耐克女鞋ZOOM STRUCTURE19气垫飞线透气缓震跑步鞋806584",
+                "total_fee": "379.00"
+              }
+            ]
+          },
+          "payment": "389.00",
+          "status": "WAIT_SELLER_SEND_GOODS",
+          "tid": "16873221810909132",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 50012036,
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 536023857309,
+                "oid": "16846940064439607",
+                "outer_iid": "831352-313-",
+                "outer_sku_id": "831352-002-44",
+                "part_mjz_discount": "0.00",
+                "payment": "649.00",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i4\/738840638\/TB2ZxMytXXXXXcbXXXXXXXXXXXX_!!738840638.png",
+                "price": "639.00",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "sku_id": "3204181705848",
+                "sku_properties_name": "颜色分类:深灰\/黑\/白;鞋码:44",
+                "status": "WAIT_SELLER_SEND_GOODS",
+                "title": "正品耐克男鞋NIKE AIR ZOOM PEGASUS 33网面气垫运动跑步鞋831352",
+                "total_fee": "639.00"
+              }
+            ]
+          },
+          "payment": "649.00",
+          "status": "WAIT_SELLER_SEND_GOODS",
+          "tid": "16846940064439607",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:03",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21104688789216489",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21104688789216489",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:04",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21115030413582487",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21115030413582487",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:04",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21133711985275396",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21133711985275396",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:04",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16863262893983246",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16863262893983246",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:04",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16862863259079905",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16862863259079905",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:05",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16862423692116305",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16862423692116305",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:05",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21136849314901065",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21136849314901065",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:05",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21136049792585190",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21136049792585190",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:05",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21115150251795696",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21115150251795696",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:05",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16845940312056906",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16845940312056906",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:06",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21135889687775471",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21135889687775471",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:06",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21134051786783562",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21134051786783562",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:06",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21114690580349968",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21114690580349968",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:06",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21105948149512390",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21105948149512390",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:07",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16863942033987335",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16863942033987335",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:07",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21115030374710381",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21115030374710381",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:07",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21135671069762161",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21135671069762161",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:07",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16863342549705027",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16863342549705027",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:08",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16863061431997029",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16863061431997029",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:08",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21115050284587799",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21115050284587799",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:08",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16863702248742403",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16863702248742403",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:08",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16862961473745707",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16862961473745707",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:08",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16861963930710400",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16861963930710400",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:09",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21135471106468997",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21135471106468997",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:09",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21133891823479692",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21133891823479692",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:09",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16863682254927122",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16863682254927122",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:09",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16862661825744527",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16862661825744527",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:09",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "21105428405185178",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "21105428405185178",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:10",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16862943050792521",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16862943050792521",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:10",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16862921540907815",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16862921540907815",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:10",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16862903048811615",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16862903048811615",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:10",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16863362373972312",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16863362373972312",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:10",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16863782053696127",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16863782053696127",
+          "type": "fixed"
+        },
+        {
+          "orders": {
+            "order": [
+              {
+                "adjust_fee": "0.00",
+                "buyer_rate": false,
+                "cid": 121424006,
+                "consign_time": "2017-05-19 13:35:11",
+                "discount_fee": "0.00",
+                "is_daixiao": false,
+                "num": 1,
+                "num_iid": 551209429725,
+                "oid": "16845420536829543",
+                "payment": "5.01",
+                "pic_path": "https:\/\/img.alicdn.com\/bao\/uploaded\/i3\/TB1D.v0QVXXXXaSXXXXXXXXXXXX_!!0-item_pic.jpg",
+                "price": "5.01",
+                "refund_status": "NO_REFUND",
+                "seller_rate": false,
+                "seller_type": "B",
+                "shipping_type": "express",
+                "sku_id": "3366070332828",
+                "sku_properties_name": "鞋码\/内长:20码\/15cm;颜色分类:深紫色",
+                "status": "WAIT_BUYER_CONFIRM_GOODS",
+                "title": "鞋带补差价专拍",
+                "total_fee": "5.01"
+              }
+            ]
+          },
+          "payment": "5.01",
+          "status": "WAIT_BUYER_CONFIRM_GOODS",
+          "tid": "16845420536829543",
+          "type": "fixed"
+        }
+      ]
+    },
+    "request_id": "eoq2va0171r6"
+  }
+}
