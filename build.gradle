@@ -126,6 +126,10 @@ dependencies {
     //If you wish to use the Java 8 extension (cell processors for parsing/formatting Java 8 classes), then you will also need the following:
     compile group: 'net.sf.supercsv', name: 'super-csv-java8', version: '2.4.0'
 
+
+    //strman-java string
+    compile(group: 'com.shekhargulati', name: 'strman', version: '0.3.0')
+
     //json
     compile 'com.alibaba:fastjson:1.2.31'
 
@@ -167,6 +171,9 @@ dependencies {
 
     // dependencies used by examples in this project
     testRuntime "com.h2database:h2:1.4.182"
+
+
+
 
 
 }

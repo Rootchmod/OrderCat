@@ -129,7 +129,10 @@ class SyncInventorySpec extends Specification {
 
     def "StringUtils.substringAfterLast()"() {
         when:
-        String dd = StringUtils.substringBeforeLast("805942-600-36.5", "-");
+        //String dd = StringUtils.substringBeforeLast("805942-600-36.5", "-");
+
+        //String dd = strman.Strman.first("805942-600-36.5",6);
+
         String dd1 = StringUtils.substringBeforeLast("配货率：78%<br/>发货时效:18小时", "%");
         String dd2 = StringUtils.substringAfterLast("配货率：78%<br/>发货时效:18小时", "发货时效:");
         String dd3 = StringUtils.substringBeforeLast("配货率：100%<br/>发货时效:18小时", "%");
@@ -147,13 +150,14 @@ class SyncInventorySpec extends Specification {
 
 
 
-        System.out.println(dd.toString())
+
+        //System.out.println(dd.toString())
         System.out.println(dd1.toString())
         System.out.println(dd2.toString())
 
 
         then:
-        dd == "805942-600";
+        //dd == "805942-600";
         dd1 == "78";
         dd2 == "18";
         dd3 == "100";

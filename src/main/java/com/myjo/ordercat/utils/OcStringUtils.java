@@ -1,6 +1,7 @@
 package com.myjo.ordercat.utils;
 
 import com.myjo.ordercat.domain.InventoryInfo;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +48,10 @@ public class OcStringUtils {
             rt = true;
         }
         return rt;
+    }
+
+    public static String getGoodsNoByOuterId(String skuOuterId){
+        return StringUtils.substringBeforeLast(skuOuterId, "-");
     }
 
 }

@@ -9,6 +9,7 @@ import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.handle.*;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
+import com.myjo.ordercat.job.FenxiaoAccountCheckJob;
 import com.myjo.ordercat.job.SyncSalesInfoJob;
 import com.myjo.ordercat.job.SyncTaoBaoInventoryJob;
 import com.myjo.ordercat.job.SyncWarehouseJob;
@@ -218,7 +219,7 @@ public class Main {
             sched.scheduleJob(job2, trigger2);
 
             //FenxiaoAccountCheckJob
-            JobDetail job3 = newJob(SyncSalesInfoJob.class)
+            JobDetail job3 = newJob(FenxiaoAccountCheckJob.class)
                     .usingJobData(map1)
                     .withIdentity(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue(), "myjo")
                     .build();

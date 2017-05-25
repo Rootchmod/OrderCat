@@ -513,7 +513,7 @@ public class SyncInventory {
         Logger.info("按照SKU,在天马库存中进行过滤");
         Map<String, List<Sku>> inventoryInfoInCsvNumIidMap =
                 skus.parallelStream()
-                        .collect(Collectors.groupingBy(sku -> StringUtils.substringBeforeLast(sku.getOuterId(), "-")));
+                        .collect(Collectors.groupingBy(sku -> OcStringUtils.getGoodsNoByOuterId(sku.getOuterId())));
 
         List<InventoryInfo> intersectionList = list.parallelStream()
                 .filter(inventoryInfo -> !inventoryInfo.getDiscount().equals("折扣"))
