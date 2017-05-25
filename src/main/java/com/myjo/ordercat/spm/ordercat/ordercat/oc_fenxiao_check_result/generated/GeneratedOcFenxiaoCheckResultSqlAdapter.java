@@ -50,20 +50,21 @@ public abstract class GeneratedOcFenxiaoCheckResultSqlAdapter {
         try {
             entity.setId(                  resultSet.getLong(1)                            );
             entity.setTid(                 getLong(resultSet, 2)                           );
-            entity.setRefundId(            getLong(resultSet, 3)                           );
-            entity.setNumIid(              getLong(resultSet, 4)                           );
-            entity.setTitle(               resultSet.getString(5)                          );
-            entity.setFenxiaoId(           getLong(resultSet, 6)                           );
-            entity.setSupplierNick(        resultSet.getString(7)                          );
-            entity.setDistributorNick(     resultSet.getString(8)                          );
-            entity.setFenxiaoRefundStatus( resultSet.getString(9)                          );
-            entity.setFenxiaoRefundFee(    resultSet.getBigDecimal(10)                     );
-            entity.setFenxiaoPaySupFee(    resultSet.getBigDecimal(11)                     );
-            entity.setFenxiaoRefundDesc(   resultSet.getString(12)                         );
-            entity.setFenxiaoRefundReason( resultSet.getString(13)                         );
-            entity.setStatus(              resultSet.getString(14)                         );
-            entity.setRemarks(             resultSet.getString(15)                         );
-            entity.setAddTime(             addTimeHelper.apply(resultSet.getTimestamp(16)) );
+            entity.setOrderStatus(         resultSet.getString(3)                          );
+            entity.setRefundId(            getLong(resultSet, 4)                           );
+            entity.setNumIid(              getLong(resultSet, 5)                           );
+            entity.setTitle(               resultSet.getString(6)                          );
+            entity.setFenxiaoId(           getLong(resultSet, 7)                           );
+            entity.setSupplierNick(        resultSet.getString(8)                          );
+            entity.setDistributorNick(     resultSet.getString(9)                          );
+            entity.setFenxiaoRefundStatus( resultSet.getString(10)                         );
+            entity.setFenxiaoRefundFee(    resultSet.getBigDecimal(11)                     );
+            entity.setFenxiaoPaySupFee(    resultSet.getBigDecimal(12)                     );
+            entity.setFenxiaoRefundDesc(   resultSet.getString(13)                         );
+            entity.setFenxiaoRefundReason( resultSet.getString(14)                         );
+            entity.setStatus(              resultSet.getString(15)                         );
+            entity.setRemarks(             resultSet.getString(16)                         );
+            entity.setAddTime(             addTimeHelper.apply(resultSet.getTimestamp(17)) );
         } catch (final SQLException sqle) {
             throw new SpeedmentException(sqle);
         }

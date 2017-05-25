@@ -24,6 +24,7 @@ public abstract class GeneratedOcFenxiaoCheckResultImpl implements OcFenxiaoChec
     
     private long id;
     private Long tid;
+    private String orderStatus;
     private Long refundId;
     private Long numIid;
     private String title;
@@ -54,6 +55,11 @@ public abstract class GeneratedOcFenxiaoCheckResultImpl implements OcFenxiaoChec
     }
     
     @Override
+    public Optional<String> getOrderStatus() {
+        return Optional.ofNullable(orderStatus);
+    }
+    
+    @Override
     public OptionalLong getRefundId() {
         return OptionalUtil.ofNullable(refundId);
     }
@@ -74,18 +80,18 @@ public abstract class GeneratedOcFenxiaoCheckResultImpl implements OcFenxiaoChec
     }
     
     @Override
-    public String getSupplierNick() {
-        return supplierNick;
+    public Optional<String> getSupplierNick() {
+        return Optional.ofNullable(supplierNick);
     }
     
     @Override
-    public String getDistributorNick() {
-        return distributorNick;
+    public Optional<String> getDistributorNick() {
+        return Optional.ofNullable(distributorNick);
     }
     
     @Override
-    public String getFenxiaoRefundStatus() {
-        return fenxiaoRefundStatus;
+    public Optional<String> getFenxiaoRefundStatus() {
+        return Optional.ofNullable(fenxiaoRefundStatus);
     }
     
     @Override
@@ -99,18 +105,18 @@ public abstract class GeneratedOcFenxiaoCheckResultImpl implements OcFenxiaoChec
     }
     
     @Override
-    public String getFenxiaoRefundDesc() {
-        return fenxiaoRefundDesc;
+    public Optional<String> getFenxiaoRefundDesc() {
+        return Optional.ofNullable(fenxiaoRefundDesc);
     }
     
     @Override
-    public String getFenxiaoRefundReason() {
-        return fenxiaoRefundReason;
+    public Optional<String> getFenxiaoRefundReason() {
+        return Optional.ofNullable(fenxiaoRefundReason);
     }
     
     @Override
-    public String getStatus() {
-        return status;
+    public Optional<String> getStatus() {
+        return Optional.ofNullable(status);
     }
     
     @Override
@@ -132,6 +138,12 @@ public abstract class GeneratedOcFenxiaoCheckResultImpl implements OcFenxiaoChec
     @Override
     public OcFenxiaoCheckResult setTid(Long tid) {
         this.tid = tid;
+        return this;
+    }
+    
+    @Override
+    public OcFenxiaoCheckResult setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
         return this;
     }
     
@@ -224,18 +236,19 @@ public abstract class GeneratedOcFenxiaoCheckResultImpl implements OcFenxiaoChec
         final StringJoiner sj = new StringJoiner(", ", "{ ", " }");
         sj.add("id = "                  + Objects.toString(getId()));
         sj.add("tid = "                 + Objects.toString(OptionalUtil.unwrap(getTid())));
+        sj.add("orderStatus = "         + Objects.toString(OptionalUtil.unwrap(getOrderStatus())));
         sj.add("refundId = "            + Objects.toString(OptionalUtil.unwrap(getRefundId())));
         sj.add("numIid = "              + Objects.toString(OptionalUtil.unwrap(getNumIid())));
         sj.add("title = "               + Objects.toString(getTitle()));
         sj.add("fenxiaoId = "           + Objects.toString(OptionalUtil.unwrap(getFenxiaoId())));
-        sj.add("supplierNick = "        + Objects.toString(getSupplierNick()));
-        sj.add("distributorNick = "     + Objects.toString(getDistributorNick()));
-        sj.add("fenxiaoRefundStatus = " + Objects.toString(getFenxiaoRefundStatus()));
+        sj.add("supplierNick = "        + Objects.toString(OptionalUtil.unwrap(getSupplierNick())));
+        sj.add("distributorNick = "     + Objects.toString(OptionalUtil.unwrap(getDistributorNick())));
+        sj.add("fenxiaoRefundStatus = " + Objects.toString(OptionalUtil.unwrap(getFenxiaoRefundStatus())));
         sj.add("fenxiaoRefundFee = "    + Objects.toString(OptionalUtil.unwrap(getFenxiaoRefundFee())));
         sj.add("fenxiaoPaySupFee = "    + Objects.toString(OptionalUtil.unwrap(getFenxiaoPaySupFee())));
-        sj.add("fenxiaoRefundDesc = "   + Objects.toString(getFenxiaoRefundDesc()));
-        sj.add("fenxiaoRefundReason = " + Objects.toString(getFenxiaoRefundReason()));
-        sj.add("status = "              + Objects.toString(getStatus()));
+        sj.add("fenxiaoRefundDesc = "   + Objects.toString(OptionalUtil.unwrap(getFenxiaoRefundDesc())));
+        sj.add("fenxiaoRefundReason = " + Objects.toString(OptionalUtil.unwrap(getFenxiaoRefundReason())));
+        sj.add("status = "              + Objects.toString(OptionalUtil.unwrap(getStatus())));
         sj.add("remarks = "             + Objects.toString(OptionalUtil.unwrap(getRemarks())));
         sj.add("addTime = "             + Objects.toString(getAddTime()));
         return "OcFenxiaoCheckResultImpl " + sj.toString();
@@ -248,6 +261,7 @@ public abstract class GeneratedOcFenxiaoCheckResultImpl implements OcFenxiaoChec
         final OcFenxiaoCheckResult thatOcFenxiaoCheckResult = (OcFenxiaoCheckResult)that;
         if (this.getId() != thatOcFenxiaoCheckResult.getId()) {return false; }
         if (!Objects.equals(this.getTid(), thatOcFenxiaoCheckResult.getTid())) {return false; }
+        if (!Objects.equals(this.getOrderStatus(), thatOcFenxiaoCheckResult.getOrderStatus())) {return false; }
         if (!Objects.equals(this.getRefundId(), thatOcFenxiaoCheckResult.getRefundId())) {return false; }
         if (!Objects.equals(this.getNumIid(), thatOcFenxiaoCheckResult.getNumIid())) {return false; }
         if (!Objects.equals(this.getTitle(), thatOcFenxiaoCheckResult.getTitle())) {return false; }
@@ -270,6 +284,7 @@ public abstract class GeneratedOcFenxiaoCheckResultImpl implements OcFenxiaoChec
         int hash = 7;
         hash = 31 * hash + Long.hashCode(getId());
         hash = 31 * hash + Objects.hashCode(getTid());
+        hash = 31 * hash + Objects.hashCode(getOrderStatus());
         hash = 31 * hash + Objects.hashCode(getRefundId());
         hash = 31 * hash + Objects.hashCode(getNumIid());
         hash = 31 * hash + Objects.hashCode(getTitle());

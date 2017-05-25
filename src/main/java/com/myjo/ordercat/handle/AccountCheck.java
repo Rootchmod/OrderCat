@@ -9,6 +9,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiao
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
+import com.myjo.ordercat.utils.OcCsvUtils;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
 import com.taobao.api.domain.PurchaseOrder;
 import com.taobao.api.domain.Refund;
@@ -66,6 +67,9 @@ public class AccountCheck {
                 OcDateTimeUtils.localDateTime2String(lend),
                 refundlist.size()));
 
+        //清空
+        ocFenxiaoCheckResultManager.stream().forEach(ocFenxiaoCheckResultManager.remover());
+
         //查询已经同步库存过的宝贝(为了过滤出分销退款订单)
         Map<String, OcSyncInventoryItemInfo> osiiMap = ocSyncInventoryItemInfoManager
                 .stream()
@@ -110,6 +114,7 @@ public class AccountCheck {
                 ofcr.setNumIid(r.getNumIid());
                 ofcr.setRefundId(r.getRefundId());
                 ofcr.setTitle(r.getTitle());
+                ofcr.setOrderStatus(r.getOrderStatus());
                 purchaseOrderlist = taoBaoHttp.getFenxiaoOrdersByTcOrderId(r.getTid());
 
                 if (purchaseOrderlist != null && purchaseOrderlist.size() > 0) {
@@ -122,9 +127,18 @@ public class AccountCheck {
                         ofcr.setFenxiaoRefundReason(refundDetail.getRefundReason());
                         ofcr.setFenxiaoRefundStatus(refundDetail.getRefundStatus().toString());
                         ofcr.setFenxiaoRefundFee(new BigDecimal(refundDetail.getRefundFee()));
-                        ofcr.setStatus(FenxiaoCheckStatus.SUCCESS_REFUND.getValue());
+                        ofcr.setSupplierNick(refundDetail.getSupplierNick());
+
+                        if(refundDetail.getRefundStatus() == 5l){
+                            ofcr.setStatus(FenxiaoCheckStatus.SUCCESS_REFUND.getValue());
+                        }else {
+                            ofcr.setStatus(FenxiaoCheckStatus.STATUS_ERROR_FENXIAO_REFUND.getValue());
+                        }
                     } else {
                         ofcr.setStatus(FenxiaoCheckStatus.NOT_FENXIAO_REFUND.getValue());
+                        if(ofcr.getOrderStatus().equals("TRADE_CLOSED")){//没有退款信息，但是交易关闭。就是退款成功
+                            ofcr.setStatus(FenxiaoCheckStatus.SUCCESS_REFUND.getValue());
+                        }
                     }
                 } else {
                     ofcr.setStatus(FenxiaoCheckStatus.NOT_FENXIAO.getValue());
@@ -135,10 +149,13 @@ public class AccountCheck {
         }
 
 
-        refundlist.stream().forEach(o -> {
-            System.out.println(o.getTid() + "," + o.getRefundId() + "," + o.getNumIid() + "," + o.getTitle() + "," + o.getOuterId());
-        });
+        List<OcFenxiaoCheckResult> olist = ocFenxiaoCheckResultManager.stream().collect(Collectors.toList());
 
+
+        OcCsvUtils.writeWithCsvOcFenxiaoCheckResultWriter(olist,execJobId);
+//        refundlist.stream().forEach(o -> {
+//            System.out.println(o.getTid() + "," + o.getRefundId() + "," + o.getNumIid() + "," + o.getTitle() + "," + o.getOuterId());
+//        });
 
         Logger.info(String.format("分销对账-运行结束"));
     }

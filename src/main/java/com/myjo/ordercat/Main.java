@@ -14,6 +14,7 @@ import com.myjo.ordercat.job.SyncTaoBaoInventoryJob;
 import com.myjo.ordercat.job.SyncWarehouseJob;
 import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager;
@@ -79,6 +80,7 @@ public class Main {
         OcSalesInfoManager ocSalesInfoManager = app.getOrThrow(OcSalesInfoManager.class);
         OcLogisticsCompaniesInfoManager ocLogisticsCompaniesInfoManager = app.getOrThrow(OcLogisticsCompaniesInfoManager.class);
         OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager = app.getOrThrow(OcSyncInventoryItemInfoManager.class);
+        OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager = app.getOrThrow(OcFenxiaoCheckResultManager.class);
 
 
         Logger.info("初始化[speedment]-完成.");
@@ -113,6 +115,11 @@ public class Main {
 
 
 
+        AccountCheck ac = new AccountCheck(tianmaSportHttp,taoBaoHttp);
+        ac.setOcSyncInventoryItemInfoManager(ocSyncInventoryItemInfoManager);
+        ac.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
+
+
 
         tianmaSportHttp.getVerifyCodeImage();
 
@@ -123,6 +130,10 @@ public class Main {
         if(!jsonObject.getBoolean("success")){
             throw new OCException("天马平台-登陆失败");
         }
+
+
+
+
 
         tianmaSportHttp.main_html();
 
@@ -137,13 +148,15 @@ public class Main {
         eh1.setJobName(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue());
         eh1.setOcJobExecInfoManager(ocJobExecInfoManager);
 
-
         ExecuteHandle eh2;
         eh2 = new SyncSalesInfoHandle(syncInventory);
         eh2.setJobName(JobName.SYNC_SALES_INFO_JOB.getValue());
         eh2.setOcJobExecInfoManager(ocJobExecInfoManager);
 
-
+        ExecuteHandle eh3;
+        eh3 = new FenXiaoAcHandle(ac);
+        eh3.setJobName(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue());
+        eh3.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
 
@@ -151,7 +164,11 @@ public class Main {
             eh2.exec();
         } else if (action.equals(JobName.SYNC_WAREHOUSE_JOB.getValue())) {
             eh.exec();
-        } else if (action.equals(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue())) {
+        }
+        else if (action.equals(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue())) {
+            eh3.exec();
+        }
+        else if (action.equals(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue())) {
             eh1.exec();
         } else if (action.equals("JobStart")) {
             SchedulerFactory sf = new StdSchedulerFactory();
@@ -162,6 +179,7 @@ public class Main {
             map1.put("SyncWarehouseHandle",eh);
             map1.put("SyncTaoBaoInventoryHandle",eh1);
             map1.put("SyncSalesInfoHandle",eh2);
+            map1.put("FenXiaoAcHandle",eh3);
             JobDetail job = newJob(SyncWarehouseJob.class)
                     .usingJobData(map1)
                     .withIdentity(JobName.SYNC_WAREHOUSE_JOB.getValue(), "myjo")
@@ -187,7 +205,7 @@ public class Main {
 
 
 
-            //SyncTaoBaoInventoryJob
+            //SyncSalesInfoJob
             JobDetail job2 = newJob(SyncSalesInfoJob.class)
                     .usingJobData(map1)
                     .withIdentity(JobName.SYNC_SALES_INFO_JOB.getValue(), "myjo")
@@ -199,17 +217,20 @@ public class Main {
                     .build();
             sched.scheduleJob(job2, trigger2);
 
+            //FenxiaoAccountCheckJob
+            JobDetail job3 = newJob(SyncSalesInfoJob.class)
+                    .usingJobData(map1)
+                    .withIdentity(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue(), "myjo")
+                    .build();
 
-
-
-
-
+            CronTrigger trigger3 = newTrigger()
+                    .withIdentity(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue()+"Trigger", "myjo")
+                    .withSchedule(cronSchedule(OrderCatConfig.getFenxiaoAccountCheckJobTriggerCron()))
+                    .build();
+            sched.scheduleJob(job3, trigger3);
 
 
             sched.start();
-
-
-
         }
 
 

@@ -162,67 +162,6 @@ public class SyncInventory {
     }
 
 
-    private void writeWithCsvInventoryWriter(List<InventoryInfo> lists, Long execJobId) throws Exception {
-
-        ICsvBeanWriter beanWriter = null;
-        try {
-            File file = new File(OrderCatConfig.getOrderCatOutPutPath() + String.format("inventory_info_rt_%d.csv", execJobId.intValue()));
-            if (file.exists()) {
-                FileUtils.forceDelete(file);
-            }
-
-            beanWriter = new CsvBeanWriter(new FileWriter(OrderCatConfig.getOrderCatOutPutPath() + String.format("inventory_info_rt_%d.csv", execJobId.intValue())),
-                    CsvPreference.STANDARD_PREFERENCE);
-
-            // the header elements are used to map the bean values to each column (names must match)
-            final String[] header = new String[]{
-                    "goodsNo",
-                    "wareHouseID",
-                    "warehouseName",
-                    "size1",
-                    "size2",
-                    "brand",
-                    "marketprice",
-                    "num2",
-                    "division",
-                    "cate",
-                    "sex",
-                    "quarter",
-                    "discount",
-                    "bdiscount",
-                    "pickRate",
-                    "updateTime",
-                    "pickDate",
-                    "thedtime",
-                    "proxyPrice",
-                    "salesPrice",
-                    "avgPrice",
-                    "salesCount",
-                    "expressName",
-                    "retrunDesc",
-                    "returnRate",
-                    "endT",
-                    "mark",
-                    "numIid",
-                    "skuId"
-            };
-
-            //final CellProcessor[] processors = getProcessors();
-
-            // write the header
-            beanWriter.writeHeader(header);
-
-            // write the beans
-            for (final InventoryInfo inventoryInfo : lists) {
-                beanWriter.write(inventoryInfo, header);
-            }
-
-        } finally {
-            if (beanWriter != null) {
-                beanWriter.close();
-            }
-        }
-    }
 
 
     private Integer getJobID(String jobName) {
@@ -797,7 +736,7 @@ public class SyncInventory {
         List<InventoryInfo> csvList = intersectionList.parallelStream()
                 .filter(inventoryInfo -> inventoryInfo.getSalesPrice() != null).collect(toList());
 
-        writeWithCsvInventoryWriter(csvList, execJobId);
+        OcCsvUtils.writeWithCsvInventoryWriter(csvList, execJobId);
 
         Logger.info(String.format("输出结果list.size:[%d]", csvList.size()));
 

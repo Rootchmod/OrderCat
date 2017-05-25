@@ -54,6 +54,18 @@ public interface GeneratedOcFenxiaoCheckResult {
     );
     /**
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
+     * be obtained using the {@link OcFenxiaoCheckResult#getOrderStatus()}
+     * method.
+     */
+    final StringField<OcFenxiaoCheckResult, String> ORDER_STATUS = StringField.create(
+        Identifier.ORDER_STATUS,
+        o -> OptionalUtil.unwrap(o.getOrderStatus()),
+        OcFenxiaoCheckResult::setOrderStatus,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getRefundId()} method.
      */
     final ComparableField<OcFenxiaoCheckResult, Long, Long> REFUND_ID = ComparableField.create(
@@ -103,7 +115,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      */
     final StringField<OcFenxiaoCheckResult, String> SUPPLIER_NICK = StringField.create(
         Identifier.SUPPLIER_NICK,
-        OcFenxiaoCheckResult::getSupplierNick,
+        o -> OptionalUtil.unwrap(o.getSupplierNick()),
         OcFenxiaoCheckResult::setSupplierNick,
         TypeMapper.identity(), 
         false
@@ -115,7 +127,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      */
     final StringField<OcFenxiaoCheckResult, String> DISTRIBUTOR_NICK = StringField.create(
         Identifier.DISTRIBUTOR_NICK,
-        OcFenxiaoCheckResult::getDistributorNick,
+        o -> OptionalUtil.unwrap(o.getDistributorNick()),
         OcFenxiaoCheckResult::setDistributorNick,
         TypeMapper.identity(), 
         false
@@ -127,7 +139,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      */
     final StringField<OcFenxiaoCheckResult, String> FENXIAO_REFUND_STATUS = StringField.create(
         Identifier.FENXIAO_REFUND_STATUS,
-        OcFenxiaoCheckResult::getFenxiaoRefundStatus,
+        o -> OptionalUtil.unwrap(o.getFenxiaoRefundStatus()),
         OcFenxiaoCheckResult::setFenxiaoRefundStatus,
         TypeMapper.identity(), 
         false
@@ -163,7 +175,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      */
     final StringField<OcFenxiaoCheckResult, String> FENXIAO_REFUND_DESC = StringField.create(
         Identifier.FENXIAO_REFUND_DESC,
-        OcFenxiaoCheckResult::getFenxiaoRefundDesc,
+        o -> OptionalUtil.unwrap(o.getFenxiaoRefundDesc()),
         OcFenxiaoCheckResult::setFenxiaoRefundDesc,
         TypeMapper.identity(), 
         false
@@ -175,7 +187,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      */
     final StringField<OcFenxiaoCheckResult, String> FENXIAO_REFUND_REASON = StringField.create(
         Identifier.FENXIAO_REFUND_REASON,
-        OcFenxiaoCheckResult::getFenxiaoRefundReason,
+        o -> OptionalUtil.unwrap(o.getFenxiaoRefundReason()),
         OcFenxiaoCheckResult::setFenxiaoRefundReason,
         TypeMapper.identity(), 
         false
@@ -186,7 +198,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      */
     final StringField<OcFenxiaoCheckResult, String> STATUS = StringField.create(
         Identifier.STATUS,
-        OcFenxiaoCheckResult::getStatus,
+        o -> OptionalUtil.unwrap(o.getStatus()),
         OcFenxiaoCheckResult::setStatus,
         TypeMapper.identity(), 
         false
@@ -231,6 +243,15 @@ public interface GeneratedOcFenxiaoCheckResult {
     OptionalLong getTid();
     
     /**
+     * Returns the orderStatus of this OcFenxiaoCheckResult. The orderStatus
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_fenxiao_check_result.order_status.
+     * 
+     * @return the orderStatus of this OcFenxiaoCheckResult
+     */
+    Optional<String> getOrderStatus();
+    
+    /**
      * Returns the refundId of this OcFenxiaoCheckResult. The refundId field
      * corresponds to the database column
      * ordercat.ordercat.oc_fenxiao_check_result.refundId.
@@ -273,7 +294,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * 
      * @return the supplierNick of this OcFenxiaoCheckResult
      */
-    String getSupplierNick();
+    Optional<String> getSupplierNick();
     
     /**
      * Returns the distributorNick of this OcFenxiaoCheckResult. The
@@ -282,7 +303,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * 
      * @return the distributorNick of this OcFenxiaoCheckResult
      */
-    String getDistributorNick();
+    Optional<String> getDistributorNick();
     
     /**
      * Returns the fenxiaoRefundStatus of this OcFenxiaoCheckResult. The
@@ -291,7 +312,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * 
      * @return the fenxiaoRefundStatus of this OcFenxiaoCheckResult
      */
-    String getFenxiaoRefundStatus();
+    Optional<String> getFenxiaoRefundStatus();
     
     /**
      * Returns the fenxiaoRefundFee of this OcFenxiaoCheckResult. The
@@ -318,7 +339,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * 
      * @return the fenxiaoRefundDesc of this OcFenxiaoCheckResult
      */
-    String getFenxiaoRefundDesc();
+    Optional<String> getFenxiaoRefundDesc();
     
     /**
      * Returns the fenxiaoRefundReason of this OcFenxiaoCheckResult. The
@@ -327,7 +348,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * 
      * @return the fenxiaoRefundReason of this OcFenxiaoCheckResult
      */
-    String getFenxiaoRefundReason();
+    Optional<String> getFenxiaoRefundReason();
     
     /**
      * Returns the status of this OcFenxiaoCheckResult. The status field
@@ -336,7 +357,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * 
      * @return the status of this OcFenxiaoCheckResult
      */
-    String getStatus();
+    Optional<String> getStatus();
     
     /**
      * Returns the remarks of this OcFenxiaoCheckResult. The remarks field
@@ -373,6 +394,16 @@ public interface GeneratedOcFenxiaoCheckResult {
      * @return    this OcFenxiaoCheckResult instance
      */
     OcFenxiaoCheckResult setTid(Long tid);
+    
+    /**
+     * Sets the orderStatus of this OcFenxiaoCheckResult. The orderStatus field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_fenxiao_check_result.order_status.
+     * 
+     * @param orderStatus to set of this OcFenxiaoCheckResult
+     * @return            this OcFenxiaoCheckResult instance
+     */
+    OcFenxiaoCheckResult setOrderStatus(String orderStatus);
     
     /**
      * Sets the refundId of this OcFenxiaoCheckResult. The refundId field
@@ -517,6 +548,7 @@ public interface GeneratedOcFenxiaoCheckResult {
         
         ID                    ("id"),
         TID                   ("tid"),
+        ORDER_STATUS          ("order_status"),
         REFUND_ID             ("refundId"),
         NUM_IID               ("numIid"),
         TITLE                 ("title"),

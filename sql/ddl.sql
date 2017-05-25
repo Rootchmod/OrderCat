@@ -125,6 +125,7 @@ DROP TABLE oc_fenxiao_check_result;
 CREATE TABLE `oc_fenxiao_check_result` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tid` BIGINT DEFAULT NULL COMMENT '订单ID',
+  `order_status` varchar(255)  COMMENT '订单状态:TRADE_NO_CREATE_PAY(没有创建支付宝交易) WAIT_BUYER_PAY(等待买家付款) WAIT_SELLER_SEND_GOODS(等待卖家发货,即:买家已付款) WAIT_BUYER_CONFIRM_GOODS(等待买家确认收货,即:卖家已发货) TRADE_BUYER_SIGNED(买家已签收,货到付款专用) TRADE_FINISHED(交易成功) TRADE_CLOSED(交易关闭) TRADE_CLOSED_BY_TAOBAO(交易被淘宝关闭) ALL_WAIT_PAY(包含：WAIT_BUYER_PAY、TRADE_NO_CREATE_PAY) ALL_CLOSED(包含：TRADE_CLOSED、TRADE_CLOSED_BY_TAOBAO)',
   `refundId` BIGINT DEFAULT NULL COMMENT '退款ID',
   `numIid` BIGINT DEFAULT NULL COMMENT '宝贝ID',
   `title` varchar(1000) NOT NULL COMMENT '宝贝标题',

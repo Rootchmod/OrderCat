@@ -36,6 +36,7 @@ public abstract class GeneratedOcFenxiaoCheckResultManagerImpl extends AbstractM
         return Stream.of(
             OcFenxiaoCheckResult.ID,
             OcFenxiaoCheckResult.TID,
+            OcFenxiaoCheckResult.ORDER_STATUS,
             OcFenxiaoCheckResult.REFUND_ID,
             OcFenxiaoCheckResult.NUM_IID,
             OcFenxiaoCheckResult.TITLE,

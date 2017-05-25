@@ -84,6 +84,13 @@ public class OrderCatConfig {
     }
 
 
+    public static String getFenxiaoAccountCheckJobTriggerCron(){
+        return config.getString(String.format(SCHEDULER_CRON, "fenxiaoAccountCheckJob_trigger_cron"));
+    }
+
+
+
+
 
 
 

@@ -439,6 +439,7 @@ public class TaoBaoHttp {
             temp = getRefundById(refund.getRefundId());
             refund.setNumIid(temp.getNumIid());
             refund.setOuterId(temp.getOuterId());
+            refund.setOrderStatus(temp.getOrderStatus());
         }
         return rtlist;
     }
@@ -483,7 +484,7 @@ public class TaoBaoHttp {
         Refund refund = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         RefundGetRequest req = new RefundGetRequest();
-        req.setFields("title,address,num_iid,outer_id,good_return_time,created");
+        req.setFields("title,address,num_iid,outer_id,order_status,good_return_time,created");
         req.setRefundId(refundId);
         RefundGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
         if(rsp.isSuccess()){
