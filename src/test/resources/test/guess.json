@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "cpCode": "YTO",
+      "cpName": "圆通速递"
+    },
+    {
+      "cpCode": "SF",
+      "cpName": "顺丰速运"
+    },
+    {
+      "cpCode": "BESTQJT",
+      "cpName": "百世快运"
+    },
+    {
+      "cpCode": "",
+      "cpName": "请选择物流公司"
+    }
+  ],
+  "success": true,
+  "message": null
+}

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.request.GetRequest;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.exception.OCException;
@@ -27,6 +28,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -113,6 +115,39 @@ public class TianmaSportHttp {
     }
 
 
+    public Optional<Boolean> addOrderRemark(String id,String remark) throws Exception {
+        boolean rt;
+
+        Logger.debug(String.format("add remark orderid=%s,remark=%s",id,remark));
+        String sessionId = map.get("seesion_id");
+        Logger.debug("http tianmaSport login sessionId: " + sessionId);
+
+
+        HttpResponse<JsonNode> jsonResponse = Unirest.post(OrderCatConfig.getTradeOrderAddRemarkHttpUrl())
+                .header("Host", "www.tianmasport.com")
+                .header("Connection", "keep-alive")
+                .header("Accept", "application/json, text/javascript, */*; q=0.01")
+                .header("Origin", "http://www.tianmasport.com")
+                .header("X-Requested-With", "XMLHttpRequest")
+                .header("User-Agent", USER_AGENT)
+                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                .header("Referer", "http://www.tianmasport.com/ms/tradeOrders/myorder_list.shtml")
+                .header("Accept-Encoding", "gzip, deflate")
+                .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+                //.header("Cookie", sessionId)
+                .field("id", id)
+                .field("remark", remark)
+                .asJson();
+        JSONObject ob = jsonResponse.getBody().getObject();
+
+        rt = ob.getBoolean("success");
+        Logger.debug("AddOrderRemark jsonResponse body:" + jsonResponse.getBody());
+        return Optional.ofNullable(rt);
+    }
+
+
+
+
     public String getVerifyCodeImage() throws Exception {
         Logger.info("http download verify code image");
 
@@ -123,7 +158,7 @@ public class TianmaSportHttp {
         long millis = dt.getMillis();
         String vcfile = OrderCatConfig.getTianmaSportVcImageFileName();
         //IOUtils.toByteArray(inputStream);
-        File vfile = new File(OrderCatConfig.getOrderCatOutPutPath() + vcfile);
+        File vfile = new File(OrderCatConfig.getOrderCatTempPath() + vcfile);
 
         Logger.debug(millis);
         Logger.debug(dtStr);
@@ -200,7 +235,7 @@ public class TianmaSportHttp {
     public String dataDownLoad(String path, String fileName) throws Exception {
         Logger.info("http data DownLoad:" + path);
 
-        String dfileStr = OrderCatConfig.getOrderCatOutPutPath() + fileName;
+        String dfileStr = OrderCatConfig.getOrderCatTempPath() + fileName;
         //IOUtils.toByteArray(inputStream);
         File dfile = new File(dfileStr);
 
@@ -372,7 +407,7 @@ public class TianmaSportHttp {
                 .field("goods_no", "")
                 .field("names", "")
                 .field("startTime", startTime)
-                .field("endsTime", endTime)
+                .field("endsTime", "")
                 .field("size", "")
                 .field("sort", "feed_back_time")
                 .field("order", "desc")
@@ -385,7 +420,7 @@ public class TianmaSportHttp {
         Logger.info("http-status-text:" + response.getStatusText());
 
         JSONObject rt = response.getBody().getObject();
-        Logger.info("inventoryDownGroup rt:" + rt);
+        //Logger.info("inventoryDownGroup rt:" + rt);
         if (code == 200) {
             pr.setTotal(rt.getInt("total"));
             org.json.JSONArray rows = rt.getJSONArray("rows");
@@ -413,6 +448,60 @@ public class TianmaSportHttp {
             throw new OCException("获取天马反馈订单失败:" + code);
         }
         return pr;
+    }
+
+
+    public Optional<LogisticsCompany> ajaxGuessMailNoRequest(String mailNo, String tradeId) throws Exception {
+        //https://wuliu.taobao.com/user/ajax_guess_mail_no.do?code=utf-8&mailNo=3921971273918
+        LogisticsCompany logisticsCompany = null;
+
+        String requestJsonFile = OrderCatConfig.getOrderCatTempPath()+"ajax_guess_mail_no_request.json";
+        String requestJsonStr = FileUtils.readFileToString(new File(requestJsonFile),"UTF-8");
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(requestJsonStr);
+        GetRequest getRequest = Unirest.get(String.format("https://wuliu.taobao.com/user/ajax_guess_mail_no.do?code=utf-8&mailNo=%s", mailNo));
+        getRequest  = getRequest.header("Host", "wuliu.taobao.com");
+        getRequest  = getRequest.header("Connection", "keep-alive");
+//        {
+//            "Accept": "application/json, text/javascript, */*; q=0.01",
+//                "X-DevTools-Emulate-Network-Conditions-Client-Id": "a4cfb530-24eb-4b35-93f9-fb41aab8f0ad",
+//                "X-Requested-With": "XMLHttpRequest",
+//                "X-DevTools-Request-Id": "7324.2138",
+//                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+//                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+//                "Referer": "https://wuliu.taobao.com/user/consign.htm?trade_id=23055370418247368",
+//                "Accept-Encoding": "gzip, deflate, sdch, br",
+//                "Accept-Language": "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4",
+//                "Cookie": "_tb_token_=HB9E6HKteq; thw=cn; lui=VAKFDSkq4kYp; luo=Uok%3D; x=738840638; uc3=sg2=ACIKPdBNvzXQZZ1%2F6JueC%2FRAZLgHu10UukDKGHjL3x4%3D&nk2=&id2=&lg2=; uss=VWn19n9GAJhytItVeCtkdiTm0IUMb4iI77oYPuWlTj83RPL9PBq3DJMP7g%3D%3D; tracknick=; sn=%E9%BA%A6%E5%B7%A8%E9%9E%8B%E7%B1%BB%E4%B8%93%E8%90%A5%E5%BA%97%3Alee5hx; skt=6f88357582fbda2b; v=0; cookie2=1c6693fa9385a3eca2c7fdc21381eb79; unb=3277376423; t=e60a0198245b4cd5661acbb044370c7c; l=Ao6OW5cItfkAIF/B8mbzJucxXm9RW1JN; isg=Avv7jte1JiViLhqTROucjAWBitm7TQ9S4HjJJ-25g_pVTBMuYyHbonBMEFr5; cna=rGepEXF8izACAS9KB+o89YoQ; uc1=cookie14=UoW%2Bvf0UQFk1zQ%3D%3D&lng=zh_CN"
+//        }
+
+        getRequest  = getRequest.header("Accept", jsonObject.getString("Accept"));
+        getRequest  = getRequest.header("X-Requested-With", jsonObject.getString("X-Requested-With"));
+        getRequest  = getRequest.header("User-Agent", jsonObject.getString("User-Agent"));
+        getRequest  = getRequest.header("Referer", String.format("https://wuliu.taobao.com/user/consign.htm?trade_id=%s",tradeId));
+        getRequest  = getRequest.header("Accept-Encoding", jsonObject.getString("Accept-Encoding"));
+        getRequest  = getRequest.header("Accept-Language", jsonObject.getString("Accept-Language"));
+        getRequest  = getRequest.header("Cookie", jsonObject.getString("Cookie"));
+
+        HttpResponse<JsonNode> response = getRequest.asJson();
+
+        if(response.getStatus()==200){
+            JSONObject jsonObject1 = response.getBody().getObject();
+            boolean success = jsonObject1.getBoolean("success");
+            if(success){
+                org.json.JSONArray datas = jsonObject1.getJSONArray("data");
+                for(int i=0;i<datas.length();i++){
+                    logisticsCompany = new LogisticsCompany();
+                    jsonObject1 = datas.getJSONObject(i);
+                    logisticsCompany.setCode(jsonObject1.getString("cpCode"));
+                    logisticsCompany.setName(jsonObject1.getString("cpName"));
+                    break;
+                }
+            }else {
+                throw new OCException("ajaxGuessMailNoRequest 请求失败");
+            }
+        }
+        Logger.debug("ajaxGuessMailNoRequest--response-str:" + response.getBody());
+        return Optional.ofNullable(logisticsCompany);
     }
 
 

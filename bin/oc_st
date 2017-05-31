@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+java -classpath ../lib/OrderCat.jar com.myjo.ordercat.native_messaging.main.Main $*

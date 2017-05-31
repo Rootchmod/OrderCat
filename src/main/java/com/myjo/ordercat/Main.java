@@ -9,10 +9,7 @@ import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.handle.*;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
-import com.myjo.ordercat.job.FenxiaoAccountCheckJob;
-import com.myjo.ordercat.job.SyncSalesInfoJob;
-import com.myjo.ordercat.job.SyncTaoBaoInventoryJob;
-import com.myjo.ordercat.job.SyncWarehouseJob;
+import com.myjo.ordercat.job.*;
 import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
@@ -62,7 +59,9 @@ public class Main {
     }
 
     public void run() throws Exception {
+
         OrderCatConfig.init(config);
+
         OrdercatApplication app = new OrdercatApplicationBuilder()
                 .withConnectionUrl(OrderCatConfig.getDBmsName(), OrderCatConfig.getDBConnectionUrl())
                 .withUsername(OrderCatConfig.getDBUsername())
@@ -113,6 +112,7 @@ public class Main {
 
         SendGoods sendGoods = new SendGoods(tianmaSportHttp, taoBaoHttp);
         sendGoods.setOcLogisticsCompaniesInfoManager(ocLogisticsCompaniesInfoManager);
+        //sendGoods.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
 
@@ -160,6 +160,17 @@ public class Main {
         eh3.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
+        ExecuteHandle eh4;
+        eh4 = new AutoSendHandle(sendGoods);
+        eh4.setJobName(JobName.AUTO_SEND_GOODS_JOB.getValue());
+        eh4.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
+
+
+
+
+
 
         if (action.equals(JobName.SYNC_SALES_INFO_JOB.getValue())) {
             eh2.exec();
@@ -171,7 +182,12 @@ public class Main {
         }
         else if (action.equals(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue())) {
             eh1.exec();
-        } else if (action.equals("JobStart")) {
+        }
+        else if (action.equals(JobName.AUTO_SEND_GOODS_JOB.getValue())) {
+            eh4.exec();
+        }
+
+        else if (action.equals("JobStart")) {
             SchedulerFactory sf = new StdSchedulerFactory();
             Scheduler sched = sf.getScheduler();
 
@@ -181,6 +197,8 @@ public class Main {
             map1.put("SyncTaoBaoInventoryHandle",eh1);
             map1.put("SyncSalesInfoHandle",eh2);
             map1.put("FenXiaoAcHandle",eh3);
+            map1.put("AutoSendHandle",eh4);
+
             JobDetail job = newJob(SyncWarehouseJob.class)
                     .usingJobData(map1)
                     .withIdentity(JobName.SYNC_WAREHOUSE_JOB.getValue(), "myjo")
@@ -229,6 +247,20 @@ public class Main {
                     .withSchedule(cronSchedule(OrderCatConfig.getFenxiaoAccountCheckJobTriggerCron()))
                     .build();
             sched.scheduleJob(job3, trigger3);
+
+
+            //FenxiaoAccountCheckJob
+            JobDetail job4 = newJob(AutoSendGoodsJob.class)
+                    .usingJobData(map1)
+                    .withIdentity(JobName.AUTO_SEND_GOODS_JOB.getValue(), "myjo")
+                    .build();
+
+            CronTrigger trigger4 = newTrigger()
+                    .withIdentity(JobName.AUTO_SEND_GOODS_JOB.getValue()+"Trigger", "myjo")
+                    .withSchedule(cronSchedule(OrderCatConfig.getAutoSendGoodsJobTriggerCron()))
+                    .build();
+            sched.scheduleJob(job4, trigger4);
+
 
 
             sched.start();

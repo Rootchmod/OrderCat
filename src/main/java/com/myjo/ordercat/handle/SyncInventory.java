@@ -112,7 +112,7 @@ public class SyncInventory {
     private List<InventoryInfo> getInventoryInfoInCsv(String fileName) throws Exception {
 
         List<InventoryInfo> list = new ArrayList<>();
-        String dfileStr = OrderCatConfig.getOrderCatOutPutPath() + fileName;
+        String dfileStr = OrderCatConfig.getOrderCatTempPath() + fileName;
         ICsvListReader listReader = null;
         try {
 
@@ -532,20 +532,41 @@ public class SyncInventory {
         intersectionList.parallelStream().forEach(inventoryInfo -> {
             inventoryInfo.setNumIid(inventoryInfoInCsvNumIidMap.get(inventoryInfo.getGoodsNo()).get(0).getNumIid());
         });
-
-
+        
         // 对库存信息进行配货率匹配
         Logger.info("对库存信息进行配货率匹配");
         //查询仓库信息
         Map<String, OcWarehouseInfo> warehouseMap = getWarehouseMap();
+
+        //重点关注仓库信息替换
+        Map<Integer, FocusWHInfoReplace> fwhirMap = OrderCatConfig.getFocusWarehouseInfoReplaceMap();
+        fwhirMap.entrySet().parallelStream().forEach(integerFocusWHInfoReplaceEntry -> {
+            Logger.info(
+                    String.format("重点关注仓库[%d]-[%s]的配货率进行替换为:[%d]",
+                            integerFocusWHInfoReplaceEntry.getKey(),
+                            integerFocusWHInfoReplaceEntry.getValue().getWarehouseName(),
+                            integerFocusWHInfoReplaceEntry.getValue().getPickRate()
+                    )
+            );
+        });
+
+        //仓库信息匹配与赋值
         intersectionList.parallelStream().forEach(inventoryInfo -> {
             OcWarehouseInfo ocWarehouseInfo = warehouseMap.get(inventoryInfo.getWarehouseName());
+            FocusWHInfoReplace focusWHInfoReplace;
             if (ocWarehouseInfo != null) {
                 inventoryInfo.setWareHouseID(ocWarehouseInfo.getWarehouseId().getAsInt());
                 inventoryInfo.setReturnRate(ocWarehouseInfo.getReturnRate().getAsInt());
                 inventoryInfo.setUpdateTime(ocWarehouseInfo.getUdpateWarehouseTime().get());
                 inventoryInfo.setExpressName(ocWarehouseInfo.getExpressName().get());
-                inventoryInfo.setPickRate(ocWarehouseInfo.getPickRate().getAsInt());
+
+                //对重点库存进行信息替换（配货率替换）
+                focusWHInfoReplace = fwhirMap.get(inventoryInfo.getWareHouseID());
+                if(focusWHInfoReplace!=null) {
+                    inventoryInfo.setPickRate(focusWHInfoReplace.getPickRate());
+                }else {
+                    inventoryInfo.setPickRate(ocWarehouseInfo.getPickRate().getAsInt());
+                }
                 inventoryInfo.setPickDate(PickDate.valueOf(ocWarehouseInfo.getPickDate().getAsInt()));
                 inventoryInfo.setMark(ocWarehouseInfo.getMark().get());
                 inventoryInfo.setRetrunDesc(ocWarehouseInfo.getRetrunDesc().get());
@@ -895,7 +916,7 @@ public class SyncInventory {
      * @throws Exception
      */
     private void delDataGatheringFile(String fileName) throws Exception {
-        String dfileStr = OrderCatConfig.getOrderCatOutPutPath() + fileName;
+        String dfileStr = OrderCatConfig.getOrderCatTempPath() + fileName;
         File dfile = new File(dfileStr);
         if (dfile.exists()) {
             FileUtils.forceDelete(dfile);

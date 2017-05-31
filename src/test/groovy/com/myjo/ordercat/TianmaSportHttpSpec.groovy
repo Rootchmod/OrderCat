@@ -1,5 +1,6 @@
 package com.myjo.ordercat
 
+import com.myjo.ordercat.domain.LogisticsCompany
 import com.myjo.ordercat.http.TianmaSportHttp
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -75,6 +76,7 @@ class TianmaSportHttpSpec extends Specification {
         when:
          //tianmaSportHttp = new TianmaSportHttp(map);
         //String v = IOUtils.toString(System.in)
+
         tianmaSportHttp.getSearchByArticleno("707361-010");
 
         //def f = tianmaSportHttp.getSearchByArticleno("tianmaSportHttp")
@@ -83,6 +85,26 @@ class TianmaSportHttpSpec extends Specification {
         "1" == "1"
 
     }
+
+    def "ajaxGuessMailNoRequest"(){
+
+        when:
+        //tianmaSportHttp = new TianmaSportHttp(map);
+        //String v = IOUtils.toString(System.in)
+        for(int i=0;i<100000;i++){
+            Optional<LogisticsCompany> logisticsCompany = tianmaSportHttp.ajaxGuessMailNoRequest("885214803258033378","23134990467245578");
+            Optional<LogisticsCompany> logisticsCompany1 = tianmaSportHttp.ajaxGuessMailNoRequest("3921971273918","23134990467245578");
+            Thread.sleep(10000)
+        }
+
+        //def f = tianmaSportHttp.getSearchByArticleno("tianmaSportHttp")
+        //System.out.println(postExample.login());
+        then:
+        logisticsCompany.get().code.get() == "YTO"
+        logisticsCompany1.get().code.get() == "YUNDA"
+
+    }
+
 
 //    def "proxyManageGetId"() {
 //        when:

@@ -1,5 +1,6 @@
 package com.myjo.ordercat.config;
 
+import com.myjo.ordercat.domain.FocusWHInfoReplace;
 import com.myjo.ordercat.domain.InventoryQueryCondition;
 import com.myjo.ordercat.domain.PickRateDelCondition;
 import com.myjo.ordercat.domain.SalesPriceCalculatePolicy;
@@ -11,7 +12,9 @@ import com.typesafe.config.ConfigObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -27,6 +30,7 @@ public class OrderCatConfig {
     private static final String TAOBAO_API = "taobao-api.%s";
     private static final String SCHEDULER_CRON = "scheduler-cron.%s";
     private static final String ACCOUNT_CHECK = "account-check.%s";
+    private static final String AUTO_SEND_GOODS = "auto-send-goods.%s";
 
 
 
@@ -62,11 +66,16 @@ public class OrderCatConfig {
     }
 
 
-    public static List<String> getFeixiaoNoCheckNumIidList(){
-        return config.getStringList(String.format(ACCOUNT_CHECK, "fenxiao_no_check_numIid_list"));
+    public static Integer getAsdOrderDateIntervalDay(){
+        return config.getInt(String.format(AUTO_SEND_GOODS, "order_date_interval_day"));
     }
 
 
+
+
+    public static List<String> getFeixiaoNoCheckNumIidList(){
+        return config.getStringList(String.format(ACCOUNT_CHECK, "fenxiao_no_check_numIid_list"));
+    }
 
     //syncWarehouseJob_trigger_cron
     public static String getSyncWarehouseJobTriggerCron(){
@@ -88,6 +97,14 @@ public class OrderCatConfig {
         return config.getString(String.format(SCHEDULER_CRON, "fenxiaoAccountCheckJob_trigger_cron"));
     }
 
+    public static String getAutoSendGoodsJobTriggerCron(){
+        return config.getString(String.format(SCHEDULER_CRON, "autoSendGoodsJob_trigger_cron"));
+    }
+
+
+
+
+
 
 
 
@@ -97,6 +114,20 @@ public class OrderCatConfig {
     public static String getSalesPriceEndReplace(){
         return config.getString(String.format(SYNC_INVENTORY, "sales_price_end_replace"));
     }
+
+
+    public static Map<Integer,FocusWHInfoReplace> getFocusWarehouseInfoReplaceMap(){
+        Map<Integer,FocusWHInfoReplace> rtMap = new HashMap<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(SYNC_INVENTORY, "focus_warehouse_info_replaces"));
+        FocusWHInfoReplace fwir;
+        for(ConfigObject cb :list){
+            fwir = ConfigBeanFactory.create(cb.toConfig(),FocusWHInfoReplace.class);
+            rtMap.put(fwir.getWarehouseId(),fwir);
+        }
+        return rtMap;
+    }
+
+
 
 //    public static SalesPriceCalculatePolicy getSalesPriceGtCalculate(){
 //        return ConfigBeanFactory.create(config.getObject(String.format(SYNC_INVENTORY, "sales_price_gt_calculate")).toConfig(),SalesPriceCalculatePolicy.class);
@@ -215,6 +246,12 @@ public class OrderCatConfig {
     }
 
 
+    public static String getOrderCatTempPath(){
+        return config.getString(String.format(ORDER_CAT, "temp_path"));
+    }
+
+
+
     public static boolean isProduction(){
         return config.getBoolean(String.format(ORDER_CAT, "is_production"));
     }
@@ -247,6 +284,7 @@ public class OrderCatConfig {
         return config.getString(String.format(TIANMA_SPORT, "login_http_url"));
     }
 
+
     public static String getTianmaSportIDGHttpUrl() {
         return config.getString(String.format(TIANMA_SPORT, "inventory_down_group_http_url"));
         //return "http://www.tianmasport.com/ms/Inventory/downGroup.do";
@@ -264,6 +302,14 @@ public class OrderCatConfig {
     public static String getTradeOrdersDataListHttpUrl() {
         return config.getString(String.format(TIANMA_SPORT, "trade_orders_data_list_http_url"));
     }
+
+    public static String getTradeOrderAddRemarkHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "trade_order_add_remark_http_url"));
+    }
+
+
+
+
 
 
 

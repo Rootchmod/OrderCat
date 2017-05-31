@@ -1,10 +1,15 @@
 package com.myjo.ordercat.native_messaging.main;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.handle.AccountCheck;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -13,7 +18,13 @@ import java.io.InterruptedIOException;
 public class Main {
 
 
-	private static final Logger Logger = LogManager.getLogger(AccountCheck.class);
+    //private static String TEMP_PATH="/Users/lee5hx/src/myjo/OrderCat/src/test/resources/test/";
+
+
+	private static String TEMP_PATH="E:\\OrderCat\\temp\\";
+
+
+	private static final Logger Logger = LogManager.getLogger(Main.class);
 
 
 	public static void main(String[] args) throws Exception {
@@ -21,8 +32,16 @@ public class Main {
 		// Read message
 		String requestJson = readMessage(System.in);
 
-		Logger.error(requestJson);
-		
+		//Logger.error(requestJson);
+
+		JSONObject object = JSON.parseObject(requestJson);
+
+		File file = new File(TEMP_PATH+"ajax_guess_mail_no_request.json");
+
+		FileUtils.writeStringToFile(file,requestJson,"UTF-8");
+
+
+
 //		ObjectMapper mapper = new ObjectMapper();
 //		NativeRequest request = mapper.readValue(requestJson, NativeRequest.class);
 //

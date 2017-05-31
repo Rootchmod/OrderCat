@@ -8,6 +8,7 @@ import com.myjo.ordercat.utils.OcListUtils;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.*;
+import com.taobao.api.domain.LogisticsCompany;
 import com.taobao.api.request.*;
 import com.taobao.api.response.*;
 import org.apache.logging.log4j.LogManager;
@@ -544,7 +545,71 @@ public class TaoBaoHttp {
         return rd;
     }
 
+    /**
+     * taobao.logistics.offline.send (自己联系物流（线下物流）发货)
+     * @throws Exception
+     */
+    public Optional<ReturnResult<Shipping>> sendTaobaoLogisticsOffline(long tid, String outSid, String companyCode) throws Exception{
+        ReturnResult<Shipping> rt = new ReturnResult<>();
+ //       TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+//        LogisticsOnlineSendRequest req = new LogisticsOnlineSendRequest();
+//        req.setTid(tid);
+        //req.setIsSplit(0L);
+//        req.setOutSid(outSid);
+//        req.setCompanyCode(companyCode);
+        //req.setSenderId(123456L);
+        //req.setCancelId(123456L);
+        //req.setFeature("identCode=tid:aaa,bbb;machineCode=tid2:aaa");
+        //req.setSellerIp("192.168.1.10");
+        //LogisticsOnlineSendResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
 
+
+
+
+
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        LogisticsOfflineSendRequest req = new LogisticsOfflineSendRequest();
+        //req.setSubTid("1,2,3");
+        req.setTid(tid);
+        //req.setIsSplit(0L);
+        req.setOutSid(outSid);
+        req.setCompanyCode(companyCode);
+        //req.setSenderId(123456L);
+        //req.setCancelId(123456L);
+        //req.setFeature("identCode=tid:aaa,bbb;machineCode=tid2:aaa");
+        //req.setSellerIp("192.168.1.10");
+        LogisticsOfflineSendResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+        Logger.debug(rsp.getBody());
+        if(rsp.isSuccess()){
+            rt.setSuccess(true);
+            rt.setResult(rsp.getShipping());
+        }else {
+            rt.setSuccess(false);
+            rt.setErrorCode(rsp.getErrorCode());
+            rt.setErrorMessages(rsp.getMsg()+"|"+rsp.getSubMsg());
+            Logger.error(rsp.getErrorCode()+":"+rsp.getMsg());
+        }
+
+
+
+
+        return Optional.ofNullable(rt);
+    }
+
+
+    //taobao.trade.get (获取单笔交易的部分信息(性能高))
+    public Optional<Trade> getTaobaoTrade(long tid)  throws Exception{
+        Trade trade = null;
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        TradeGetRequest req = new TradeGetRequest();
+        req.setFields("tid,type,status,payment,orders");
+        req.setTid(tid);
+        TradeGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+        if(rsp.isSuccess()){
+            trade = rsp.getTrade();
+        }
+        return Optional.ofNullable(trade);
+    }
 
 
 }
