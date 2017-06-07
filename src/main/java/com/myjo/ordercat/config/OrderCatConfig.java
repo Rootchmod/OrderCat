@@ -71,6 +71,16 @@ public class OrderCatConfig {
     }
 
 
+    public static Integer getFenxiaoOrderDateIntervalDay(){
+        return config.getInt(String.format(ACCOUNT_CHECK, "fenxiao_order_date_interval_day"));
+    }
+
+
+    public static Integer getTianmaOrderDateIntervalDay(){
+        return config.getInt(String.format(ACCOUNT_CHECK, "tianma_order_date_interval_day"));
+    }
+
+
 
 
     public static List<String> getFeixiaoNoCheckNumIidList(){
@@ -99,6 +109,11 @@ public class OrderCatConfig {
 
     public static String getAutoSendGoodsJobTriggerCron(){
         return config.getString(String.format(SCHEDULER_CRON, "autoSendGoodsJob_trigger_cron"));
+    }
+
+
+    public static String getGuessMailNoKeepJobTriggerCron(){
+        return config.getString(String.format(SCHEDULER_CRON, "guessMailNoKeepJob_trigger_cron"));
     }
 
 

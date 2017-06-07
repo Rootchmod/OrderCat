@@ -10,6 +10,7 @@ import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
+import com.myjo.ordercat.utils.OcSizeUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -347,14 +348,14 @@ public class TianmaSportHttp {
 //        return rtlist;
 //    }
 
-    public List<TianmaOrder> tradeOrderDataList(String startTime, String endTime, OrderStatus orderStatus) throws Exception {
+    public List<TianmaOrder> tradeOrderDataList(String startTime, String endTime, TianmaOrderStatus orderStatus, String sort) throws Exception {
         List<TianmaOrder> rtlist = new ArrayList<>();
         int pageNo = 1;
         int pageSize = 300;
 
         PageResult<TianmaOrder> pageResult;
         do {
-            pageResult = tradeOrderDataList(startTime, endTime, orderStatus, pageNo, pageSize);
+            pageResult = tradeOrderDataList(startTime, endTime, orderStatus, sort,pageNo, pageSize);
             rtlist.addAll(pageResult.getRows());
             Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
         } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
@@ -362,9 +363,17 @@ public class TianmaSportHttp {
     }
 
 
-    public PageResult<TianmaOrder> tradeOrderDataList(String startTime, String endTime, OrderStatus orderStatus, Integer pageNo, Integer pageSize) throws Exception {
+    public PageResult<TianmaOrder> tradeOrderDataList(String startTime,
+                                                      String endTime,
+                                                      TianmaOrderStatus orderStatus,
+                                                      String sort,
+                                                      Integer pageNo,
+                                                      Integer pageSize) throws Exception {
         Logger.info("inventory_down_group_http_url: " + OrderCatConfig.getTianmaSportIDGHttpUrl());
-        Logger.info(String.format("startTime:%s endTime:%s order_status:%s", startTime, endTime, orderStatus.getVal()));
+        Logger.info(String.format("startTime:%s endTime:%s order_status:%s",
+                startTime==null?"":startTime,
+                endTime==null?"":endTime,
+                orderStatus==null?"":orderStatus.getVal()));
 
         PageResult<TianmaOrder> pr = new PageResult();
 
@@ -384,32 +393,17 @@ public class TianmaSportHttp {
                 .header("Referer", "http://www.tianmasport.com/ms/Inventory/grouPurchase.shtml")
                 .header("Accept-Encoding", "gzip, deflate")
                 .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
-
-
-//        page:1
-//        rows:15
-//        status:50
-//        m_warehouse_name:
-//        goods_no:
-//        names:
-//        startTime:2017-02-08
-//        endsTime:
-//        size:
-//        outer_tid:
-//        order_id:
-
-//        sort:feed_back_time
-//        order:desc
+                //查询参数
                 .field("page", pageNo.intValue())
                 .field("rows", pageSize.intValue())
-                .field("status", orderStatus.getVal())
+                .field("status", orderStatus==null?"":orderStatus.getVal())
                 .field("m_warehouse_name", "")
                 .field("goods_no", "")
                 .field("names", "")
-                .field("startTime", startTime)
-                .field("endsTime", "")
+                .field("startTime", startTime==null?"":startTime)
+                .field("endsTime", endTime==null?"":endTime)
                 .field("size", "")
-                .field("sort", "feed_back_time")
+                .field("sort", sort==null?"":sort) //feed_back_time
                 .field("order", "desc")
                 .field("outer_tid", "")
                 .field("order_id", "")
@@ -438,6 +432,23 @@ public class TianmaSportHttp {
                 tianmaOrder.setNoShipmentRemark(order.get("no_shipment_remark").toString());
                 tianmaOrder.setOrderId(order.get("order_id").toString());
                 tianmaOrder.setOuterOrderId(order.get("outer_order_id").toString());
+                tianmaOrder.setSize1(order.get("size1").toString());
+
+                if(OcSizeUtils.getClothesConversionSize1(tianmaOrder.getSize1()).indexOf("error")>-1){
+                    tianmaOrder.setSize1(tianmaOrder.getSize1());
+                }else {
+                    tianmaOrder.setSize1(OcSizeUtils.getClothesConversionSize1(tianmaOrder.getSize1()));
+                }
+
+
+                tianmaOrder.setSize2(order.get("size2").toString());
+                tianmaOrder.setPayPrice(order.getBigDecimal("pay_price"));
+                tianmaOrder.setPostFee(order.getBigDecimal("post_fee"));
+                tianmaOrder.setWarehouseId(order.getInt("m_warehouse_id"));
+                tianmaOrder.setWarehouseName(order.getString("m_warehouse_name"));
+                tianmaOrder.setStatus(order.get("status").toString());
+                tianmaOrder.setGoodsNo(order.get("goods_no").toString());
+
 
                 orders.add(tianmaOrder);
 

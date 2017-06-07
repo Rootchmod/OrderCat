@@ -8,6 +8,7 @@ import com.myjo.ordercat.handle.ExecuteHandle
 import com.myjo.ordercat.handle.FenXiaoAcHandle
 import com.myjo.ordercat.handle.SendGoods
 import com.myjo.ordercat.handle.SyncLcHandle
+import com.myjo.ordercat.handle.TianMaAcHandle
 import com.myjo.ordercat.http.TaoBaoHttp
 import com.myjo.ordercat.http.TianmaSportHttp
 import com.myjo.ordercat.spm.OrdercatApplication
@@ -18,6 +19,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoMan
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tianma_check_result.OcTianmaCheckResultManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -51,7 +53,7 @@ class AccountCheckSpec extends Specification {
         OcLogisticsCompaniesInfoManager ocLogisticsCompaniesInfoManager = app.getOrThrow(OcLogisticsCompaniesInfoManager.class);
         OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager = app.getOrThrow(OcSyncInventoryItemInfoManager.class);
         OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager = app.getOrThrow(OcFenxiaoCheckResultManager.class);
-
+        OcTianmaCheckResultManager ocTianmaCheckResultManager = app.getOrThrow(OcTianmaCheckResultManager.class);
 
         Map<String,String> map = new HashMap<>();
 
@@ -60,6 +62,7 @@ class AccountCheckSpec extends Specification {
         ac = new AccountCheck(tianmaSportHttp,taoBaoHttp);
         ac.setOcSyncInventoryItemInfoManager(ocSyncInventoryItemInfoManager);
         ac.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
+        ac.setOcTianmaCheckResultManager(ocTianmaCheckResultManager);
 //        si.setOcInventoryInfoManager(ocInventoryInfoManager);
 //        si.setOcWarehouseInfoManager(ocWarehouseInfoManager);
 //        si.setOcJobExecInfoManager(ocJobExecInfoManager);
@@ -69,6 +72,12 @@ class AccountCheckSpec extends Specification {
         eh = new FenXiaoAcHandle(ac)
         eh.setJobName(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue());
         eh.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
+
+        eh1 = new TianMaAcHandle(ac)
+        eh1.setJobName(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue());
+        eh1.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
 
@@ -93,5 +102,13 @@ class AccountCheckSpec extends Specification {
         then:
         "ok" == "ok";
     }
+
+    def "tianmaCheck"() {
+        when:
+        eh1.exec()
+        then:
+        "ok" == "ok";
+    }
+
 
 }

@@ -138,7 +138,7 @@ CREATE TABLE `oc_fenxiao_check_result` (
   `fenxiao_refund_desc` varchar(255)  COMMENT '分销-退款原因',
   `fenxiao_refund_reason` varchar(255) COMMENT '分销-退款说明',
   `status` varchar(255)  COMMENT '对账状态 NOT_FENXIAO("NOT_FENXIAO"),NOT_FENXIAO_REFUND("NOT_FENXIAO_REFUND"),NOT_FENXIAO("NOT_FENXIAO"),SUCCESS_REFUND("SUCCESS_REFUND")',
-  `remarks` TEXT COMMENT ' (json格式)',
+  `remarks` TEXT COMMENT '备注(json格式)',
   `add_time` timestamp NOT NULL COMMENT '添加日期',
   PRIMARY KEY (`id`),
   KEY `IDX_NUMIID` (`numIid`),
@@ -147,4 +147,41 @@ CREATE TABLE `oc_fenxiao_check_result` (
   KEY `IDX_FENXIAOID` (`fenxiaoId`),
   KEY `IDX_STATUS` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分销对账结果表';
+
+
+DROP TABLE oc_tianma_check_result;
+CREATE TABLE `oc_tianma_check_result` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tb_order_id` BIGINT DEFAULT NULL COMMENT '淘宝订单ID',
+  `tb_order_status` varchar(255)  COMMENT '淘宝订单状态',
+  `tb_numIid` BIGINT DEFAULT NULL COMMENT '淘宝宝贝ID',
+  `tb_title` varchar(1000) COMMENT '淘宝宝贝标题',
+  `tb_payment` decimal(25,10) COMMENT '淘宝支付价格',
+  `tb_refundID` BIGINT COMMENT '淘宝退款单ID',
+  `tb_refundStatus` varchar(255) COMMENT '淘宝退款状态',
+  `tb_num` BIGINT COMMENT '淘宝购买宝贝数量',
+  `tm_order_id` BIGINT DEFAULT NULL COMMENT '天马订单ID',
+  `tm_outer_order_id` varchar(255) NULL COMMENT '天马外部订单编码',
+  `tm_goods_no` varchar(255)  COMMENT '天马货号',
+  `tm_order_status` varchar(255)  COMMENT '天马订单状态',
+  `tm_delivery_no` varchar(255)  COMMENT '天马快递单号',
+  `tm_delivery_name` varchar(255)  COMMENT '天马快递名称',
+  `tm_warehouse_id` INTEGER(10)  COMMENT '天马仓库ID',
+  `tm_buyer_name` varchar(255)  COMMENT '天马买家名称',
+  `tm_warehouse_name` varchar(255)  COMMENT '天马仓库名称',
+  `tm_payPrice` decimal(25,10)  COMMENT '天马支付价格',
+  `tm_postFee` decimal(25,10)  COMMENT '天马运费',
+  `tm_noshipment_Remark` varchar(255)  COMMENT '天马订单备注',
+  `size1` varchar(255)  COMMENT '中国码',
+  `size2` varchar(255)  COMMENT '国外码',
+  `dz_status` varchar(255)  COMMENT '对账状态',
+  `dz_details_message` TEXT COMMENT '对账详细描述',
+  `remarks` TEXT COMMENT '备注(json格式)',
+  `add_time` timestamp NOT NULL COMMENT '添加日期',
+  PRIMARY KEY (`id`),
+  KEY `IDX_TM_ORDER_ID` (`tm_order_id`),
+  KEY `IDX_TB_ORDER_ID` (`tb_order_id`),
+  KEY `IDX_DZ_STATUS` (`dz_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天马对账结果表';
+
 

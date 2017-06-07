@@ -6,7 +6,8 @@ public enum JobName {
     SYNC_SALES_INFO_JOB("SyncSalesInfoJob"),
     SYNC_LC_JOB("SyncLcJob"),
     AUTO_SEND_GOODS_JOB("AutoSendGoodsJob"),
-    FENXIAO_ACCOUNT_CHECK_JOB("FenxiaoAccountCheckJob");
+    FENXIAO_ACCOUNT_CHECK_JOB("FenxiaoAccountCheckJob"),
+    TIANMA_ACCOUNT_CHECK_JOB("TianmaAccountCheckJob");
 
     private String v;
 

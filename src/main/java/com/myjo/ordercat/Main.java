@@ -13,7 +13,6 @@ import com.myjo.ordercat.job.*;
 import com.myjo.ordercat.spm.OrdercatApplication;
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
@@ -69,8 +68,7 @@ public class Main {
                 .build();
 
         //设置超时时间
-        Unirest.setTimeouts(300*1000,300*1000);
-
+        Unirest.setTimeouts(300 * 1000, 300 * 1000);
 
 
         //speedment
@@ -94,7 +92,6 @@ public class Main {
         Logger.info("初始化[nashorn]-js脚本引擎完成.");
 
 
-
         Map<String, String> map = new HashMap<>();
         TianmaSportHttp tianmaSportHttp = new TianmaSportHttp(map);
         TaoBaoHttp taoBaoHttp = new TaoBaoHttp();
@@ -102,8 +99,7 @@ public class Main {
         Logger.info("初始化[TianmaSportHttp,TaoBaoHttp]-完成.");
 
 
-
-        SyncInventory syncInventory = new SyncInventory(tianmaSportHttp, taoBaoHttp,e);
+        SyncInventory syncInventory = new SyncInventory(tianmaSportHttp, taoBaoHttp, e);
         syncInventory.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         syncInventory.setOcJobExecInfoManager(ocJobExecInfoManager);
         syncInventory.setOcSalesInfoManager(ocSalesInfoManager);
@@ -115,11 +111,9 @@ public class Main {
         //sendGoods.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
-
-        AccountCheck ac = new AccountCheck(tianmaSportHttp,taoBaoHttp);
+        AccountCheck ac = new AccountCheck(tianmaSportHttp, taoBaoHttp);
         ac.setOcSyncInventoryItemInfoManager(ocSyncInventoryItemInfoManager);
         ac.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
-
 
 
         tianmaSportHttp.getVerifyCodeImage();
@@ -128,16 +122,11 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         JSONObject jsonObject = tianmaSportHttp.login(br.readLine());
 
-        if(!jsonObject.getBoolean("success")){
+        if (!jsonObject.getBoolean("success")) {
             throw new OCException("天马平台-登陆失败");
         }
 
-
-
-
-
         tianmaSportHttp.main_html();
-
 
         ExecuteHandle eh;
         eh = new SyncWarehouseHandle(syncInventory);
@@ -166,49 +155,39 @@ public class Main {
         eh4.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
-
-
-
-
-
-
         if (action.equals(JobName.SYNC_SALES_INFO_JOB.getValue())) {
             eh2.exec();
         } else if (action.equals(JobName.SYNC_WAREHOUSE_JOB.getValue())) {
             eh.exec();
-        }
-        else if (action.equals(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue())) {
+        } else if (action.equals(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue())) {
             eh3.exec();
-        }
-        else if (action.equals(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue())) {
+        } else if (action.equals(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue())) {
             eh1.exec();
-        }
-        else if (action.equals(JobName.AUTO_SEND_GOODS_JOB.getValue())) {
+        } else if (action.equals(JobName.AUTO_SEND_GOODS_JOB.getValue())) {
             eh4.exec();
-        }
-
-        else if (action.equals("JobStart")) {
+        } else if (action.equals("start")) {
             SchedulerFactory sf = new StdSchedulerFactory();
             Scheduler sched = sf.getScheduler();
 
             //SyncWarehouseJob
             JobDataMap map1 = new JobDataMap();
-            map1.put("SyncWarehouseHandle",eh);
-            map1.put("SyncTaoBaoInventoryHandle",eh1);
-            map1.put("SyncSalesInfoHandle",eh2);
-            map1.put("FenXiaoAcHandle",eh3);
-            map1.put("AutoSendHandle",eh4);
+            map1.put("SyncWarehouseHandle", eh);
+            map1.put("SyncTaoBaoInventoryHandle", eh1);
+            map1.put("SyncSalesInfoHandle", eh2);
+            map1.put("FenXiaoAcHandle", eh3);
+            map1.put("AutoSendHandle", eh4);
+
+            map1.put("TianmaSportHttp",tianmaSportHttp);
 
             JobDetail job = newJob(SyncWarehouseJob.class)
                     .usingJobData(map1)
                     .withIdentity(JobName.SYNC_WAREHOUSE_JOB.getValue(), "myjo")
                     .build();
             CronTrigger trigger = newTrigger()
-                    .withIdentity(JobName.SYNC_WAREHOUSE_JOB.getValue()+"Trigger", "myjo")
+                    .withIdentity(JobName.SYNC_WAREHOUSE_JOB.getValue() + "Trigger", "myjo")
                     .withSchedule(cronSchedule(OrderCatConfig.getSyncWarehouseJobTriggerCron()))
                     .build();
             sched.scheduleJob(job, trigger);
-
 
             //SyncTaoBaoInventoryJob
             JobDetail job1 = newJob(SyncTaoBaoInventoryJob.class)
@@ -217,11 +196,10 @@ public class Main {
                     .build();
 
             CronTrigger trigger1 = newTrigger()
-                    .withIdentity(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue()+"Trigger", "myjo")
+                    .withIdentity(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue() + "Trigger", "myjo")
                     .withSchedule(cronSchedule(OrderCatConfig.getSyncTaoBaoInventoryJobTriggerCron()))
                     .build();
             sched.scheduleJob(job1, trigger1);
-
 
 
             //SyncSalesInfoJob
@@ -231,7 +209,7 @@ public class Main {
                     .build();
 
             CronTrigger trigger2 = newTrigger()
-                    .withIdentity(JobName.SYNC_SALES_INFO_JOB.getValue()+"Trigger", "myjo")
+                    .withIdentity(JobName.SYNC_SALES_INFO_JOB.getValue() + "Trigger", "myjo")
                     .withSchedule(cronSchedule(OrderCatConfig.getSyncSalesInfoJobTriggerCron()))
                     .build();
             sched.scheduleJob(job2, trigger2);
@@ -243,24 +221,37 @@ public class Main {
                     .build();
 
             CronTrigger trigger3 = newTrigger()
-                    .withIdentity(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue()+"Trigger", "myjo")
+                    .withIdentity(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue() + "Trigger", "myjo")
                     .withSchedule(cronSchedule(OrderCatConfig.getFenxiaoAccountCheckJobTriggerCron()))
                     .build();
             sched.scheduleJob(job3, trigger3);
 
-
-            //FenxiaoAccountCheckJob
+            //AutoSendGoodsJob
             JobDetail job4 = newJob(AutoSendGoodsJob.class)
                     .usingJobData(map1)
                     .withIdentity(JobName.AUTO_SEND_GOODS_JOB.getValue(), "myjo")
                     .build();
 
             CronTrigger trigger4 = newTrigger()
-                    .withIdentity(JobName.AUTO_SEND_GOODS_JOB.getValue()+"Trigger", "myjo")
+                    .withIdentity(JobName.AUTO_SEND_GOODS_JOB.getValue() + "Trigger", "myjo")
                     .withSchedule(cronSchedule(OrderCatConfig.getAutoSendGoodsJobTriggerCron()))
                     .build();
             sched.scheduleJob(job4, trigger4);
 
+
+
+
+            //GuessMailNoKeepJob
+            JobDetail job5 = newJob(GuessMailNoKeepJob.class)
+                    .usingJobData(map1)
+                    .withIdentity("GuessMailNoKeepJob", "myjo")
+                    .build();
+
+            CronTrigger trigger5 = newTrigger()
+                    .withIdentity("GuessMailNoKeepJob" + "Trigger", "myjo")
+                    .withSchedule(cronSchedule(OrderCatConfig.getGuessMailNoKeepJobTriggerCron()))
+                    .build();
+            sched.scheduleJob(job5, trigger5);
 
 
             sched.start();
@@ -268,8 +259,6 @@ public class Main {
 
 
     }
-
-
 
 
 }

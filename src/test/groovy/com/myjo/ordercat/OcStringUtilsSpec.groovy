@@ -24,6 +24,8 @@ class OcStringUtilsSpec extends Specification {
 
     def "OcStringUtils.getGoodsNoByOuterId"() {
         when:
+        Random random = new Random();
+        System.out.println(random.nextLong())
         String dd = OcStringUtils.getGoodsNoByOuterId("805942-600-36.5")
         String dd1 = OcStringUtils.getGoodsNoByOuterId("810506-011-XXXL")
         then:
@@ -31,6 +33,7 @@ class OcStringUtilsSpec extends Specification {
         dd1 == "810506-011"
 
     }
+
 
 
 }

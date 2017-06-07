@@ -1,7 +1,7 @@
 package com.myjo.ordercat.handle;
 
 import com.myjo.ordercat.config.OrderCatConfig;
-import com.myjo.ordercat.domain.OrderStatus;
+import com.myjo.ordercat.domain.TianmaOrderStatus;
 import com.myjo.ordercat.domain.ReturnResult;
 import com.myjo.ordercat.domain.TianmaOrder;
 import com.myjo.ordercat.exception.OCException;
@@ -55,23 +55,16 @@ public class SendGoods {
         String startTime = OcDateTimeUtils.localDateTime2String(lbegin, OcDateTimeUtils.OC_DATE);
         String endTime = OcDateTimeUtils.localDateTime2String(lend, OcDateTimeUtils.OC_DATE);
         //查询反馈成功的订单
-        List<TianmaOrder> tianmaOrders = tianmaSportHttp.tradeOrderDataList(startTime, endTime, OrderStatus.FEEDBACK_SUCCESS);
+        List<TianmaOrder> tianmaOrders = tianmaSportHttp.tradeOrderDataList(startTime, null, TianmaOrderStatus.FEEDBACK_SUCCESS,"feed_back_time");
         Logger.info(String.format("查询[%s]-[%s]区间,status=[%s]的订单.size:[%d]",
                 startTime,
                 endTime,
-                OrderStatus.FEEDBACK_SUCCESS.toString(),
+                TianmaOrderStatus.FEEDBACK_SUCCESS.toString(),
                 tianmaOrders.size()
         ));
         if (tianmaOrders.size() == 0) {
             throw new OCException("天马反馈成功的订单不能为空!请检查!");
         }
-
-
-        Optional<com.myjo.ordercat.domain.LogisticsCompany> logisticsCompany = tianmaSportHttp.ajaxGuessMailNoRequest("885214803258033378", "23134990467245578");
-        if (logisticsCompany.isPresent()) {
-            Logger.info(String.format("淘宝快递公司猜测接口-可用性维持[%s]-[%s]-[%s]", "885214803258033378", "23134990467245578", logisticsCompany.get().getCode()));
-        }
-
 
         tianmaOrders.parallelStream()
                 .filter(tianmaOrder -> tianmaOrder.getOuterOrderId().indexOf("麦巨") == -1)
@@ -82,7 +75,6 @@ public class SendGoods {
                         Optional<Trade> trade = taoBaoHttp.getTaobaoTrade(Long.valueOf(tianmaOrder.getOuterOrderId()));
 
                         if (trade.isPresent() && "WAIT_SELLER_SEND_GOODS".equals(trade.get().getStatus()) && trade.get().getOrders().size() == 1) {//WAIT_SELLER_SEND_GOODS(等待卖家发货,即:买家已付款)
-
                             Optional<com.myjo.ordercat.domain.LogisticsCompany> lc = tianmaSportHttp.ajaxGuessMailNoRequest(tianmaOrder.getDeliveryNo(), tianmaOrder.getOuterOrderId());
                             if (lc.isPresent()) {
                                 String companyCode = lc.get().getCode().get();

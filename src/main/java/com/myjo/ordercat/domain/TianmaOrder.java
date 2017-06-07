@@ -1,5 +1,8 @@
 package com.myjo.ordercat.domain;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 /**
  * Created by lee5hx on 17/5/10.
  */
@@ -19,11 +22,26 @@ public class TianmaOrder {
     //no_shipment_remark
     private String noShipmentRemark;
 
+    private String size1;
+    private String size2;
+
+    private Integer warehouseId;
+    private String warehouseName;
+
+    private BigDecimal payPrice;
+
+    private BigDecimal postFee;
+
+    private String status;
+
     //订单日期
     private String created;
 
     //feed_back_time 反馈日期
     private String feedBackTime;
+
+
+    private String goodsNo;
 
 
     public String getOuterOrderId() {
@@ -89,4 +107,72 @@ public class TianmaOrder {
     public void setFeedBackTime(String feedBackTime) {
         this.feedBackTime = feedBackTime;
     }
+
+
+    public String getSize1() {
+        return size1;
+    }
+
+    public void setSize1(String size1) {
+        this.size1 = size1;
+    }
+
+    public String getSize2() {
+        return size2;
+    }
+
+    public void setSize2(String size2) {
+        this.size2 = size2;
+    }
+
+    public Integer getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Integer warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public BigDecimal getPayPrice() {
+        return payPrice;
+    }
+
+    public void setPayPrice(BigDecimal payPrice) {
+        this.payPrice = payPrice;
+    }
+
+    public BigDecimal getPostFee() {
+        return postFee;
+    }
+
+    public void setPostFee(BigDecimal postFee) {
+        this.postFee = postFee;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGoodsNo() {
+        return goodsNo;
+    }
+
+    public void setGoodsNo(String goodsNo) {
+        this.goodsNo = goodsNo;
+    }
 }
+
+
+

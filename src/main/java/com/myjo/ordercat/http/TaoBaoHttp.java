@@ -83,8 +83,8 @@ public class TaoBaoHttp {
         pageResult.setRows(rsp.getItems());
         pageResult.setTotal(rsp.getTotalResults());
 
-        Logger.debug("getTaobaoItemsOnSale.pageResult.getRows().size:" + pageResult.getRows().size());
-        Logger.debug("getTaobaoItemsOnSale.pageResult.getTotal():" + pageResult.getTotal());
+        //Logger.debug("getTaobaoItemsOnSale.pageResult.getRows().size:" + pageResult.getRows().size());
+        //Logger.debug("getTaobaoItemsOnSale.pageResult.getTotal():" + pageResult.getTotal());
         return pageResult;
     }
 
@@ -598,15 +598,19 @@ public class TaoBaoHttp {
 
 
     //taobao.trade.get (获取单笔交易的部分信息(性能高))
-    public Optional<Trade> getTaobaoTrade(long tid)  throws Exception{
+    public Optional<Trade> getTaobaoTrade(long tid) {
         Trade trade = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradeGetRequest req = new TradeGetRequest();
         req.setFields("tid,type,status,payment,orders");
         req.setTid(tid);
-        TradeGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-        if(rsp.isSuccess()){
-            trade = rsp.getTrade();
+        try{
+            TradeGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+            if(rsp.isSuccess()){
+                trade = rsp.getTrade();
+            }
+        }catch (Exception e){
+            Logger.error(e);
         }
         return Optional.ofNullable(trade);
     }
