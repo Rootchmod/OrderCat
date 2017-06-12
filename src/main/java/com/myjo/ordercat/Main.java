@@ -1,5 +1,6 @@
 package com.myjo.ordercat;
 
+import com.aliyun.openservices.ons.api.*;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.mashape.unirest.http.Unirest;
@@ -18,6 +19,10 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLog
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
+import com.taobao.api.DefaultTaobaoClient;
+import com.taobao.api.TaobaoClient;
+import com.taobao.api.request.JushitaJmsUserAddRequest;
+import com.taobao.api.response.JushitaJmsUserAddResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -30,6 +35,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
@@ -47,6 +53,8 @@ public class Main {
     private String config;
     @Parameter(names = {"--action", "-a"})
     private String action;
+    @Parameter(names = {"--cid", "-cid"})
+    private String consumerId;
 
     public static void main(String args[]) throws Exception {
         Main main = new Main();
@@ -165,7 +173,26 @@ public class Main {
             eh1.exec();
         } else if (action.equals(JobName.AUTO_SEND_GOODS_JOB.getValue())) {
             eh4.exec();
-        } else if (action.equals("start")) {
+        }
+        else if (action.equals("order_robot")) {
+            TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+            JushitaJmsUserAddRequest req = new JushitaJmsUserAddRequest();
+            req.setTopicNames("taobao_trade_TradeBuyerPay");
+            JushitaJmsUserAddResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+            Logger.info(rsp.getBody());
+            Properties properties = new Properties();
+            properties.put(PropertyKeyConst.ConsumerId, consumerId);
+            properties.put(PropertyKeyConst.AccessKey,  OrderCatConfig.getTaobaoApiAppKey());
+            properties.put(PropertyKeyConst.SecretKey,  OrderCatConfig.getTaobaoApiAppSecret());
+            Consumer consumer = ONSFactory.createConsumer(properties);
+            consumer.subscribe("rmq_sys_jst_23279400", "*", (message, context) -> {
+                Logger.info("Receive: " + message);
+                return Action.CommitMessage;
+            });
+            consumer.start();
+            Logger.info(String.format("Consumer-[%s] Started",consumerId));
+        }
+        else if (action.equals("start")) {
             SchedulerFactory sf = new StdSchedulerFactory();
             Scheduler sched = sf.getScheduler();
 

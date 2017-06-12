@@ -9,6 +9,9 @@ import org.apache.logging.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -18,6 +21,25 @@ public class InventoryDataOperate {
 
 
     private static final Logger Logger = LogManager.getLogger(InventoryDataOperate.class);
+
+
+
+
+
+
+
+    public static <T> Predicate<T> distinctByMap(Function<? super T, String> keyExtractor, Map<?, ?> map, boolean rt) {
+        //return t -> map.putIfAbsent(keyExtractor.apply(t), null) == null;
+        return t -> map.containsKey(keyExtractor.apply(t)) == rt;
+    }
+
+
+    public static <T> Predicate<T> distinctByMapIfAbsent(Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), null) == null;
+        //return t -> map.containsKey(keyExtractor.apply(t)) == rt;
+    }
+
 
 
     /**

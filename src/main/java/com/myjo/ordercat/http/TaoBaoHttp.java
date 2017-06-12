@@ -1,5 +1,6 @@
 package com.myjo.ordercat.http;
 
+import com.aliyun.openservices.ons.api.*;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.exception.OCException;
@@ -9,6 +10,7 @@ import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.*;
 import com.taobao.api.domain.LogisticsCompany;
+import com.taobao.api.internal.tmc.TmcClient;
 import com.taobao.api.request.*;
 import com.taobao.api.response.*;
 import org.apache.logging.log4j.LogManager;
@@ -160,7 +162,7 @@ public class TaoBaoHttp {
         //库存更新
         List<List<Sku>> subLists = OcListUtils.splitList(skuList, 19);
         for (List<Sku> list : subLists) {
-            updateTmallItemQuantityUpdate(itemId, list,csvListSukMap,tmallPriceUpdateInfos);//库存更新
+            updateTmallItemQuantityUpdate(itemId, list, csvListSukMap, tmallPriceUpdateInfos);//库存更新
         }
 
         //过滤为空的SKU
@@ -170,7 +172,7 @@ public class TaoBaoHttp {
                 .sorted((o1, o2) -> o2.getSalesPrice().compareTo(o1.getSalesPrice()))
                 .collect(Collectors.toList());
 
-        List<List<TmallPriceUpdateInfo>> subTmallPriceUpdateInfos =  OcListUtils.splitList(tmallPriceUpdateInfos, 19);
+        List<List<TmallPriceUpdateInfo>> subTmallPriceUpdateInfos = OcListUtils.splitList(tmallPriceUpdateInfos, 19);
 
         String price = null;
         Optional<TmallPriceUpdateInfo> dd;
@@ -191,7 +193,8 @@ public class TaoBaoHttp {
 
     /**
      * tmall.item.price.update (天猫商品/SKU价格更新接口)
-     *ERR_RULE_CATEGORY_CANNOT_BLANK
+     * ERR_RULE_CATEGORY_CANNOT_BLANK
+     *
      * @throws Exception
      */
     public Long updateTmallItemPriceUpdate(Long itemId, List<TmallPriceUpdateInfo> list, String price) throws Exception {
@@ -210,18 +213,18 @@ public class TaoBaoHttp {
         TmallItemPriceUpdateRequest.UpdateSkuPrice obj3;
         //InventoryInfo inventoryInfo;
         for (TmallPriceUpdateInfo t : list) {
-                obj3 = new TmallItemPriceUpdateRequest.UpdateSkuPrice();
-                obj3.setSkuId(t.getSkuId());
-                obj3.setPrice(t.getSalesPrice().toPlainString());
-                Logger.debug(String.format("skuid:[%d] - [%s] - 价格[%s]",
-                        t.getSkuId(),
-                        t.getOuterId(),
-                        t.getSalesPrice().toPlainString()));
-                list2.add(obj3);
+            obj3 = new TmallItemPriceUpdateRequest.UpdateSkuPrice();
+            obj3.setSkuId(t.getSkuId());
+            obj3.setPrice(t.getSalesPrice().toPlainString());
+            Logger.debug(String.format("skuid:[%d] - [%s] - 价格[%s]",
+                    t.getSkuId(),
+                    t.getOuterId(),
+                    t.getSalesPrice().toPlainString()));
+            list2.add(obj3);
 
         }
 
-        if (price != null ) {
+        if (price != null) {
             Logger.debug(String.format("[%d]-最小价格[%s]", itemId, price));
             req.setItemPrice(price);
         }
@@ -249,7 +252,7 @@ public class TaoBaoHttp {
      *
      * @throws Exception
      */
-    public Long updateTmallItemQuantityUpdate(Long itemId, List<Sku> skuList, Map<String, InventoryInfo> csvListSukMap,List<TmallPriceUpdateInfo> tmallPriceUpdateInfos) throws Exception {
+    public Long updateTmallItemQuantityUpdate(Long itemId, List<Sku> skuList, Map<String, InventoryInfo> csvListSukMap, List<TmallPriceUpdateInfo> tmallPriceUpdateInfos) throws Exception {
 
         Long quantityUpdateResult = 0l;
 
@@ -303,6 +306,7 @@ public class TaoBaoHttp {
 
     /**
      * taobao.logistics.companies.get (查询物流公司信息)
+     *
      * @return
      * @throws Exception
      */
@@ -314,18 +318,14 @@ public class TaoBaoHttp {
         req.setIsRecommended(true);
         req.setOrderMode("offline");
         LogisticsCompaniesGetResponse rsp = client.execute(req);
-        if(rsp.isSuccess()){
+        if (rsp.isSuccess()) {
             list = rsp.getLogisticsCompanies();
         }
         return list;
     }
 
 
-
-
-
     public void test() throws Exception {
-
 
 
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
@@ -346,26 +346,25 @@ public class TaoBaoHttp {
         System.out.println(rsp.getBody());
 
 
-
-
     }
 
 
     /**
-     *  taobao.trades.sold.get (查询卖家已卖出的交易数据（根据创建时间）)
-     *   WAIT_BUYER_PAY：等待买家付款
-     *   WAIT_SELLER_SEND_GOODS：等待卖家发货
-     *   SELLER_CONSIGNED_PART：卖家部分发货
-     *   WAIT_BUYER_CONFIRM_GOODS：等待买家确认收货
-     *   TRADE_BUYER_SIGNED：买家已签收（货到付款专用）
-     *   TRADE_FINISHED：交易成功
-     *   TRADE_CLOSED：交易关闭
-     *   TRADE_CLOSED_BY_TAOBAO：交易被淘宝关闭
-     *   TRADE_NO_CREATE_PAY：没有创建外部交易（支付宝交易）
-     *   WAIT_PRE_AUTH_CONFIRM：余额宝0元购合约中
-     *   PAY_PENDING：外卡支付付款确认中
-     *   ALL_WAIT_PAY：所有买家未付款的交易（包含：WAIT_BUYER_PAY、TRADE_NO_CREATE_PAY）
-     *   ALL_CLOSED：所有关闭的交易（包含：TRADE_CLOSED、TRADE_CLOSED_BY_TAOBAO）
+     * taobao.trades.sold.get (查询卖家已卖出的交易数据（根据创建时间）)
+     * WAIT_BUYER_PAY：等待买家付款
+     * WAIT_SELLER_SEND_GOODS：等待卖家发货
+     * SELLER_CONSIGNED_PART：卖家部分发货
+     * WAIT_BUYER_CONFIRM_GOODS：等待买家确认收货
+     * TRADE_BUYER_SIGNED：买家已签收（货到付款专用）
+     * TRADE_FINISHED：交易成功
+     * TRADE_CLOSED：交易关闭
+     * TRADE_CLOSED_BY_TAOBAO：交易被淘宝关闭
+     * TRADE_NO_CREATE_PAY：没有创建外部交易（支付宝交易）
+     * WAIT_PRE_AUTH_CONFIRM：余额宝0元购合约中
+     * PAY_PENDING：外卡支付付款确认中
+     * ALL_WAIT_PAY：所有买家未付款的交易（包含：WAIT_BUYER_PAY、TRADE_NO_CREATE_PAY）
+     * ALL_CLOSED：所有关闭的交易（包含：TRADE_CLOSED、TRADE_CLOSED_BY_TAOBAO）
+     *
      * @param begin
      * @param end
      * @param status
@@ -396,7 +395,7 @@ public class TaoBaoHttp {
         req.setFields("num_iid,title,sku_id,type,pay_time,total_fee,end_time,buyer_nick,outer_iid,num,status");
         req.setStartCreated(begin);
         req.setEndCreated(end);
-        if(status != null ){
+        if (status != null) {
             req.setStatus(status.toString());
         }
         // req.setType("game_equipment");
@@ -417,6 +416,7 @@ public class TaoBaoHttp {
 
     /**
      * taobao.refunds.receive.get (查询卖家收到的退款列表)
+     *
      * @param begin
      * @param end
      * @return
@@ -436,7 +436,7 @@ public class TaoBaoHttp {
         } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
 
         Refund temp;
-        for(Refund refund:rtlist) {
+        for (Refund refund : rtlist) {
             temp = getRefundById(refund.getRefundId());
             refund.setNumIid(temp.getNumIid());
             refund.setOuterId(temp.getOuterId());
@@ -447,6 +447,7 @@ public class TaoBaoHttp {
 
     /**
      * taobao.refunds.receive.get (查询卖家收到的退款列表)
+     *
      * @param begin
      * @param end
      * @param pageNo
@@ -454,7 +455,7 @@ public class TaoBaoHttp {
      * @return
      * @throws Exception
      */
-    public PageResult<Refund> getReceiveRefunds(Date begin, Date end,Long pageNo, Long pageSize) throws Exception{
+    public PageResult<Refund> getReceiveRefunds(Date begin, Date end, Long pageNo, Long pageSize) throws Exception {
         PageResult<Refund> pr = new PageResult();
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         RefundsReceiveGetRequest req = new RefundsReceiveGetRequest();
@@ -468,7 +469,7 @@ public class TaoBaoHttp {
         req.setPageSize(pageSize);
         req.setUseHasNext(false);
         RefundsReceiveGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-        if(rsp.isSuccess()){
+        if (rsp.isSuccess()) {
             pr.setRows(rsp.getRefunds());
             pr.setTotal(rsp.getTotalResults());
         }
@@ -477,18 +478,19 @@ public class TaoBaoHttp {
 
     /**
      * taobao.refund.get (获取单笔退款详情)
+     *
      * @param refundId
      * @return
      * @throws Exception
      */
-    public Refund getRefundById(long refundId) throws Exception{
+    public Refund getRefundById(long refundId) throws Exception {
         Refund refund = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         RefundGetRequest req = new RefundGetRequest();
         req.setFields("title,address,num_iid,outer_id,order_status,good_return_time,created");
         req.setRefundId(refundId);
         RefundGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-        if(rsp.isSuccess()){
+        if (rsp.isSuccess()) {
             refund = rsp.getRefund();
         }
         return refund;
@@ -496,18 +498,19 @@ public class TaoBaoHttp {
 
     /**
      * taobao.fenxiao.orders.get (查询采购单信息)
+     *
      * @param tcOrderId
      * @return
      * @throws Exception
      */
-    public List<PurchaseOrder> getFenxiaoOrdersByTcOrderId(long tcOrderId) throws Exception{
+    public List<PurchaseOrder> getFenxiaoOrdersByTcOrderId(long tcOrderId) throws Exception {
         List<PurchaseOrder> list = new ArrayList<>();
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         FenxiaoOrdersGetRequest req = new FenxiaoOrdersGetRequest();
         //req.setStatus("WAIT_BUYER_PAY");
         //req.setStartCreated(StringUtils.parseDateTime("2000-01-01 00:00:00"));
         //req.setEndCreated(StringUtils.parseDateTime("2000-01-01 23:59:59"));
-       // req.setTimeType("trade_time_type");
+        // req.setTimeType("trade_time_type");
         //req.setPageNo(1L);
         //req.setPageSize(10L);
         //req.setPurchaseOrderId(120121243L);
@@ -515,7 +518,7 @@ public class TaoBaoHttp {
         req.setTcOrderId(tcOrderId);
         FenxiaoOrdersGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
         Logger.info(rsp.getBody());
-        if(rsp.isSuccess()){
+        if (rsp.isSuccess()) {
 
             list = rsp.getPurchaseOrders();
 
@@ -525,11 +528,12 @@ public class TaoBaoHttp {
 
     /**
      * taobao.fenxiao.refund.get (查询采购单退款信息)
+     *
      * @param subOrderId
      * @return
      * @throws Exception
      */
-    public RefundDetail getFenxiaoRefundBySubOrderId(long subOrderId) throws Exception{
+    public RefundDetail getFenxiaoRefundBySubOrderId(long subOrderId) throws Exception {
         RefundDetail rd = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         FenxiaoRefundGetRequest req = new FenxiaoRefundGetRequest();
@@ -538,7 +542,7 @@ public class TaoBaoHttp {
         FenxiaoRefundGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
 
         Logger.info(rsp.getBody());
-        if(rsp.isSuccess()){
+        if (rsp.isSuccess()) {
             rd = rsp.getRefundDetail();
         }
 
@@ -547,11 +551,12 @@ public class TaoBaoHttp {
 
     /**
      * taobao.logistics.offline.send (自己联系物流（线下物流）发货)
+     *
      * @throws Exception
      */
-    public Optional<ReturnResult<Shipping>> sendTaobaoLogisticsOffline(long tid, String outSid, String companyCode) throws Exception{
+    public Optional<ReturnResult<Shipping>> sendTaobaoLogisticsOffline(long tid, String outSid, String companyCode) throws Exception {
         ReturnResult<Shipping> rt = new ReturnResult<>();
- //       TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        //       TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
 //        LogisticsOnlineSendRequest req = new LogisticsOnlineSendRequest();
 //        req.setTid(tid);
         //req.setIsSplit(0L);
@@ -562,9 +567,6 @@ public class TaoBaoHttp {
         //req.setFeature("identCode=tid:aaa,bbb;machineCode=tid2:aaa");
         //req.setSellerIp("192.168.1.10");
         //LogisticsOnlineSendResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-
-
-
 
 
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
@@ -580,20 +582,68 @@ public class TaoBaoHttp {
         //req.setSellerIp("192.168.1.10");
         LogisticsOfflineSendResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
         Logger.debug(rsp.getBody());
-        if(rsp.isSuccess()){
+        if (rsp.isSuccess()) {
             rt.setSuccess(true);
             rt.setResult(rsp.getShipping());
-        }else {
+        } else {
             rt.setSuccess(false);
             rt.setErrorCode(rsp.getErrorCode());
-            rt.setErrorMessages(rsp.getMsg()+"|"+rsp.getSubMsg());
-            Logger.error(rsp.getErrorCode()+":"+rsp.getMsg());
+            rt.setErrorMessages(rsp.getMsg() + "|" + rsp.getSubMsg());
+            Logger.error(rsp.getErrorCode() + ":" + rsp.getMsg());
         }
 
 
-
-
         return Optional.ofNullable(rt);
+    }
+
+
+    public void tmc_test() throws Exception {
+
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        TmcUserPermitRequest req = new TmcUserPermitRequest();
+        req.setTopics("taobao_trade_TradeBuyerPay,taobao_trade_TradeChanged");
+        TmcUserPermitResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+        System.out.println(rsp.getBody());
+
+
+        TmcClient client1 = new TmcClient(OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret(), "default"); // 关于default参考消息分组说明
+        client1.setMessageHandler((message, status) -> {
+            try {
+                System.out.println(message.getContent());
+                System.out.println(message.getTopic());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                status.fail(); // 消息处理失败回滚，服务端需要重发
+                // 重试注意：不是所有的异常都需要系统重试。
+                // 对于字段不全、主键冲突问题，导致写DB异常，不可重试，否则消息会一直重发
+                // 对于，由于网络问题，权限问题导致的失败，可重试。
+                // 重试时间 5分钟不等，不要滥用，否则会引起雪崩
+            }
+        });
+        client1.connect("ws://mc.api.taobao.com");
+        Thread.sleep(100000 * 100000);
+
+
+    }
+
+
+    public void consumer_test() throws Exception {
+
+//        Properties properties = new Properties();
+//        properties.put(PropertyKeyConst.ConsumerId, "CID_OC_1");
+//        properties.put(PropertyKeyConst.AccessKey, OrderCatConfig.getTaobaoApiAppKey());
+//        properties.put(PropertyKeyConst.SecretKey, OrderCatConfig.getTaobaoApiAppSecret());
+//        Consumer consumer = ONSFactory.createConsumer(properties);
+//        consumer.subscribe("rmq_sys_jst_23279400", "*", new MessageListener() {
+//            public Action consume(Message message, ConsumeContext context) {
+//                System.out.println("Receive: " + message);
+//                return Action.CommitMessage;
+//            }
+//        });
+//        consumer.start();
+//        System.out.println("Consumer Started");
+
     }
 
 
@@ -602,14 +652,15 @@ public class TaoBaoHttp {
         Trade trade = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradeGetRequest req = new TradeGetRequest();
-        req.setFields("tid,type,status,payment,orders");
+
+        req.setFields("tid,type,status,payment,orders,created,pay_time,price,discount_fee,total_fee");
         req.setTid(tid);
-        try{
+        try {
             TradeGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-            if(rsp.isSuccess()){
+            if (rsp.isSuccess()) {
                 trade = rsp.getTrade();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.error(e);
         }
         return Optional.ofNullable(trade);

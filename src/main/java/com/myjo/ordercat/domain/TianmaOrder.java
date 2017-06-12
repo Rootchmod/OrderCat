@@ -32,7 +32,7 @@ public class TianmaOrder {
 
     private BigDecimal postFee;
 
-    private String status;
+    private TianmaOrderStatus status;
 
     //订单日期
     private String created;
@@ -157,11 +157,11 @@ public class TianmaOrder {
         this.postFee = postFee;
     }
 
-    public String getStatus() {
+    public TianmaOrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TianmaOrderStatus status) {
         this.status = status;
     }
 

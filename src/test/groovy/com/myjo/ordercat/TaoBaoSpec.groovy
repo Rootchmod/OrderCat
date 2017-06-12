@@ -3,6 +3,14 @@ package com.myjo.ordercat
 import com.myjo.ordercat.domain.ItemsOnSale
 import com.myjo.ordercat.domain.TaoBaoGoodInfo
 import com.myjo.ordercat.http.TaoBaoHttp
+import com.taobao.api.DefaultTaobaoClient
+import com.taobao.api.TaobaoClient
+import com.taobao.api.internal.tmc.Message
+import com.taobao.api.internal.tmc.MessageHandler
+import com.taobao.api.internal.tmc.MessageStatus
+import com.taobao.api.internal.tmc.TmcClient
+import com.taobao.api.request.TmcUserPermitRequest
+import com.taobao.api.response.TmcUserPermitResponse
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import spock.lang.Specification
@@ -88,10 +96,28 @@ class TaoBaoSpec extends Specification {
         "ok" == "ok"
     }
 
+    def "TmcClient"(){
+        when:
+
+        taoBaoHttp.tmc_test()
+
+        then:
+        "ok" == "ok"
+    }
+
+
+    def "consumer_test"(){
+        when:
+
+        taoBaoHttp.consumer_test()
+
+        then:
+        "ok" == "ok"
+    }
 
 
 
-
+     // 消息环境地址：ws://mc.api.tbsandbox.com/
 
 
 

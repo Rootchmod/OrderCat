@@ -17,6 +17,8 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyn
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tianma_check_result.OcTianmaCheckResultManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tianma_check_result.OcTianmaCheckResultSqlAdapter;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManagerImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoSqlAdapter;
 import com.speedment.common.injector.Injector;
@@ -45,6 +47,7 @@ public abstract class GeneratedOrdercatApplicationBuilder extends AbstractApplic
         withManager(OcSalesInfoManagerImpl.class);
         withManager(OcSyncInventoryItemInfoManagerImpl.class);
         withManager(OcTianmaCheckResultManagerImpl.class);
+        withManager(OcTmsportCheckResultManagerImpl.class);
         withManager(OcWarehouseInfoManagerImpl.class);
         withComponent(OcFenxiaoCheckResultSqlAdapter.class);
         withComponent(OcInventoryInfoSqlAdapter.class);
@@ -53,6 +56,7 @@ public abstract class GeneratedOrdercatApplicationBuilder extends AbstractApplic
         withComponent(OcSalesInfoSqlAdapter.class);
         withComponent(OcSyncInventoryItemInfoSqlAdapter.class);
         withComponent(OcTianmaCheckResultSqlAdapter.class);
+        withComponent(OcTmsportCheckResultSqlAdapter.class);
         withComponent(OcWarehouseInfoSqlAdapter.class);
     }
     

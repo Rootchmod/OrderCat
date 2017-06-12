@@ -80,6 +80,12 @@ public class OrderCatConfig {
         return config.getInt(String.format(ACCOUNT_CHECK, "tianma_order_date_interval_day"));
     }
 
+    public static Long getTianmaPaytimeDifferDay(){
+        return config.getLong(String.format(ACCOUNT_CHECK, "tianma_paytime_differ_day"));
+    }
+
+
+
 
 
 

@@ -185,3 +185,29 @@ CREATE TABLE `oc_tianma_check_result` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天马对账结果表';
 
 
+
+DROP TABLE oc_tmsport_check_result;
+CREATE TABLE `oc_tmsport_check_result` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tm_outer_order_id` varchar(255) NULL COMMENT '天马外部订单编码',
+  `tm_order_num` BIGINT COMMENT '天马订单数量',
+  `tm_num` BIGINT COMMENT '天马购买数量',
+  `tb_order_num` BIGINT COMMENT '淘宝订单数量',
+  `tb_num` BIGINT COMMENT '淘宝购买数量',
+  `tb_created` timestamp COMMENT '淘宝订单时间',
+  `tb_paytime` timestamp COMMENT '淘宝订单支付时间',
+  `tb_price` decimal(25,10)  COMMENT '商品价格。精确到2位小数;单位:元。如:200.07，表示:200元7分',
+  `tb_payment` decimal(25,10)  COMMENT '子订单实付金额。精确到2位小数，单位:元。如:200.07，表示:200元7分。对于多子订单的交易，计算公式如下：payment = price * num + adjust_fee - discount_fee ；单子订单交易，payment与主订单的payment一致，对于退款成功的子订单，由于主订单的优惠分摊金额，会造成该字段可能不为0.00元。建议使用退款前的实付金额减去退款单中的实际退款金额计算。',
+  `tb_discountFee` decimal(25,10)  COMMENT '子订单级订单优惠金额。精确到2位小数;单位:元。如:200.07，表示:200元7分',
+  `tb_totalFee` decimal(25,10)  COMMENT '应付金额（商品价格 * 商品数量 + 手工调整金额 - 子订单级订单优惠金额）。精确到2位小数;单位:元。如:200.07，表示:200元7分',
+  `dz_status` varchar(255)  COMMENT '对账状态',
+  `dz_details_message` TEXT COMMENT '对账详细描述',
+  `remarks` TEXT COMMENT '备注(json格式)',
+  `add_time` timestamp NOT NULL COMMENT '添加日期',
+  PRIMARY KEY (`id`),
+  KEY `IDX_TM_OUTER_ORDER_ID` (`tm_outer_order_id`),
+  KEY `IDX_DZ_STATUS` (`dz_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天马体育对账结果表';
+
+
+

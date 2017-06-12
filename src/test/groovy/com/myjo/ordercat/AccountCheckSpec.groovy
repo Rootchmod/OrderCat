@@ -20,6 +20,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLog
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tianma_check_result.OcTianmaCheckResultManager
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -53,7 +54,7 @@ class AccountCheckSpec extends Specification {
         OcLogisticsCompaniesInfoManager ocLogisticsCompaniesInfoManager = app.getOrThrow(OcLogisticsCompaniesInfoManager.class);
         OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager = app.getOrThrow(OcSyncInventoryItemInfoManager.class);
         OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager = app.getOrThrow(OcFenxiaoCheckResultManager.class);
-        OcTianmaCheckResultManager ocTianmaCheckResultManager = app.getOrThrow(OcTianmaCheckResultManager.class);
+        OcTmsportCheckResultManager ocTmsportCheckResultManager = app.getOrThrow(OcTmsportCheckResultManager.class);
 
         Map<String,String> map = new HashMap<>();
 
@@ -62,7 +63,7 @@ class AccountCheckSpec extends Specification {
         ac = new AccountCheck(tianmaSportHttp,taoBaoHttp);
         ac.setOcSyncInventoryItemInfoManager(ocSyncInventoryItemInfoManager);
         ac.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
-        ac.setOcTianmaCheckResultManager(ocTianmaCheckResultManager);
+        ac.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
 //        si.setOcInventoryInfoManager(ocInventoryInfoManager);
 //        si.setOcWarehouseInfoManager(ocWarehouseInfoManager);
 //        si.setOcJobExecInfoManager(ocJobExecInfoManager);

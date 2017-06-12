@@ -446,8 +446,9 @@ public class TianmaSportHttp {
                 tianmaOrder.setPostFee(order.getBigDecimal("post_fee"));
                 tianmaOrder.setWarehouseId(order.getInt("m_warehouse_id"));
                 tianmaOrder.setWarehouseName(order.getString("m_warehouse_name"));
-                tianmaOrder.setStatus(order.get("status").toString());
+                tianmaOrder.setStatus(TianmaOrderStatus.valueOf1(order.get("status").toString()));
                 tianmaOrder.setGoodsNo(order.get("goods_no").toString());
+
 
 
                 orders.add(tianmaOrder);

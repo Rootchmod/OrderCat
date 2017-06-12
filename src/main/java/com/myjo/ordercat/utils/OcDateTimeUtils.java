@@ -52,7 +52,14 @@ public class OcDateTimeUtils {
         return dateTime.format(dtf);
     }
 
+    public static LocalDateTime date2LocalTime(Date date) {
 
+        if(date == null) return null;
+        //java.util.Date date = new java.util.Date();
+        Instant instant = date.toInstant();
+        ZoneId zone = ZoneId.systemDefault();
+        return LocalDateTime.ofInstant(instant, zone);
+    }
 
     public static Date localDateTime2Date(LocalDateTime localDateTime){
         ZoneId zone = ZoneId.systemDefault();
@@ -60,6 +67,10 @@ public class OcDateTimeUtils {
         java.util.Date date = Date.from(instant);
         return date;
     }
+
+
+
+
 
     public static Date string2Date(String dateTime){
         return localDateTime2Date(string2LocalDateTime(dateTime));
