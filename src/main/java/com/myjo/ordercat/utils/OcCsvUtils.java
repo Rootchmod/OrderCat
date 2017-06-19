@@ -85,7 +85,7 @@ public class OcCsvUtils {
     }
 
 
-    public static void writeWithCsvOcFenxiaoCheckResultWriter(List<OcTmsportCheckResult>  lists, Long execJobId) throws Exception {
+    public static void writeWithCsvOcTianmaCheckResultWriter(List<OcTmsportCheckResult>  lists, Long execJobId) throws Exception {
 
         List<Object[]> list = new ArrayList();
         Object[] objects;
@@ -160,7 +160,7 @@ public class OcCsvUtils {
     }
 
 
-    public static void writeWithCsvOcTianmaCheckResultWriter(List<OcFenxiaoCheckResult> lists, Long execJobId) throws Exception {
+    public static void writeWithCsvOcFenxiaoCheckResultWriter(List<OcFenxiaoCheckResult> lists, Long execJobId) throws Exception {
 
         List<Object[]> list = new ArrayList();
         Object[] objects;
@@ -235,69 +235,5 @@ public class OcCsvUtils {
             }
         }
     }
-
-
-
-//    public static void writeWithCsvOcFenxiaoCheckResultWriter(List<OcFenxiaoCheckResult> lists, Long execJobId) throws Exception {
-//
-//        ICsvBeanWriter beanWriter = null;
-//        try {
-//            File file = new File(OrderCatConfig.getOrderCatOutPutPath() + String.format("fenxiao_check_rt_%d.csv", execJobId.intValue()));
-//            if (file.exists()) {
-//                FileUtils.forceDelete(file);
-//            }
-//
-//            beanWriter = new CsvBeanWriter(new FileWriter(OrderCatConfig.getOrderCatOutPutPath() + String.format("fenxiao_check_rt_%d.csv", execJobId.intValue())),
-//                    CsvPreference.STANDARD_PREFERENCE);
-//
-//            // the header elements are used to map the bean values to each column (names must match)
-//            final String[] header = new String[]{
-//                    "goodsNo",
-//                    "wareHouseID",
-//                    "warehouseName",
-//                    "size1",
-//                    "size2",
-//                    "brand",
-//                    "marketprice",
-//                    "num2",
-//                    "division",
-//                    "cate",
-//                    "sex",
-//                    "quarter",
-//                    "discount",
-//                    "bdiscount",
-//                    "pickRate",
-//                    "updateTime",
-//                    "pickDate",
-//                    "thedtime",
-//                    "proxyPrice",
-//                    "salesPrice",
-//                    "avgPrice",
-//                    "salesCount",
-//                    "expressName",
-//                    "retrunDesc",
-//                    "returnRate",
-//                    "endT",
-//                    "mark",
-//                    "numIid",
-//                    "skuId"
-//            };
-//
-//            //final CellProcessor[] processors = getProcessors();
-//
-//            // write the header
-//            beanWriter.writeHeader(header);
-//
-//            // write the beans
-//            for (final OcFenxiaoCheckResult o : lists) {
-//                beanWriter.write(o, header);
-//            }
-//
-//        } finally {
-//            if (beanWriter != null) {
-//                beanWriter.close();
-//            }
-//        }
-//    }
 
 }

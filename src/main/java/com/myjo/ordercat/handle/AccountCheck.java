@@ -288,12 +288,11 @@ public class AccountCheck {
                     Order tbOrder = tbOrders.get(0);
 
 
-
                     //校验时间
                     if (tianmaCheckResult.getDzStatus() == null) {
                         LocalDateTime payTime = OcDateTimeUtils.date2LocalTime(tianmaCheckResult.getTrade().getPayTime());
                         LocalDateTime created = OcDateTimeUtils.string2LocalDateTime(tmOrder.getCreated());
-                        if(payTime.plusDays(OrderCatConfig.getTianmaPaytimeDifferDay()).compareTo(created)==-1){
+                        if (payTime.plusDays(OrderCatConfig.getTianmaPaytimeDifferDay()).compareTo(created) == -1) {
 
                             String dzDetailsMessage = String.format("订单时间不匹配,TB订单与TM订单相差[%d]天,TB订单时间为:[%s],TM订订单时间为:[%s]",
                                     OrderCatConfig.getTianmaPaytimeDifferDay(),
@@ -346,7 +345,7 @@ public class AccountCheck {
 
                     if (tianmaCheckResult.getDzStatus() == null) {
 
-                        if(tianmaCheckResult.getTbNum()!=tianmaCheckResult.getTmNum()){
+                        if (tianmaCheckResult.getTbNum() != tianmaCheckResult.getTmNum()) {
                             String dzDetailsMessage = String.format("订单中商品数量不一致,TB商品数量为:[%d],TM商品数量为:[%d]",
                                     tianmaCheckResult.getTbNum(),
                                     tianmaCheckResult.getTmNum()
@@ -370,18 +369,18 @@ public class AccountCheck {
                     List<Order> tbOrders = tianmaCheckResult.getTbOrders();
                     //删除这几笔订单中的已退款 待付款 交易关闭 已退款（含售后）
                     long tbNum = 0;
-                    for(Order o :tbOrders){
-                        if(!"TRADE_CLOSED".equals(o.getStatus())
+                    for (Order o : tbOrders) {
+                        if (!"TRADE_CLOSED".equals(o.getStatus())
                                 && !"WAIT_BUYER_PAY".equals(o.getStatus())
                                 && !"TRADE_CLOSED_BY_TAOBAO".equals(o.getStatus())
                                 && !"TRADE_NO_CREATE_PAY".equals(o.getStatus())
-                                ){
-                            tbNum = tbNum+1;
+                                ) {
+                            tbNum = tbNum + 1;
 
                         }
                     }
 
-                    if(tianmaCheckResult.getTmNum()!=tbNum){
+                    if (tianmaCheckResult.getTmNum() != tbNum) {
                         String dzDetailsMessage = String.format("订单中商品数量不一致,TB商品数量为:[%d],TM商品数量为:[%d]",
                                 tbNum,
                                 tianmaCheckResult.getTmNum()
@@ -406,13 +405,12 @@ public class AccountCheck {
         Logger.info(String.format("正在持久化数据库"));
 
 
-
         //已经对过账的所有记录
         Map<String, OcTmsportCheckResult> yetTmsportCheckResultMap = ocTmsportCheckResultManager
                 .stream()
                 .collect(Collectors.toConcurrentMap(o -> o.getTmOuterOrderId().get(), Function.identity()));
 
-        Logger.info(String.format("已经对过账的所有记录.size:[%d]",yetTmsportCheckResultMap.size()));
+        Logger.info(String.format("已经对过账的所有记录.size:[%d]", yetTmsportCheckResultMap.size()));
 
 
         tianmaCheckResultList.parallelStream()
@@ -420,7 +418,7 @@ public class AccountCheck {
                 .forEach(tianmaCheckResult -> {
 
                     OcTmsportCheckResult ocTmsportCheckResult = yetTmsportCheckResultMap.get(tianmaCheckResult.getTmOuterOrderId());
-                    if(ocTmsportCheckResult!=null){
+                    if (ocTmsportCheckResult != null) {
                         ocTmsportCheckResult.setAddTime(LocalDateTime.now());
                         ocTmsportCheckResult.setTbOrderNum(tianmaCheckResult.getTbOrderNum());
                         ocTmsportCheckResult.setTbNum(tianmaCheckResult.getTbNum());
@@ -436,7 +434,7 @@ public class AccountCheck {
                         ocTmsportCheckResult.setDzStatus(tianmaCheckResult.getDzStatus().getValue());
                         ocTmsportCheckResult.setDzDetailsMessage(tianmaCheckResult.getDzDetailsMessage());
                         ocTmsportCheckResultManager.update(ocTmsportCheckResult);
-                    }else {
+                    } else {
                         ocTmsportCheckResult = new OcTmsportCheckResultImpl();
                         ocTmsportCheckResult.setAddTime(LocalDateTime.now());
                         ocTmsportCheckResult.setTbOrderNum(tianmaCheckResult.getTbOrderNum());
@@ -464,7 +462,7 @@ public class AccountCheck {
 
         Logger.info(String.format("输出天马对账结果CSV."));
         List<OcTmsportCheckResult> outCsvList = ocTmsportCheckResultManager.stream().collect(Collectors.toList());
-        OcCsvUtils.writeWithCsvOcFenxiaoCheckResultWriter(outCsvList,execJobId);
+        OcCsvUtils.writeWithCsvOcTianmaCheckResultWriter(outCsvList, execJobId);
         Logger.info(String.format("输出天马对账结果CSV-完成."));
 
         Logger.info(String.format("天马对账-运行结束"));
@@ -494,6 +492,7 @@ public class AccountCheck {
             }
         }
     }
+
     public void setOcSyncInventoryItemInfoManager(OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager) {
         this.ocSyncInventoryItemInfoManager = ocSyncInventoryItemInfoManager;
     }
