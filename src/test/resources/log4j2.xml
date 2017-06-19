@@ -27,6 +27,7 @@
         <logger name="org.gradle.tooling" level="info"/>
         <logger name="org.eclipse.aether" level="info"/>
         <logger name="org.quartz.core" level="info"/>
+        <logger name="org.springframework" level="error"/>
 
         <!--<Logger name="log4j.logger.org.apache.http" level="info"/>-->
         <Root level="all" >

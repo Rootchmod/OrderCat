@@ -22,3 +22,6 @@ hs_err_pid*
 .gradletasknamecache
 f1e9b9262c0bf404c0596422e3aaf484
 classes
+tomcat.8080
+jquery-3.2.1.js
+xorder_info.json

@@ -201,7 +201,7 @@ public class SyncInventory {
         for (int i = 0; i < distinctWarehouseList.size(); i++) {
             inventoryInfo = distinctWarehouseList.get(i);
             Logger.info(inventoryInfo.getGoodsNo() + ":" + inventoryInfo.getWarehouseName() + "--" + (i + 1) + "/" + distinctWarehouseList.size());
-            pickRateList.addAll(tianmaSportHttp.getSearchByArticleno(inventoryInfo.getGoodsNo()));
+            pickRateList.addAll(tianmaSportHttp.getTmSportWhInfo(inventoryInfo.getGoodsNo()));
 
         }
         List<InventoryInfo> distinctPickRateList = pickRateList.parallelStream()
@@ -244,7 +244,7 @@ public class SyncInventory {
                 }
                 inventoryInfo = inventoryInfos.get(j);
                 Logger.info(inventoryInfo.getGoodsNo() + ":" + inventoryInfo.getWarehouseName() + "--" + (j + 1) + "/" + inventoryInfos.size());
-                for_inventoryInfos = tianmaSportHttp.getSearchByArticleno(inventoryInfo.getGoodsNo());
+                for_inventoryInfos = tianmaSportHttp.getTmSportWhInfo(inventoryInfo.getGoodsNo());
                 for (InventoryInfo info : for_inventoryInfos) {
                     if (info.getWarehouseName().equals(inventoryInfo.getWarehouseName())) {
                         pickRateList.addAll(for_inventoryInfos);
@@ -790,7 +790,7 @@ public class SyncInventory {
             if (OrderCatConfig.isProduction()) {
                 skuNumIidMap.entrySet().parallelStream()
                         //.filter(longListEntry -> longListEntry.getKey() == 540062300867l || longListEntry.getKey() == 543451776272l)
-                        //.filter(longListEntry -> longListEntry.getKey() == 540067487116l)
+                        //.filter(longListEntry -> longListEntry.getKey() == 549857468792l)
                         .forEach(longListEntry -> {
                             Logger.info(String.format("开始同步-商品ID: [%d] 的SKU价格与库存. ", longListEntry.getKey()));
                             try {

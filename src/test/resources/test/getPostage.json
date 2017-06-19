@@ -1,0 +1,43 @@
+
+//wareHouseName:深圳2仓
+//province:山东省
+//weight:1.3
+[
+  {
+    "supplierId": null,
+    "status": 1,
+    "remark": null,
+    "checkContinuePostage": 7,
+    "continuePostage": 4,
+    "firsPostage": 10,
+    "type": 1,
+    "id": 142896,
+    "checkFirsPostage": 13,
+    "wareHouseName": "深圳2仓",
+    "province": "山东省",
+    "expressName": "普通快递(20.0)",
+    "wareHouseId": null
+  },
+  {
+    "supplierId": null,
+    "status": 1,
+    "remark": null,
+    "checkContinuePostage": 12,
+    "continuePostage": 12,
+    "firsPostage": 23,
+    "type": 1,
+    "id": 142911,
+    "checkFirsPostage": 23,
+    "wareHouseName": "深圳2仓",
+    "province": "山东省",
+    "expressName": "顺丰(35.0)",
+    "wareHouseId": null
+  }
+]
+
+//wareHouseName:深圳2仓
+//province:山东省
+//weight:1.3
+
+//{success: true, msg: "普通快递(20.0)"}
+

@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-java -classpath ../lib/OrderCat.jar com.myjo.ordercat.ReadStdin
+java -classpath ../lib/OrderCat.jar  com.myjo.ordercat.Main $*

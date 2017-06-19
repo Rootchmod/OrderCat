@@ -1,10 +1,14 @@
 package com.myjo.ordercat;
 
 import com.aliyun.openservices.ons.api.*;
+import com.aol.micro.server.MicroserverApp;
+import com.aol.micro.server.config.Microserver;
+import com.aol.micro.server.module.Module;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.mashape.unirest.http.Unirest;
 import com.myjo.ordercat.config.OrderCatConfig;
+import com.myjo.ordercat.context.OrderCatContext;
 import com.myjo.ordercat.domain.JobName;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.handle.*;
@@ -18,7 +22,9 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoMan
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
+import com.speedment.runtime.core.ApplicationBuilder;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.request.JushitaJmsUserAddRequest;
@@ -45,6 +51,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 /**
  * Created by lee5hx on 17/4/19.
  */
+@Microserver(properties={"cors.simple","true"})
 public class Main {
 
     private static final Logger Logger = LogManager.getLogger(Main.class);
@@ -55,6 +62,7 @@ public class Main {
     private String action;
     @Parameter(names = {"--cid", "-cid"})
     private String consumerId;
+
 
     public static void main(String args[]) throws Exception {
         Main main = new Main();
@@ -73,7 +81,12 @@ public class Main {
                 .withConnectionUrl(OrderCatConfig.getDBmsName(), OrderCatConfig.getDBConnectionUrl())
                 .withUsername(OrderCatConfig.getDBUsername())
                 .withPassword(OrderCatConfig.getDBPassword())
+                .withLogging(ApplicationBuilder.LogType.CONNECTION)
+                .withParam("connectionpool.maxAge", "8000")
+                .withParam("connectionpool.maxRetainSize", "20")
                 .build();
+
+
 
         //设置超时时间
         Unirest.setTimeouts(300 * 1000, 300 * 1000);
@@ -87,7 +100,11 @@ public class Main {
         OcLogisticsCompaniesInfoManager ocLogisticsCompaniesInfoManager = app.getOrThrow(OcLogisticsCompaniesInfoManager.class);
         OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager = app.getOrThrow(OcSyncInventoryItemInfoManager.class);
         OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager = app.getOrThrow(OcFenxiaoCheckResultManager.class);
+        OcTmsportCheckResultManager ocTmsportCheckResultManager = app.getOrThrow(OcTmsportCheckResultManager.class);
 
+
+        OrderCatContext.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
+        OrderCatContext.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
 
         Logger.info("初始化[speedment]-完成.");
 
@@ -122,6 +139,7 @@ public class Main {
         AccountCheck ac = new AccountCheck(tianmaSportHttp, taoBaoHttp);
         ac.setOcSyncInventoryItemInfoManager(ocSyncInventoryItemInfoManager);
         ac.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
+        ac.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
 
 
         tianmaSportHttp.getVerifyCodeImage();
@@ -163,6 +181,13 @@ public class Main {
         eh4.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
+        ExecuteHandle eh5;
+        eh5 = new TianMaAcHandle(ac);
+        eh5.setJobName(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue());
+        eh5.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
+
         if (action.equals(JobName.SYNC_SALES_INFO_JOB.getValue())) {
             eh2.exec();
         } else if (action.equals(JobName.SYNC_WAREHOUSE_JOB.getValue())) {
@@ -173,6 +198,12 @@ public class Main {
             eh1.exec();
         } else if (action.equals(JobName.AUTO_SEND_GOODS_JOB.getValue())) {
             eh4.exec();
+        }else if (action.equals(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue())) {
+            eh5.exec();
+        }
+        else if(action.equals("morder")){
+//            OrderOperate orderOperate = new OrderOperate(tianmaSportHttp,taoBaoHttp);
+//            orderOperate.manualOrder(28219168266790387l,"182",null,null);
         }
         else if (action.equals("order_robot")) {
             TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
@@ -193,6 +224,20 @@ public class Main {
             Logger.info(String.format("Consumer-[%s] Started",consumerId));
         }
         else if (action.equals("start")) {
+
+
+            //new MicroserverApp(()->"order_cat_api").start();
+
+            MicroserverApp server = new MicroserverApp(this.getClass(),new Module() {
+                @Override
+                public String getContext() {
+                    return "order_cat_api";
+                }
+            });
+            server.start();
+
+            Logger.info("MicroserverApp 启动成功!");
+
             SchedulerFactory sf = new StdSchedulerFactory();
             Scheduler sched = sf.getScheduler();
 
@@ -203,7 +248,7 @@ public class Main {
             map1.put("SyncSalesInfoHandle", eh2);
             map1.put("FenXiaoAcHandle", eh3);
             map1.put("AutoSendHandle", eh4);
-
+            map1.put("TianmaAcHandle", eh5);
             map1.put("TianmaSportHttp",tianmaSportHttp);
 
             JobDetail job = newJob(SyncWarehouseJob.class)
@@ -281,7 +326,24 @@ public class Main {
             sched.scheduleJob(job5, trigger5);
 
 
+
+            //TianmaAccountCheckJob
+            JobDetail job6 = newJob(TianmaAccountCheckJob.class)
+                    .usingJobData(map1)
+                    .withIdentity(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue(), "myjo")
+                    .build();
+
+            CronTrigger trigger6 = newTrigger()
+                    .withIdentity(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue() + "Trigger", "myjo")
+                    .withSchedule(cronSchedule(OrderCatConfig.getTianmaAccountCheckJobTriggerCron()))
+                    .build();
+            sched.scheduleJob(job6, trigger6);
+
             sched.start();
+
+
+            Logger.info(String.format("启动-MicroserverApp[%s].","order_cat_api"));
+
         }
 
 

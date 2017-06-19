@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="jquery-3.2.1.js"></script>
+
+    <script>
+
+        $.get("http://101.37.86.8/order_cat_api/account-check/fenxiao/check/list?page=1&page_size=10", function(data){
+            console.log(data);
+        });
+
+
+
+        function fenxiaoPagelist(page,pagesize){
+
+
+            var url = "http://101.37.86.8/order_cat_api/account-check/fenxiao/check/list?page="+page+"&page_size="+pagesize;
+            var status ;// 取查询条件状态值
+            if(status){
+
+
+            }
+
+            outPutContent(rows)
+            outPutPageination(total,page)
+        }
+
+        //输出内容
+        function outPutContent(rows) {
+            //输出列表内容
+        }
+        //输出页码
+        function outPutPageination(total,page) {
+            //输出页码 例如:
+            //<a hrer='javascript:fenxiaoPagelist(1,20)'>2<a>
+            //<a hrer='javascript:fenxiaoPagelist(2,20)'>1<a>
+
+
+
+        }
+
+
+
+
+
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>

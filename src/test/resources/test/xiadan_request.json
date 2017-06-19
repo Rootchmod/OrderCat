@@ -1,0 +1,45 @@
+//jsonStr=%5B%7B%22wareHouseName%22%3A%22%E5%A4%A9%E9%A9%AC%E6%80%BB%E4%BB%931%E4%BB%93%22%2C%22size%22%3A%2242.5%22%2C%22articleno%22%3A%22884277-005%22%2C%22express%22%3A%22%E6%99%AE%E9%80%9A%E5%BF%AB%E9%80%92(10.0)%22%2C%22orderCount%22%3A%221%22%2C%22productID%22%3A%22391781%22%2C%22ercipei%22%3A%221%22%2C%22size1%22%3A%229%22%2C%22hezi%22%3A%221%22%2C%22wareHouseID%22%3A182%2C%22sku_id%22%3A1618059%2C%22articleno_old%22%3A%22884277-005%22%7D%2C%5D&recv_name=%E6%9D%8E%E7%9B%9B%E7%86%99&recv_mobile=18601941970&recv_tel=2222&zipcode=266000&recv_address=%E5%B1%B1%E4%B8%9C%E9%9D%92%E5%B2%9B%E5%B8%82&remark=lee5hx-%E6%B5%8B%E8%AF%95%E4%B8%8D%E8%A6%81%E4%BB%98%E6%AC%BE%E3%80%82&province=%E5%B1%B1%E4%B8%9C%E7%9C%81&city=%E9%9D%92%E5%B2%9B%E5%B8%82&area=%E6%9D%8E%E6%B2%A7%E5%8C%BA&outer_tid=lee5hx%E6%B5%8B%E8%AF%95&province_id=370000&city_id=370200&area_id=370213
+
+
+[
+  {
+    "wareHouseName": "天马总仓1仓",
+    "size": "42.5",
+    "articleno": "884277-005",
+    "express": "普通快递(10.0)",
+    "orderCount": "1",
+    "productID": "391781",
+    "ercipei": "1",
+    "size1": "9",
+    "hezi": "1",
+    "wareHouseID": 182,
+    "sku_id": 1618059,
+    "articleno_old": "884277-005"
+  },
+]
+
+{
+  "id": 110101,
+  "ppname": null,
+  "flag": 0,
+  "level": 4,
+  "ppid": null,
+  "zipcode": "100010",
+  "name": "东城区",
+  "pid": 110100
+}
+
+
+//recv_name = 李盛熙
+//recv_mobile = 18601941970
+//recv_tel = 2222
+//zipcode = 266000
+//recv_address = 山东青岛市
+//remark = lee5hx-测试不要付款。
+//province = 山东省
+//city = 青岛市
+//area = 李沧区
+//outer_tid = lee5hx测试
+//province_id= 370000
+//city_id = 370200
+//area_id = 370213

@@ -210,4 +210,20 @@ CREATE TABLE `oc_tmsport_check_result` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天马体育对账结果表';
 
 
-
+DROP TABLE oc_tm_order_records;
+CREATE TABLE `oc_tm_order_records` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tid` varchar(255) NULL COMMENT '淘宝订单ID',
+  `type` varchar(255)  COMMENT '下单类型：手工补单，自动下单',
+  `status` varchar(255)  COMMENT '下单状态：成功或失败',
+  'order_info' TEXT COMMENT '订单信息-json',
+  'fail_cause' TEXT COMMENT '失败原因',
+  `wh_snapshot_data` TEXT COMMENT '仓库快照数据(自动机器下单时，才会有数据)',
+  `machine_cid` TEXT COMMENT '下单机器CID(自动机器下单时，才会有数据)',
+  `add_time` timestamp NOT NULL COMMENT '下单时间',
+  PRIMARY KEY (`id`),
+  KEY `IDX_TID` (`tid`),
+  KEY `IDX_TYPE` (`type`),
+  KEY `IDX_STATUS` (`status`),
+  KEY `IDX_ADD_TIME` (`add_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='下单记录表';

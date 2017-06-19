@@ -54,4 +54,9 @@ public class OcStringUtils {
         return StringUtils.substringBeforeLast(skuOuterId, "-");
     }
 
+    public static String getGoodsNoBySize(String skuOuterId){
+        return StringUtils.substringAfterLast(skuOuterId, "-");
+    }
+
+
 }

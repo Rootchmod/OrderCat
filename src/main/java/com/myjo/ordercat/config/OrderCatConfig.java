@@ -112,6 +112,10 @@ public class OrderCatConfig {
     public static String getFenxiaoAccountCheckJobTriggerCron(){
         return config.getString(String.format(SCHEDULER_CRON, "fenxiaoAccountCheckJob_trigger_cron"));
     }
+    public static String getTianmaAccountCheckJobTriggerCron(){
+        return config.getString(String.format(SCHEDULER_CRON, "tianmaAccountCheckJob_trigger_cron"));
+    }
+
 
     public static String getAutoSendGoodsJobTriggerCron(){
         return config.getString(String.format(SCHEDULER_CRON, "autoSendGoodsJob_trigger_cron"));
@@ -316,6 +320,11 @@ public class OrderCatConfig {
         //return "http://www.tianmasport.com/ms/Inventory/downGroup.do";
     }
 
+    public static String getTianmaGetAreaHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "get_area_http_url"));
+        //http://www.tianmasport.com/ms/order/getArea.do?pid=0
+    }
+
     public static String getSearchByArticlenoHttpUrl() {
         return config.getString(String.format(TIANMA_SPORT, "search_by_articleno_http_url"));
     }
@@ -327,6 +336,8 @@ public class OrderCatConfig {
     public static String getTradeOrderAddRemarkHttpUrl() {
         return config.getString(String.format(TIANMA_SPORT, "trade_order_add_remark_http_url"));
     }
+
+
 
 
 

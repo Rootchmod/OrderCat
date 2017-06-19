@@ -232,6 +232,7 @@ public class AccountCheck {
                 tianmaCheckResultList.size()
         ));
 
+
         //赋值TB订单
         tianmaCheckResultList.parallelStream().forEach(tianmaCheckResult -> {
             String outerOrderId = tianmaCheckResult.getTmOuterOrderId();
@@ -333,9 +334,10 @@ public class AccountCheck {
                                 "TRADE_CLOSED".equals(tbOrder.getStatus()) ||
                                 "TRADE_CLOSED_BY_TAOBAO".equals(tbOrder.getStatus())
                                 ) {
-                            String dzDetailsMessage = String.format("订单状态不匹配,TB订单状态为:[%s],TM订单状态为:[%s]",
+                            String dzDetailsMessage = String.format("订单状态不匹配,TB订单状态为:[%s],TM订单状态为:[%s],货号为:[%s]",
                                     tbOrder.getStatus(),
-                                    tmOrder.getStatus().getVal()
+                                    tmOrder.getStatus().getVal(),
+                                    tbOrder.getOuterSkuId()
                             );
                             tianmaCheckResult.setDzDetailsMessage(dzDetailsMessage);
                             tianmaCheckResult.setDzStatus(TianmaCheckStatus.ORDER_STATUS_DOES_NOT_MATCH);
@@ -404,30 +406,66 @@ public class AccountCheck {
         Logger.info(String.format("正在持久化数据库"));
 
 
+
+        //已经对过账的所有记录
+        Map<String, OcTmsportCheckResult> yetTmsportCheckResultMap = ocTmsportCheckResultManager
+                .stream()
+                .collect(Collectors.toConcurrentMap(o -> o.getTmOuterOrderId().get(), Function.identity()));
+
+        Logger.info(String.format("已经对过账的所有记录.size:[%d]",yetTmsportCheckResultMap.size()));
+
+
         tianmaCheckResultList.parallelStream()
                 .filter(tianmaCheckResult -> tianmaCheckResult.getDzStatus() != null)
                 .forEach(tianmaCheckResult -> {
-                    OcTmsportCheckResult ocTmsportCheckResult = new OcTmsportCheckResultImpl();
-                    ocTmsportCheckResult.setAddTime(LocalDateTime.now());
-                    ocTmsportCheckResult.setTbOrderNum(tianmaCheckResult.getTbOrderNum());
-                    ocTmsportCheckResult.setTbNum(tianmaCheckResult.getTbNum());
-                    ocTmsportCheckResult.setTbTotalFee(tianmaCheckResult.getTbTotalFee());
-                    ocTmsportCheckResult.setTbPayment(tianmaCheckResult.getTbPayment());
-                    ocTmsportCheckResult.setTbPaytime(tianmaCheckResult.getTbPayTime());
-                    ocTmsportCheckResult.setTbCreated(tianmaCheckResult.getTbCreated());
-                    ocTmsportCheckResult.setTbPrice(tianmaCheckResult.getTbPrice());
-                    ocTmsportCheckResult.setTbDiscountFee(tianmaCheckResult.getTbDiscountFee());
-                    ocTmsportCheckResult.setTmOuterOrderId(tianmaCheckResult.getTmOuterOrderId());
-                    ocTmsportCheckResult.setTmOrderNum(tianmaCheckResult.getTmOrderNum());
-                    ocTmsportCheckResult.setTmNum(tianmaCheckResult.getTmNum());
-                    ocTmsportCheckResult.setDzStatus(tianmaCheckResult.getDzStatus().getValue());
-                    ocTmsportCheckResult.setDzDetailsMessage(tianmaCheckResult.getDzDetailsMessage());
+
+                    OcTmsportCheckResult ocTmsportCheckResult = yetTmsportCheckResultMap.get(tianmaCheckResult.getTmOuterOrderId());
+                    if(ocTmsportCheckResult!=null){
+                        ocTmsportCheckResult.setAddTime(LocalDateTime.now());
+                        ocTmsportCheckResult.setTbOrderNum(tianmaCheckResult.getTbOrderNum());
+                        ocTmsportCheckResult.setTbNum(tianmaCheckResult.getTbNum());
+                        ocTmsportCheckResult.setTbTotalFee(tianmaCheckResult.getTbTotalFee());
+                        ocTmsportCheckResult.setTbPayment(tianmaCheckResult.getTbPayment());
+                        ocTmsportCheckResult.setTbPaytime(tianmaCheckResult.getTbPayTime());
+                        ocTmsportCheckResult.setTbCreated(tianmaCheckResult.getTbCreated());
+                        ocTmsportCheckResult.setTbPrice(tianmaCheckResult.getTbPrice());
+                        ocTmsportCheckResult.setTbDiscountFee(tianmaCheckResult.getTbDiscountFee());
+                        ocTmsportCheckResult.setTmOuterOrderId(tianmaCheckResult.getTmOuterOrderId());
+                        ocTmsportCheckResult.setTmOrderNum(tianmaCheckResult.getTmOrderNum());
+                        ocTmsportCheckResult.setTmNum(tianmaCheckResult.getTmNum());
+                        ocTmsportCheckResult.setDzStatus(tianmaCheckResult.getDzStatus().getValue());
+                        ocTmsportCheckResult.setDzDetailsMessage(tianmaCheckResult.getDzDetailsMessage());
+                        ocTmsportCheckResultManager.update(ocTmsportCheckResult);
+                    }else {
+                        ocTmsportCheckResult = new OcTmsportCheckResultImpl();
+                        ocTmsportCheckResult.setAddTime(LocalDateTime.now());
+                        ocTmsportCheckResult.setTbOrderNum(tianmaCheckResult.getTbOrderNum());
+                        ocTmsportCheckResult.setTbNum(tianmaCheckResult.getTbNum());
+                        ocTmsportCheckResult.setTbTotalFee(tianmaCheckResult.getTbTotalFee());
+                        ocTmsportCheckResult.setTbPayment(tianmaCheckResult.getTbPayment());
+                        ocTmsportCheckResult.setTbPaytime(tianmaCheckResult.getTbPayTime());
+                        ocTmsportCheckResult.setTbCreated(tianmaCheckResult.getTbCreated());
+                        ocTmsportCheckResult.setTbPrice(tianmaCheckResult.getTbPrice());
+                        ocTmsportCheckResult.setTbDiscountFee(tianmaCheckResult.getTbDiscountFee());
+                        ocTmsportCheckResult.setTmOuterOrderId(tianmaCheckResult.getTmOuterOrderId());
+                        ocTmsportCheckResult.setTmOrderNum(tianmaCheckResult.getTmOrderNum());
+                        ocTmsportCheckResult.setTmNum(tianmaCheckResult.getTmNum());
+                        ocTmsportCheckResult.setDzStatus(tianmaCheckResult.getDzStatus().getValue());
+                        ocTmsportCheckResult.setDzDetailsMessage(tianmaCheckResult.getDzDetailsMessage());
+                        ocTmsportCheckResultManager.persist(ocTmsportCheckResult);
+                    }
                     //ocTmsportCheckResult.setRemarks(tianmaCheckResult.getRemarks());
-                    ocTmsportCheckResultManager.persist(ocTmsportCheckResult);
+
 
                 });
 
         Logger.info(String.format("持久化数据库-完成"));
+
+
+        Logger.info(String.format("输出天马对账结果CSV."));
+        List<OcTmsportCheckResult> outCsvList = ocTmsportCheckResultManager.stream().collect(Collectors.toList());
+        OcCsvUtils.writeWithCsvOcFenxiaoCheckResultWriter(outCsvList,execJobId);
+        Logger.info(String.format("输出天马对账结果CSV-完成."));
 
         Logger.info(String.format("天马对账-运行结束"));
     }
@@ -456,52 +494,6 @@ public class AccountCheck {
             }
         }
     }
-
-
-//    private boolean isCheckStatus(TianmaOrder tianmaOrder, Order order) {
-//        //TRADE_NO_CREATE_PAY(没有创建支付宝交易)
-//        //WAIT_BUYER_PAY(等待买家付款)
-//        //WAIT_SELLER_SEND_GOODS(等待卖家发货,即:买家已付款)
-//        //WAIT_BUYER_CONFIRM_GOODS(等待买家确认收货,即:卖家已发货)
-//        //TRADE_BUYER_SIGNED(买家已签收,货到付款专用)
-//        //TRADE_FINISHED(交易成功)
-//        //TRADE_CLOSED(付款以后用户退款成功，交易自动关闭)
-//        //TRADE_CLOSED_BY_TAOBAO(付款以前，卖家或买家主动关闭交易)
-//        //PAY_PENDING(国际信用卡支付付款确认中)
-//
-//        //双方状态不匹配!天马状态为[FEEDBACK_SUCCESS],淘宝状态为[WAIT_BUYER_CONFIRM_GOODS].
-//        boolean rt = false;
-//        if ("WAIT_SELLER_SEND_GOODS".equals(order.getStatus())
-//                || "WAIT_BUYER_CONFIRM_GOODS".equals(order.getStatus())
-//                || "TRADE_FINISHED".equals(order.getStatus())) {
-//            if (tianmaOrder.getStatus() != TianmaOrderStatus.PICKING &&
-//                    tianmaOrder.getStatus() != TianmaOrderStatus.FEEDBACK_SUCCESS &&
-//                    tianmaOrder.getStatus() != TianmaOrderStatus.PAYMENT_HAS_BEEN &&
-//                    tianmaOrder.getStatus() != TianmaOrderStatus.WAITING_RETURN
-//                    ) {
-//                rt = true;
-//            }
-//        }
-//        return rt;
-//    }
-//
-//
-//    private boolean isNoCheckTmStatus(TianmaOrder tianmaOrder) {
-//        // 已退款10  已退货 80 反馈失败 60 代付款0  待退款90
-//        return TianmaOrderStatus.REFUNDED != tianmaOrder.getStatus() &&
-//                TianmaOrderStatus.RETURNED != tianmaOrder.getStatus() &&
-//                TianmaOrderStatus.FEEDBACK_FAILURE != tianmaOrder.getStatus() &&
-//                TianmaOrderStatus.WAITING_PAYMENT != tianmaOrder.getStatus() &&
-//                TianmaOrderStatus.WAITING_REFUNDED != tianmaOrder.getStatus();
-//    }
-//
-//
-//    private boolean isCheckTMRefund(TianmaOrder tianmaOrder) {
-//        return TianmaOrderStatus.REFUNDED != tianmaOrder.getStatus() &&
-//                TianmaOrderStatus.RETURNED != tianmaOrder.getStatus() &&
-//                TianmaOrderStatus.FEEDBACK_FAILURE != tianmaOrder.getStatus();
-//    }
-
     public void setOcSyncInventoryItemInfoManager(OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager) {
         this.ocSyncInventoryItemInfoManager = ocSyncInventoryItemInfoManager;
     }

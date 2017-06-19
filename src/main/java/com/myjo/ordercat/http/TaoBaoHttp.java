@@ -11,11 +11,13 @@ import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.*;
 import com.taobao.api.domain.LogisticsCompany;
 import com.taobao.api.internal.tmc.TmcClient;
+import com.taobao.api.internal.util.WebUtils;
 import com.taobao.api.request.*;
 import com.taobao.api.response.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -661,6 +663,43 @@ public class TaoBaoHttp {
                 trade = rsp.getTrade();
             }
         } catch (Exception e) {
+            Logger.error(e);
+        }
+        return Optional.ofNullable(trade);
+    }
+
+
+    //taobao.trade.fullinfo.get
+
+    public Optional<Trade> getTaobaoTradeFullInfo(long tid){
+
+
+//        receiver_name String 东方不败收货人的姓名
+//        receiver_state String 浙江省收货人的所在省份
+//        receiver_address String 淘宝城911号收货人的详细地址
+//        receiver_zip String 223700收货人的邮编
+//        receiver_mobile String 13512501826收货人的手机号码
+//        receiver_phone String 13819175372收货人的电话号码
+//        consign_time Date 2000-01-01 00:00:00卖家发货时间。格式:yyyy-MM-dd HH:mm:ss
+//        received_payment String 200.07卖家实际收到的支付宝打款金额（由于子订单可以部分确认收货，这个金额会随着子订单的确认收货而不断增加，交易成功后等于买家实付款减去退款金额）。精确到2位小数;单位:元。如:200.07，表示:200元7分
+//        receiver_city
+//        receiver_district
+
+
+
+
+
+        Trade trade = null;
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
+        req.setFields("tid,type,status,payment,orders,receiver_name,receiver_state,receiver_address,receiver_zip,receiver_mobile,receiver_phone,received_payment,receiver_city,receiver_district");
+        req.setTid(tid);
+        try {
+            TradeFullinfoGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+            if (rsp.isSuccess()) {
+                trade = rsp.getTrade();
+            }
+        }catch (Exception e){
             Logger.error(e);
         }
         return Optional.ofNullable(trade);

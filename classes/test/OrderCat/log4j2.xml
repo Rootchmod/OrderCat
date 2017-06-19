@@ -2,16 +2,36 @@
 
 <Configuration status="off">
     <Appenders>
-        <Console name="STDOUT">
+        <console name="STDOUT">
             <PatternLayout pattern="[%d][%-5.-5p][%-14.-14c{1}:%4L] %-22.-22M - %m%n"/>
-        </Console>
+        </console>
+        <RollingFile name="RollingFileError" fileName="${sys:user.home}/logs/hpaasvc/error.log"
+                     filePattern="${sys:user.home}/logs/hpaasvc/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">
+            <thresholdFilter level="ERROR"/>
+            <patternLayout pattern="[%d][%-5.-5p][%-14.-14c{1}:%4L] %-22.-22M - %m%n"/>
+            <policies>
+
+                <sizeBasedTriggeringPolicy size="100 MB"/>
+            </policies>
+        </RollingFile>
     </Appenders>
+
+
+
     <Loggers>
-        <Logger name="org.gradle.tooling" level="info"/>
-        <Logger name="org.eclipse.aether" level="info"/>
+
+
+
+        <logger name="com.myjo.ordercat" level="info"/>
+        <logger name="org.apache.http" level="info"/>
+        <logger name="org.gradle.tooling" level="info"/>
+        <logger name="org.eclipse.aether" level="info"/>
+        <logger name="org.quartz.core" level="info"/>
+
         <!--<Logger name="log4j.logger.org.apache.http" level="info"/>-->
-        <Root level="INFO" includeLocation="true">
-            <AppenderRef ref="STDOUT"/>
+        <Root level="all" >
+            <appenderRef ref="STDOUT"/>
+            <appenderRef ref="RollingFileError"/>
         </Root>
     </Loggers>
 </Configuration>
