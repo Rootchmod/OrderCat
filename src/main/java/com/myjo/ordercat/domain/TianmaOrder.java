@@ -43,6 +43,8 @@ public class TianmaOrder {
 
     private String goodsNo;
 
+    private String tid;
+
 
     public String getOuterOrderId() {
         return outerOrderId;
@@ -171,6 +173,14 @@ public class TianmaOrder {
 
     public void setGoodsNo(String goodsNo) {
         this.goodsNo = goodsNo;
+    }
+
+    public String getTid() {
+        return tid;
+    }
+
+    public void setTid(String tid) {
+        this.tid = tid;
     }
 }
 

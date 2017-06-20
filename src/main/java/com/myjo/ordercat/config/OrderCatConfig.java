@@ -31,6 +31,9 @@ public class OrderCatConfig {
     private static final String SCHEDULER_CRON = "scheduler-cron.%s";
     private static final String ACCOUNT_CHECK = "account-check.%s";
     private static final String AUTO_SEND_GOODS = "auto-send-goods.%s";
+    private static final String ORDER_OPERATE = "order-operate.%s";
+
+
 
 
 
@@ -343,6 +346,17 @@ public class OrderCatConfig {
 
 
 
+    //发顺丰的快递价格上限
+    //sf_price_gate = "25"
+    public static String getOrderOperateSfPriceGate() {
+        return config.getString(String.format(ORDER_OPERATE, "sf_price_gate"));
+    }
+
+    //天马支付密码
+    //tm_pay_pwd = "VmtjMWQySnJOVlpPVkZwaFpXeGFZVll3VlhkUFVUMDk="
+    public static String getOrderOperateTmPayPwd() {
+        return config.getString(String.format(ORDER_OPERATE, "tm_pay_pwd"));
+    }
 
 
 
