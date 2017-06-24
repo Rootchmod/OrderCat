@@ -8,6 +8,7 @@ import com.myjo.ordercat.domain.JobName
 import com.myjo.ordercat.handle.AccountCheck
 import com.myjo.ordercat.handle.ExecuteHandle
 import com.myjo.ordercat.handle.FenXiaoAcHandle
+import com.myjo.ordercat.handle.OrderOperate
 import com.myjo.ordercat.handle.TianMaAcHandle
 import com.myjo.ordercat.http.TaoBaoHttp
 import com.myjo.ordercat.http.TianmaSportHttp
@@ -19,8 +20,10 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoMan
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager
+import com.myjo.ordercat.utils.OcEncryptionUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import spock.lang.Shared
@@ -37,15 +40,11 @@ import spock.lang.Unroll
 class RestApiSpec extends Specification {
 
     private static final Logger Logger = LogManager.getLogger(RestApiSpec.class);
-
-    private static AccountCheck ac;
-    private static ExecuteHandle eh;
-    private static ExecuteHandle eh1;
+    private static OrderOperate orderOperate;
 
 
     @Shared
     def client = new RESTClient("http://localhost:8080/order_cat_api/")
-
 
 
     def setup() {
@@ -53,10 +52,14 @@ class RestApiSpec extends Specification {
         OrdercatApplication app = new OrdercatApplicationBuilder()
                 .withConnectionUrl(OrderCatConfig.getDBmsName(), OrderCatConfig.getDBConnectionUrl())
                 .withUsername(OrderCatConfig.getDBUsername())
-                .withPassword(OrderCatConfig.getDBPassword())
+                .withPassword(OcEncryptionUtils.base64Decoder(OrderCatConfig.getDBPassword(), 5))
                 .build();
 
+        Map<String,String> map = new HashMap<>();
 
+
+        TianmaSportHttp tianmaSportHttp = new TianmaSportHttp(map);
+        TaoBaoHttp taoBaoHttp = new TaoBaoHttp();
 
 //
 //        OcWarehouseInfoManager ocWarehouseInfoManager = app.getOrThrow(OcWarehouseInfoManager.class);
@@ -67,10 +70,18 @@ class RestApiSpec extends Specification {
 //        OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager = app.getOrThrow(OcSyncInventoryItemInfoManager.class);
         OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager = app.getOrThrow(OcFenxiaoCheckResultManager.class);
         OcTmsportCheckResultManager ocTmsportCheckResultManager = app.getOrThrow(OcTmsportCheckResultManager.class);
+        OcTmOrderRecordsManager ocTmOrderRecordsManager = app.getOrThrow(OcTmOrderRecordsManager.class);
+
 //
 
         OrderCatContext.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
         OrderCatContext.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
+
+
+        orderOperate = new OrderOperate(tianmaSportHttp, taoBaoHttp);
+        orderOperate.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
+
+        OrderCatContext.setOrderOperate(orderOperate);
 
 //        Map<String,String> map = new HashMap<>();
 //
@@ -109,7 +120,6 @@ class RestApiSpec extends Specification {
 //
 //        tianmaSportHttp.main_html();
 
-
 //        def server = new MicroserverApp( MicroserverApp.class,new Module() {
 //            @Override
 //            String getContext() {
@@ -117,7 +127,7 @@ class RestApiSpec extends Specification {
 //            }
 //        });
 
-        def server = new MicroserverApp( RestApiSpec.class,new Module() {
+        def server = new MicroserverApp(RestApiSpec.class, new Module() {
             @Override
             String getContext() {
                 return "order_cat_api";
@@ -131,7 +141,7 @@ class RestApiSpec extends Specification {
 
     def "StatusResource-status-ping"() {
         when:
-        def response = client.get(path : "status/ping")
+        def response = client.get(path: "status/ping")
 
 
         then:
@@ -144,7 +154,7 @@ class RestApiSpec extends Specification {
 
     def "AccountCheckResource-/account-check/tmsport/check/list"() {
         when:
-        def response = client.get(path : "account-check/tmsport/check/list")
+        def response = client.get(path: "account-check/tmsport/check/list")
 
         then:
         with(response) {
@@ -156,14 +166,13 @@ class RestApiSpec extends Specification {
 
     def "AccountCheckResource-/fenxiao/check/list"() {
         when:
-        def response = client.get(path : "account-check/fenxiao/check/list")
+        def response = client.get(path: "account-check/fenxiao/check/list")
 
         then:
         with(response) {
             status == 200
         }
     }
-
 
 
 }

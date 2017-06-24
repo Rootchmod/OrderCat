@@ -24,6 +24,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
+import com.myjo.ordercat.utils.OcEncryptionUtils;
 import com.speedment.runtime.core.ApplicationBuilder;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
@@ -80,8 +81,8 @@ public class Main {
         OrdercatApplication app = new OrdercatApplicationBuilder()
                 .withConnectionUrl(OrderCatConfig.getDBmsName(), OrderCatConfig.getDBConnectionUrl())
                 .withUsername(OrderCatConfig.getDBUsername())
-                .withPassword(OrderCatConfig.getDBPassword())
-                .withLogging(ApplicationBuilder.LogType.CONNECTION)
+                .withPassword(OcEncryptionUtils.base64Decoder(OrderCatConfig.getDBPassword(),5))
+                //.withLogging(ApplicationBuilder.LogType.CONNECTION)
                 .withParam("connectionpool.maxAge", "8000")
                 .withParam("connectionpool.maxRetainSize", "20")
                 .build();

@@ -1,14 +1,15 @@
 package com.myjo.ordercat.handle;
 
 import com.alibaba.fastjson.JSON;
+import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_tianma_check_result.OcTianmaCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager;
+import com.myjo.ordercat.utils.OcEncryptionUtils;
 import com.myjo.ordercat.utils.OcStringUtils;
 import com.taobao.api.domain.Order;
 import com.taobao.api.domain.Trade;
@@ -45,11 +46,12 @@ public class OrderOperate {
      *
      * @param tid
      */
-    public void manualOrder(
+    public OcTmOrderRecords manualOrder(
             long tid,
             String wareHouseId,
+            String payPwd1,
             String machineCid,
-            String whSnapshotData) {
+            String whSnapshotData) throws Exception {
         Logger.info(String.format("开始执行下单-淘宝订单[%d],仓库ID[%s]",
                 tid,
                 wareHouseId
@@ -58,7 +60,7 @@ public class OrderOperate {
         Optional<OcTmOrderRecords> obj = ocTmOrderRecordsManager.stream()
                 .filter(OcTmOrderRecords.TID.equal(String.valueOf(tid)).and(OcTmOrderRecords.STATUS.equal(TmOrderRecordStatus.SUCCESS.getValue())))
                 .findAny();
-        if(obj.isPresent()){
+        if (obj.isPresent()) {
             throw new OCException(String.format("淘宝订单[%d],已经下过订单.禁止重复下单", tid));
         }
 
@@ -66,9 +68,9 @@ public class OrderOperate {
         OcTmOrderRecords ocTmOrderRecords = new OcTmOrderRecordsImpl();
         ocTmOrderRecords.setTid(String.valueOf(tid));
 
-        if(machineCid==null){
+        if (machineCid == null) {
             ocTmOrderRecords.setType(TmOrderRecordType.MANUAL.getValue());
-        }else {
+        } else {
             ocTmOrderRecords.setType(TmOrderRecordType.MACHINE.getValue());
             ocTmOrderRecords.setMachineCid(machineCid);
             ocTmOrderRecords.setWhSnapshotData(whSnapshotData);
@@ -108,7 +110,7 @@ public class OrderOperate {
                 requestMap.put("province", trade.getReceiverState());
                 requestMap.put("city", trade.getReceiverCity());
                 requestMap.put("area", trade.getReceiverDistrict());
-                requestMap.put("outer_tid", "lee5hx-" + String.valueOf(tid));
+                requestMap.put("outer_tid", String.valueOf(tid));
                 List<TmArea> list = tianmaSportHttp.getArea("0");
                 String province_id = getPidInAreas(list, trade.getReceiverState());
                 list = tianmaSportHttp.getArea(province_id);
@@ -118,8 +120,6 @@ public class OrderOperate {
                 requestMap.put("province_id", province_id);
                 requestMap.put("city_id", city_id);
                 requestMap.put("area_id", area_id);
-
-
 
 
                 Map<String, Object> anrtMap = tianmaSportHttp.getSearchByArticleno(articleno);
@@ -162,7 +162,7 @@ public class OrderOperate {
                 Optional<TmPostage> optionalTmPostage = postages.parallelStream()
                         .filter(o -> o.getExpressName().indexOf("到付") < 0)
                         .filter(o -> o.getExpressName().indexOf("顺丰") > -1
-                                && o.getKdCost().compareTo(new BigDecimal("25")) < 0)
+                                && o.getKdCost().compareTo(new BigDecimal(OrderCatConfig.getOrderOperateSfPriceGate())) < 0)
                         .findFirst();
 
                 String express; //普通快递(10.0)
@@ -196,14 +196,19 @@ public class OrderOperate {
                 requestMap.put("jsonStr", jsonStr.toString());
                 //下单
                 String rt = tianmaSportHttp.orderBooking(requestMap);
-                Logger.info(String.format("orderBooking下单-rt[%s}",rt));
+                Logger.info(String.format("orderBooking下单-rt[%s}", rt));
 
+                PageResult<TianmaOrder> prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, String.valueOf(tid), null, 1, 10);
 
+                if (prTmOrders.getTotal() > 1 || prTmOrders.getRows().size() > 1) {
+                    throw new OCException(String.format("淘宝订单[%d],在天马中的订单大于1.", tid));
+                }
 
-                //todo 订单付款 lee5hx
+                String orderId = prTmOrders.getRows().get(0).getTid();
+//                tianmaSportHttp.mergePostage(orderId);
 
-                //tianmaSportHttp.updataBalance();
-
+                //String payPwd = OcEncryptionUtils.base64Decoder(OrderCatConfig.getOrderOperateTmPayPwd(), 5);
+                tianmaSportHttp.updataBalance(orderId, payPwd1);
 
 
                 ocTmOrderRecords.setStatus(TmOrderRecordStatus.SUCCESS.getValue());
@@ -213,7 +218,6 @@ public class OrderOperate {
                 throw new OCException(String.format("淘宝订单[%d],没有找到对应的订单信息.", tid));
             }
         } catch (Exception e) {
-
             ocTmOrderRecords.setStatus(TmOrderRecordStatus.FAILURE.getValue());
             ocTmOrderRecords.setFailCause(e.getMessage());
             Logger.error(e);
@@ -221,7 +225,7 @@ public class OrderOperate {
 
         ocTmOrderRecords.setAddTime(LocalDateTime.now());
         ocTmOrderRecordsManager.persist(ocTmOrderRecords);
-
+        return ocTmOrderRecords;
     }
 
     private String getPidInAreas(List<TmArea> list, String name) {
@@ -234,7 +238,6 @@ public class OrderOperate {
         }
         return pid;
     }
-
 
 
     /**

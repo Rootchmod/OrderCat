@@ -13,6 +13,7 @@ import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.job.OcBaseJob;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
+import com.myjo.ordercat.utils.OcEncryptionUtils;
 import com.myjo.ordercat.utils.OcSizeUtils;
 import org.apache.commons.collections.FastHashMap;
 import org.apache.commons.io.FileUtils;
@@ -106,7 +107,7 @@ public class TianmaSportHttp {
                 .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
                 //.header("Cookie", sessionId)
                 .field("nickName", OrderCatConfig.getTianmaSportUserName())
-                .field("pwd", OrderCatConfig.getTianmaSportPassWord())
+                .field("pwd", OcEncryptionUtils.base64Decoder(OrderCatConfig.getTianmaSportPassWord(),5))
                 .field("verifyCode", verifyCode)
                 .field("remember", "on")
                 .asJson();
@@ -446,7 +447,7 @@ public class TianmaSportHttp {
 
         PageResult<TianmaOrder> pageResult;
         do {
-            pageResult = tradeOrderDataList(startTime, endTime, orderStatus, sort, pageNo, pageSize);
+            pageResult = tradeOrderDataList(startTime, endTime, orderStatus,null, sort, pageNo, pageSize);
             rtlist.addAll(pageResult.getRows());
             Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
         } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
@@ -457,10 +458,11 @@ public class TianmaSportHttp {
     public PageResult<TianmaOrder> tradeOrderDataList(String startTime,
                                                       String endTime,
                                                       TianmaOrderStatus orderStatus,
+                                                      String outerTid,
                                                       String sort,
                                                       Integer pageNo,
                                                       Integer pageSize) throws Exception {
-        Logger.info("inventory_down_group_http_url: " + OrderCatConfig.getTianmaSportIDGHttpUrl());
+        Logger.info("trade_orders_data_list_http_url: " + OrderCatConfig.getTradeOrdersDataListHttpUrl());
         Logger.info(String.format("startTime:%s endTime:%s order_status:%s",
                 startTime == null ? "" : startTime,
                 endTime == null ? "" : endTime,
@@ -496,7 +498,7 @@ public class TianmaSportHttp {
                 .field("size", "")
                 .field("sort", sort == null ? "" : sort) //feed_back_time
                 .field("order", "desc")
-                .field("outer_tid", "")
+                .field("outer_tid", outerTid == null?"":outerTid)
                 .field("order_id", "")
                 .asJson();
         int code = response.getStatus();
@@ -539,6 +541,8 @@ public class TianmaSportHttp {
                 tianmaOrder.setWarehouseName(order.getString("m_warehouse_name"));
                 tianmaOrder.setStatus(TianmaOrderStatus.valueOf1(order.get("status").toString()));
                 tianmaOrder.setGoodsNo(order.get("goods_no").toString());
+
+                tianmaOrder.setTid(String.valueOf(order.getInt("tid")));
 
 
                 orders.add(tianmaOrder);
@@ -725,13 +729,13 @@ public class TianmaSportHttp {
                 orderId));
 
         String rt;
-        HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/order/defaultPostage.do"))
+        HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/tradeInfo/updataBalance.do"))
                 .header("Host", "www.tianmasport.com")
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
                 .header("User-Agent", USER_AGENT)
                 .header("Accept", "application/json, text/javascript, */*; q=0.01")
-                .header("Referer", "http://www.tianmasport.com/ms/order/quickOrder.shtml")
+                .header("Referer", "http://www.tianmasport.com/ms/tradeOrders/myorder_list.shtml")
                 .header("Accept-Encoding", "gzip, deflate, sdch")
                 .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
                 .header("X-Requested-With", "XMLHttpRequest")
@@ -744,11 +748,67 @@ public class TianmaSportHttp {
             JSONObject object = response.getBody().getObject();
             if(object.getBoolean("success") == true){
                 rt = object.getString("msg");
+                Logger.info(rt);
             }else {
                 throw new OCException("updataBalance 查询失败:" + object.getString("msg"));
             }
         } else {
             throw new OCException("updataBalance:" + code);
+        }
+        return rt;
+    }
+
+
+
+    //http://www.tianmasport.com/ms/tradeInfo/mergePostage.do
+
+    /**
+     * 合并订单
+     * @param orderId
+     * @return
+     * @throws Exception
+     */
+    public String mergePostage(String orderId) throws Exception {
+
+        Logger.info(String.format("http tm-sport mergePostage:orderId:%s",
+                orderId));
+
+        String rt;
+        HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/tradeInfo/mergePostage.do"))
+                .header("Host", "www.tianmasport.com")
+                .header("Connection", "keep-alive")
+                .header("Upgrade-Insecure-Requests", "1")
+                .header("User-Agent", USER_AGENT)
+                .header("Accept", "application/json, text/javascript, */*; q=0.01")
+                .header("Referer", "http://www.tianmasport.com/ms/tradeOrders/myorder_list.shtml")
+                .header("Accept-Encoding", "gzip, deflate, sdch")
+                .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+                .header("X-Requested-With", "XMLHttpRequest")
+                .field("orderIDs",orderId)
+                .asJson();
+
+        int code = response.getStatus();
+        if (code == 200) {
+            JSONObject object = response.getBody().getObject();
+            if(object.getBoolean("success") == true){
+
+                //{"easyuiUrl":"http://www.tianmasport.com/ms/js/jquery-easyui","balance":207754.211,"msUrl":"http://www.tianmasport.com/ms","weight":12,"success":true,"totalPrice":"398.850","postage":"12.000"}
+
+
+                Logger.info(String.format("balance=%s",object.getBigDecimal("balance").toPlainString()));
+                Logger.info(String.format("totalPrice=%s",object.getBigDecimal("totalPrice").toPlainString()));
+                Logger.info(String.format("postage=%s",object.getBigDecimal("postage").toPlainString()));
+                Logger.info(String.format("weight=%s",String.valueOf(object.getInt("weight"))));
+
+
+                rt = "success";
+
+                Logger.info(rt);
+            }else {
+                throw new OCException("mergePostage 查询失败:" + object.getString("msg"));
+            }
+        } else {
+            throw new OCException("mergePostage:" + code);
         }
         return rt;
     }

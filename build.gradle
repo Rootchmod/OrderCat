@@ -184,6 +184,8 @@ dependencies {
 
     compile group: 'com.aol.microservices', name:'micro-grizzly-with-jersey', version:'0.91.1'
     compile group: 'com.aol.microservices', name:'micro-cors',version:'0.91.1'
+    compile group: 'com.aol.microservices', name:'micro-swagger',version:'0.91.1'
+
 
     //compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.3'
 

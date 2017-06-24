@@ -13,6 +13,9 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsport
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Rest
 @Path("/account-check")
+@Api(value = "/account-check", description = "对账信息接口")
 public class AccountCheckResource {
 
 
@@ -35,12 +39,12 @@ public class AccountCheckResource {
     @GET
     @Produces("application/json;charset=utf-8")
     @Path("/tmsport/check/list")
-
+    @ApiOperation(value = "天马对账信息查询", response = PageResult.class)
     public PageResult<OcTmsportCheckResultVO> tmsportCheckList(
-            @QueryParam("tm_outer_order_id") String tm_outer_order_id,
-            @QueryParam("dz_status") String dz_status,
-            @QueryParam("page_size") int page_size,
-            @QueryParam("page") int page
+            @ApiParam(name = "tm_outer_order_id", value = "淘宝订单ID") @QueryParam("tm_outer_order_id") String tm_outer_order_id,
+            @ApiParam(name = "dz_status", value = "对账状态") @QueryParam("dz_status") String dz_status,
+            @ApiParam(required = true, name = "page_size", value = "分页大小") @QueryParam("page_size") int page_size,
+            @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
 
         Logger.info(String.format("tm_outer_order_id:%s,dz_status:%s,page_size:%d,page:%d",
@@ -80,7 +84,7 @@ public class AccountCheckResource {
         List<OcTmsportCheckResult> list = ocTmsportCheckResultManager.stream()
                 .filter(p1)
                 .sorted(OcTmsportCheckResultImpl.ADD_TIME.comparator())
-                .skip((page-1) * page_size)
+                .skip((page - 1) * page_size)
                 .limit(page_size)
                 .collect(Collectors.toList());
 
@@ -116,9 +120,10 @@ public class AccountCheckResource {
     @POST
     @Produces("application/json;charset=utf-8")
     @Path("/tmsport/check/addRemark")
+    @ApiOperation(value = "添加天马对账备注", response = Map.class)
     public Map<String, Object> tmsportCheckAddRemark(
-            @FormParam("id") String id,
-            @FormParam("remark") String remark) {
+            @ApiParam(required = true,name = "id", value = "对账ID") @FormParam("id") String id,
+            @ApiParam(required = true,name = "remark", value = "备注") @FormParam("remark") String remark) {
 
 
         Logger.info(String.format("id:%s,remark:%s", id, remark));
@@ -151,10 +156,11 @@ public class AccountCheckResource {
     @GET
     @Produces("application/json;charset=utf-8")
     @Path("/fenxiao/check/list")
+    @ApiOperation(value = "分销对账信息查询", response = PageResult.class)
     public PageResult<OcFenxiaoCheckResultVO> fenxiaoCheckList(
-            @QueryParam("status") String status,
-            @QueryParam("page_size") int page_size,
-            @QueryParam("page") int page
+            @ApiParam(name = "status", value = "对账状态") @QueryParam("status") String status,
+            @ApiParam(required = true,name = "page_size", value = "分页大小") @QueryParam("page_size") int page_size,
+            @ApiParam(required = true,name = "page", value = "当前页") @QueryParam("page") int page
     ) {
         PageResult<OcFenxiaoCheckResultVO> pageResult = new PageResult<>();
         OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager = OrderCatContext.getOcFenxiaoCheckResultManager();
@@ -187,20 +193,20 @@ public class AccountCheckResource {
                 .map(o -> {
                     OcFenxiaoCheckResultVO fenxiaoCheckResult = new OcFenxiaoCheckResultVO();
                     fenxiaoCheckResult.setId(o.getId());
-                    fenxiaoCheckResult.setTid(o.getTid().isPresent()?o.getTid().getAsLong():0);
-                    fenxiaoCheckResult.setOrderStatus(o.getOrderStatus().isPresent()?o.getOrderStatus().get():"");
-                    fenxiaoCheckResult.setRefundId(o.getRefundId().isPresent()?o.getRefundId().getAsLong():0);
-                    fenxiaoCheckResult.setNumIid(o.getNumIid().isPresent()?o.getNumIid().getAsLong():0);
+                    fenxiaoCheckResult.setTid(o.getTid().isPresent() ? o.getTid().getAsLong() : 0);
+                    fenxiaoCheckResult.setOrderStatus(o.getOrderStatus().isPresent() ? o.getOrderStatus().get() : "");
+                    fenxiaoCheckResult.setRefundId(o.getRefundId().isPresent() ? o.getRefundId().getAsLong() : 0);
+                    fenxiaoCheckResult.setNumIid(o.getNumIid().isPresent() ? o.getNumIid().getAsLong() : 0);
                     fenxiaoCheckResult.setTitle(o.getTitle());
-                    fenxiaoCheckResult.setFenxiaoId(o.getFenxiaoId().isPresent()?o.getFenxiaoId().getAsLong():0);
-                    fenxiaoCheckResult.setSupplierNick(o.getSupplierNick().isPresent()?o.getSupplierNick().get():"");
-                    fenxiaoCheckResult.setDistributorNick(o.getDistributorNick().isPresent()?o.getDistributorNick().get():"");
-                    fenxiaoCheckResult.setFenxiaoRefundStatus(o.getFenxiaoRefundStatus().isPresent()?o.getFenxiaoRefundStatus().get():"");
-                    fenxiaoCheckResult.setFenxiaoRefundFee(o.getFenxiaoRefundFee().isPresent()?o.getFenxiaoRefundFee().get(): BigDecimal.ZERO);
-                    fenxiaoCheckResult.setFenxiaoPaySupFee(o.getFenxiaoPaySupFee().isPresent()?o.getFenxiaoPaySupFee().get(): BigDecimal.ZERO);
-                    fenxiaoCheckResult.setFenxiaoRefundDesc(o.getFenxiaoRefundDesc().isPresent()?o.getFenxiaoRefundDesc().get():"");
-                    fenxiaoCheckResult.setFenxiaoRefundReason(o.getFenxiaoRefundReason().isPresent()?o.getFenxiaoRefundReason().get():"");
-                    fenxiaoCheckResult.setStatus(o.getStatus().isPresent()?o.getStatus().get():"");
+                    fenxiaoCheckResult.setFenxiaoId(o.getFenxiaoId().isPresent() ? o.getFenxiaoId().getAsLong() : 0);
+                    fenxiaoCheckResult.setSupplierNick(o.getSupplierNick().isPresent() ? o.getSupplierNick().get() : "");
+                    fenxiaoCheckResult.setDistributorNick(o.getDistributorNick().isPresent() ? o.getDistributorNick().get() : "");
+                    fenxiaoCheckResult.setFenxiaoRefundStatus(o.getFenxiaoRefundStatus().isPresent() ? o.getFenxiaoRefundStatus().get() : "");
+                    fenxiaoCheckResult.setFenxiaoRefundFee(o.getFenxiaoRefundFee().isPresent() ? o.getFenxiaoRefundFee().get() : BigDecimal.ZERO);
+                    fenxiaoCheckResult.setFenxiaoPaySupFee(o.getFenxiaoPaySupFee().isPresent() ? o.getFenxiaoPaySupFee().get() : BigDecimal.ZERO);
+                    fenxiaoCheckResult.setFenxiaoRefundDesc(o.getFenxiaoRefundDesc().isPresent() ? o.getFenxiaoRefundDesc().get() : "");
+                    fenxiaoCheckResult.setFenxiaoRefundReason(o.getFenxiaoRefundReason().isPresent() ? o.getFenxiaoRefundReason().get() : "");
+                    fenxiaoCheckResult.setStatus(o.getStatus().isPresent() ? o.getStatus().get() : "");
                     fenxiaoCheckResult.setRemarks(o.getRemarks().isPresent() ? o.getRemarks().get() : "");
                     fenxiaoCheckResult.setAddTime(OcDateTimeUtils.localDateTime2Date(o.getAddTime()));
                     return fenxiaoCheckResult;
@@ -214,9 +220,10 @@ public class AccountCheckResource {
     @POST
     @Produces("application/json;charset=utf-8")
     @Path("/fenxiao/check/addRemark")
+    @ApiOperation(value = "添加分销对账备注", response = Map.class)
     public Map<String, Object> fenxiaoCheckAddRemark(
-            @FormParam("id") String id,
-            @FormParam("remark") String remark) {
+            @ApiParam(required = true,name = "id", value = "对账ID") @FormParam("id") String id,
+            @ApiParam(required = true,name = "remark", value = "备注") @FormParam("remark") String remark) {
 
         Logger.info(String.format("id:%s,remark:%s", id, remark));
 

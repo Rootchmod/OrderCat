@@ -17,6 +17,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLog
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager
+import com.myjo.ordercat.utils.OcEncryptionUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import spock.lang.Specification
@@ -39,7 +40,7 @@ class OrderOperateSpec extends Specification {
         OrdercatApplication app = new OrdercatApplicationBuilder()
                 .withConnectionUrl(OrderCatConfig.getDBmsName(), OrderCatConfig.getDBConnectionUrl())
                 .withUsername(OrderCatConfig.getDBUsername())
-                .withPassword(OrderCatConfig.getDBPassword())
+                .withPassword(OcEncryptionUtils.base64Decoder(OrderCatConfig.getDBPassword(),5))
                 .build();
 
         Map<String,String> map = new HashMap<>();
@@ -71,8 +72,8 @@ class OrderOperateSpec extends Specification {
     def "manualOrder"() {
         when:
 
-        //订单号: 28746668856447565   广东特价渠道   可以下顺丰
-        orderOperate.manualOrder(9141559958006554,"485",null,null)
+        //订单号: 25988863027166718
+        orderOperate.manualOrder(30116390378191766,"410","789789as",null,null)
         then:
         "ok" == "ok";
     }
