@@ -41,7 +41,7 @@ public class OrderOperateResource {
     public Map<String, Object> fenxiaoCheckAddRemark(
             @ApiParam(required = true,name = "tid", value = "对账ID") @FormParam("tid") String tid,
             @ApiParam(required = true,name = "wareHouseId", value = "备注") @FormParam("wareHouseId") String wareHouseId,
-            @ApiParam(required = true,name = "payPwd", value = "备注") @FormParam("payPwd") String payPwd
+            @ApiParam(required = true,name = "payPwd", value = "密码") @FormParam("payPwd") String payPwd
             ) {
         Logger.info(String.format("/order-operate/manualOrder tid:%s,wareHouseId:%s,payPwd:*******", tid, wareHouseId));
         Map<String, Object> rt = new HashMap<>();
@@ -78,9 +78,73 @@ public class OrderOperateResource {
             @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
 
+//        Logger.info(String.format("tm_outer_order_id:%s,dz_status:%s,page_size:%d,page:%d",
+//                tm_outer_order_id,
+//                dz_status,
+//                page_size,
+//                page
+//        ));
+        PageResult<OcTmsportCheckResultVO> pageResult = new PageResult<>();
+
+        OcTmsportCheckResultManager ocTmsportCheckResultManager = OrderCatContext.getOcTmsportCheckResultManager();
 
 
-        return null;
+        List<Predicate<OcTmsportCheckResult>> predicateList = new ArrayList<>();
+
+//        if (tm_outer_order_id != null) {
+//            predicateList.add(OcTmsportCheckResultImpl.TM_OUTER_ORDER_ID.equal(tm_outer_order_id));
+//        }
+//
+//        if (dz_status != null) {
+//            predicateList.add(OcTmsportCheckResultImpl.DZ_STATUS.equal(dz_status));
+//        }
+
+        Predicate<OcTmsportCheckResult> p1 = ocTmsportCheckResult -> true;
+
+        for (Predicate<OcTmsportCheckResult> p : predicateList) {
+            p1 = p1.and(p);
+        }
+        //Stream<OcTmsportCheckResult> stream = ;
+
+        long count = ocTmsportCheckResultManager.stream()
+                .filter(p1)
+                .count();
+        pageResult.setTotal(count);
+
+
+        List<OcTmsportCheckResult> list = ocTmsportCheckResultManager.stream()
+                .filter(p1)
+                .sorted(OcTmsportCheckResultImpl.ADD_TIME.comparator())
+                .skip((page - 1) * page_size)
+                .limit(page_size)
+                .collect(Collectors.toList());
+
+        List<OcTmsportCheckResultVO> tianmaCheckResultList = list.parallelStream()
+                .map(o -> {
+                    OcTmsportCheckResultVO tianmaCheckResult = new OcTmsportCheckResultVO();
+                    tianmaCheckResult.setId(o.getId());
+                    tianmaCheckResult.setTmOuterOrderId(o.getTmOuterOrderId().get());
+                    tianmaCheckResult.setTmOrderNum(o.getTmOrderNum().getAsLong());
+                    tianmaCheckResult.setTmNum(o.getTmNum().getAsLong());
+                    tianmaCheckResult.setTbOrderNum(o.getTbOrderNum().getAsLong());
+                    tianmaCheckResult.setTbNum(o.getTbNum().getAsLong());
+                    tianmaCheckResult.setTbCreated(OcDateTimeUtils.localDateTime2Date(o.getTbCreated().get()));
+                    tianmaCheckResult.setTbPaytime(OcDateTimeUtils.localDateTime2Date(o.getTbPaytime().get()));
+                    tianmaCheckResult.setTbPrice(o.getTbPrice().get());
+                    tianmaCheckResult.setTbPayment(o.getTbPayment().get());
+                    tianmaCheckResult.setTbDiscountFee(o.getTbDiscountFee().get());
+                    tianmaCheckResult.setTbTotalFee(o.getTbTotalFee().get());
+                    tianmaCheckResult.setDzStatus(o.getDzStatus().get());
+                    tianmaCheckResult.setDzDetailsMessage(o.getDzDetailsMessage().get());
+                    tianmaCheckResult.setRemarks(o.getRemarks().isPresent() ? o.getRemarks().get() : "");
+                    tianmaCheckResult.setAddTime(OcDateTimeUtils.localDateTime2Date(o.getAddTime()));
+                    return tianmaCheckResult;
+                })
+                .collect(Collectors.toList());
+        pageResult.setRows(tianmaCheckResultList);
+
+
+        return pageResult;
     }
 
 
