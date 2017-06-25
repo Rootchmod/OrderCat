@@ -36,7 +36,7 @@ public class OrderOperateResource {
     @Path("/manualOrder")
     @ApiOperation(value = "手工下单接口", response = Map.class)
     public Map<String, Object> fenxiaoCheckAddRemark(
-            @ApiParam(required = true, name = "tid", value = "对账ID") @FormParam("tid") String tid,
+            @ApiParam(required = true, name = "tid", value = "淘宝订单ID") @FormParam("tid") String tid,
             @ApiParam(required = true, name = "wareHouseId", value = "备注") @FormParam("wareHouseId") String wareHouseId,
             @ApiParam(required = true, name = "payPwd", value = "密码") @FormParam("payPwd") String payPwd
     ) {

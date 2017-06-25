@@ -25,8 +25,7 @@ import java.util.stream.Collectors;
 @Path("/common")
 public class CommonResource {
     @GET
-    @Produces("text/plain")
-    @HeaderParam("")
+    @Produces("application/json;charset=utf-8")
     @Path("/wh-list")
     public List<OcWarehouseInfo> whlist() {
         OcWarehouseInfoManager ocWarehouseInfoManager = OrderCatContext.getOcWarehouseInfoManager();
