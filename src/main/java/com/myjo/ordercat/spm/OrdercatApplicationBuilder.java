@@ -11,7 +11,4 @@ import com.myjo.ordercat.spm.generated.GeneratedOrdercatApplicationBuilder;
  * 
  * @author myjo
  */
-public final class OrdercatApplicationBuilder extends GeneratedOrdercatApplicationBuilder {
-    
-    
-}
+public final class OrdercatApplicationBuilder extends GeneratedOrdercatApplicationBuilder {}

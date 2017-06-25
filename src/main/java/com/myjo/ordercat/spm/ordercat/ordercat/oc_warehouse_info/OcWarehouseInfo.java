@@ -10,7 +10,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.generated.Gener
  * 
  * @author myjo
  */
-public interface OcWarehouseInfo extends GeneratedOcWarehouseInfo {
-    
-    
-}
+public interface OcWarehouseInfo extends GeneratedOcWarehouseInfo {}

@@ -10,7 +10,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.generated
  * 
  * @author myjo
  */
-public final class OcTmsportCheckResultImpl extends GeneratedOcTmsportCheckResultImpl implements OcTmsportCheckResult {
-    
-    
-}
+public final class OcTmsportCheckResultImpl 
+extends GeneratedOcTmsportCheckResultImpl 
+implements OcTmsportCheckResult {}

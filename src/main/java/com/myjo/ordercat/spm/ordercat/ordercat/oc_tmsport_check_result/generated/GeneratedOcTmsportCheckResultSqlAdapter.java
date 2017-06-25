@@ -2,11 +2,11 @@ package com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.generate
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResult;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultImpl;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.common.injector.annotation.ExecuteBefore;
 import com.speedment.common.injector.annotation.WithState;
 import com.speedment.runtime.config.Project;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.component.ProjectComponent;
 import com.speedment.runtime.core.component.sql.SqlPersistenceComponent;
 import com.speedment.runtime.core.component.sql.SqlStreamSupplierComponent;
@@ -42,7 +42,8 @@ public abstract class GeneratedOcTmsportCheckResultSqlAdapter {
     }
     
     @ExecuteBefore(RESOLVED)
-    void installMethodName(@WithState(RESOLVED) SqlStreamSupplierComponent streamSupplierComponent, @WithState(RESOLVED) SqlPersistenceComponent persistenceComponent) {
+    void installMethodName(@WithState(RESOLVED) SqlStreamSupplierComponent streamSupplierComponent,
+            @WithState(RESOLVED) SqlPersistenceComponent persistenceComponent) {
         streamSupplierComponent.install(tableIdentifier, this::apply);
         persistenceComponent.install(tableIdentifier);
     }
@@ -51,21 +52,22 @@ public abstract class GeneratedOcTmsportCheckResultSqlAdapter {
         final OcTmsportCheckResult entity = createEntity();
         try {
             entity.setId(               resultSet.getLong(1)                             );
-            entity.setTmOuterOrderId(   resultSet.getString(2)                           );
-            entity.setTmOrderNum(       getLong(resultSet, 3)                            );
-            entity.setTmNum(            getLong(resultSet, 4)                            );
-            entity.setTbOrderNum(       getLong(resultSet, 5)                            );
-            entity.setTbNum(            getLong(resultSet, 6)                            );
-            entity.setTbCreated(        tbCreatedHelper.apply(resultSet.getTimestamp(7)) );
-            entity.setTbPaytime(        tbPaytimeHelper.apply(resultSet.getTimestamp(8)) );
-            entity.setTbPrice(          resultSet.getBigDecimal(9)                       );
-            entity.setTbPayment(        resultSet.getBigDecimal(10)                      );
-            entity.setTbDiscountFee(    resultSet.getBigDecimal(11)                      );
-            entity.setTbTotalFee(       resultSet.getBigDecimal(12)                      );
-            entity.setDzStatus(         resultSet.getString(13)                          );
-            entity.setDzDetailsMessage( resultSet.getString(14)                          );
-            entity.setRemarks(          resultSet.getString(15)                          );
-            entity.setAddTime(          addTimeHelper.apply(resultSet.getTimestamp(16))  );
+            entity.setTmOrderIds(       resultSet.getString(2)                           );
+            entity.setTmOuterOrderId(   resultSet.getString(3)                           );
+            entity.setTmOrderNum(       getLong(resultSet, 4)                            );
+            entity.setTmNum(            getLong(resultSet, 5)                            );
+            entity.setTbOrderNum(       getLong(resultSet, 6)                            );
+            entity.setTbNum(            getLong(resultSet, 7)                            );
+            entity.setTbCreated(        tbCreatedHelper.apply(resultSet.getTimestamp(8)) );
+            entity.setTbPaytime(        tbPaytimeHelper.apply(resultSet.getTimestamp(9)) );
+            entity.setTbPrice(          resultSet.getBigDecimal(10)                      );
+            entity.setTbPayment(        resultSet.getBigDecimal(11)                      );
+            entity.setTbDiscountFee(    resultSet.getBigDecimal(12)                      );
+            entity.setTbTotalFee(       resultSet.getBigDecimal(13)                      );
+            entity.setDzStatus(         resultSet.getString(14)                          );
+            entity.setDzDetailsMessage( resultSet.getString(15)                          );
+            entity.setRemarks(          resultSet.getString(16)                          );
+            entity.setAddTime(          addTimeHelper.apply(resultSet.getTimestamp(17))  );
         } catch (final SQLException sqle) {
             throw new SpeedmentException(sqle);
         }

@@ -10,7 +10,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.generated.Gen
  * 
  * @author myjo
  */
-public final class OcTmOrderRecordsImpl extends GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords {
-    
-    
-}
+public final class OcTmOrderRecordsImpl 
+extends GeneratedOcTmOrderRecordsImpl 
+implements OcTmOrderRecords {}

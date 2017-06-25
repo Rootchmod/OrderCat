@@ -1,9 +1,9 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfo;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
@@ -32,7 +32,7 @@ public interface GeneratedOcSalesInfo {
      * This Field corresponds to the {@link OcSalesInfo} field that can be
      * obtained using the {@link OcSalesInfo#getId()} method.
      */
-    final LongField<OcSalesInfo, Long> ID = LongField.create(
+    LongField<OcSalesInfo, Long> ID = LongField.create(
         Identifier.ID,
         OcSalesInfo::getId,
         OcSalesInfo::setId,
@@ -43,7 +43,7 @@ public interface GeneratedOcSalesInfo {
      * This Field corresponds to the {@link OcSalesInfo} field that can be
      * obtained using the {@link OcSalesInfo#getNumIid()} method.
      */
-    final StringField<OcSalesInfo, String> NUM_IID = StringField.create(
+    StringField<OcSalesInfo, String> NUM_IID = StringField.create(
         Identifier.NUM_IID,
         o -> OptionalUtil.unwrap(o.getNumIid()),
         OcSalesInfo::setNumIid,
@@ -54,7 +54,7 @@ public interface GeneratedOcSalesInfo {
      * This Field corresponds to the {@link OcSalesInfo} field that can be
      * obtained using the {@link OcSalesInfo#getSalesCount()} method.
      */
-    final ComparableField<OcSalesInfo, Integer, Integer> SALES_COUNT = ComparableField.create(
+    ComparableField<OcSalesInfo, Integer, Integer> SALES_COUNT = ComparableField.create(
         Identifier.SALES_COUNT,
         o -> OptionalUtil.unwrap(o.getSalesCount()),
         OcSalesInfo::setSalesCount,
@@ -65,7 +65,7 @@ public interface GeneratedOcSalesInfo {
      * This Field corresponds to the {@link OcSalesInfo} field that can be
      * obtained using the {@link OcSalesInfo#getExecJobId()} method.
      */
-    final ComparableField<OcSalesInfo, Integer, Integer> EXEC_JOB_ID = ComparableField.create(
+    ComparableField<OcSalesInfo, Integer, Integer> EXEC_JOB_ID = ComparableField.create(
         Identifier.EXEC_JOB_ID,
         o -> OptionalUtil.unwrap(o.getExecJobId()),
         OcSalesInfo::setExecJobId,
@@ -76,7 +76,7 @@ public interface GeneratedOcSalesInfo {
      * This Field corresponds to the {@link OcSalesInfo} field that can be
      * obtained using the {@link OcSalesInfo#getAddTime()} method.
      */
-    final ComparableField<OcSalesInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
+    ComparableField<OcSalesInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
         Identifier.ADD_TIME,
         OcSalesInfo::getAddTime,
         OcSalesInfo::setAddTime,

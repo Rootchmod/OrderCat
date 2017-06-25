@@ -10,7 +10,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.generated
  * 
  * @author myjo
  */
-public interface OcTmsportCheckResult extends GeneratedOcTmsportCheckResult {
-    
-    
-}
+public interface OcTmsportCheckResult extends GeneratedOcTmsportCheckResult {}

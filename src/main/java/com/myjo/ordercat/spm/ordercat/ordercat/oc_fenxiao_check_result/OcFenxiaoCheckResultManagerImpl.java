@@ -11,7 +11,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.generated
  * 
  * @author myjo
  */
-public final class OcFenxiaoCheckResultManagerImpl extends GeneratedOcFenxiaoCheckResultManagerImpl implements OcFenxiaoCheckResultManager {
-    
-    
-}
+public final class OcFenxiaoCheckResultManagerImpl 
+extends GeneratedOcFenxiaoCheckResultManagerImpl 
+implements OcFenxiaoCheckResultManager {}

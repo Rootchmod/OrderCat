@@ -10,7 +10,6 @@ import com.myjo.ordercat.spm.generated.GeneratedOrdercatApplicationImpl;
  * 
  * @author myjo
  */
-public final class OrdercatApplicationImpl extends GeneratedOrdercatApplicationImpl implements OrdercatApplication {
-    
-    
-}
+public final class OrdercatApplicationImpl 
+extends GeneratedOrdercatApplicationImpl 
+implements OrdercatApplication {}

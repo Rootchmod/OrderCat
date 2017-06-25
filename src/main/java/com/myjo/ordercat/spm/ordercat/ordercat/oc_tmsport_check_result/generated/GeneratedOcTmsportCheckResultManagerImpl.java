@@ -1,8 +1,8 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResult;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.manager.AbstractManager;
 import com.speedment.runtime.field.Field;
 import java.util.stream.Stream;
@@ -18,7 +18,9 @@ import java.util.stream.Stream;
  * @author Speedment
  */
 @GeneratedCode("Speedment")
-public abstract class GeneratedOcTmsportCheckResultManagerImpl extends AbstractManager<OcTmsportCheckResult> implements GeneratedOcTmsportCheckResultManager {
+public abstract class GeneratedOcTmsportCheckResultManagerImpl 
+extends AbstractManager<OcTmsportCheckResult> 
+implements GeneratedOcTmsportCheckResultManager {
     
     private final TableIdentifier<OcTmsportCheckResult> tableIdentifier;
     
@@ -35,6 +37,7 @@ public abstract class GeneratedOcTmsportCheckResultManagerImpl extends AbstractM
     public Stream<Field<OcTmsportCheckResult>> fields() {
         return Stream.of(
             OcTmsportCheckResult.ID,
+            OcTmsportCheckResult.TM_ORDER_IDS,
             OcTmsportCheckResult.TM_OUTER_ORDER_ID,
             OcTmsportCheckResult.TM_ORDER_NUM,
             OcTmsportCheckResult.TM_NUM,

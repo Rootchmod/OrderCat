@@ -13,11 +13,11 @@ public class OcTmsportCheckResultVO {
 
     private long id;
     private String tmOuterOrderId;
+    private String tmOrderIds;
     private Long tmOrderNum;
     private Long tmNum;
     private Long tbOrderNum;
     private Long tbNum;
-
     private Date tbCreated;
     private Date tbPaytime;
     private BigDecimal tbPrice;
@@ -159,5 +159,13 @@ public class OcTmsportCheckResultVO {
 
     public void setAddTime(Date addTime) {
         this.addTime = addTime;
+    }
+
+    public String getTmOrderIds() {
+        return tmOrderIds;
+    }
+
+    public void setTmOrderIds(String tmOrderIds) {
+        this.tmOrderIds = tmOrderIds;
     }
 }

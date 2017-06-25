@@ -35,6 +35,11 @@ public class AccountCheckResource {
 
     private static final Logger Logger = LogManager.getLogger(OrderOperate.class);
 
+   //docker run --name oc-mysql -v /Users/lee5hx/docker/mysql/data:/var/lib/mysql -v /Users/lee5hx/docker/mysql/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7
+
+
+
+
 
     @GET
     @Produces("application/json;charset=utf-8")
@@ -43,13 +48,17 @@ public class AccountCheckResource {
     public PageResult<OcTmsportCheckResultVO> tmsportCheckList(
             @ApiParam(name = "tm_outer_order_id", value = "淘宝订单ID") @QueryParam("tm_outer_order_id") String tm_outer_order_id,
             @ApiParam(name = "dz_status", value = "对账状态") @QueryParam("dz_status") String dz_status,
+            @ApiParam(name = "begin_time", value = "开始时间") @QueryParam("begin_time") String begin_time,
+            @ApiParam(name = "end_time", value = "结束时间") @QueryParam("end_time") String end_time,
             @ApiParam(required = true, name = "page_size", value = "分页大小") @QueryParam("page_size") int page_size,
             @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
 
-        Logger.info(String.format("tm_outer_order_id:%s,dz_status:%s,page_size:%d,page:%d",
+        Logger.info(String.format("tm_outer_order_id:%s,dz_status:%s,begin_time:%s,end_time:%s,page_size:%d,page:%d",
                 tm_outer_order_id,
                 dz_status,
+                begin_time,
+                end_time,
                 page_size,
                 page
         ));
@@ -60,6 +69,13 @@ public class AccountCheckResource {
 
         List<Predicate<OcTmsportCheckResult>> predicateList = new ArrayList<>();
 
+        if(begin_time!=null){
+            predicateList.add(OcTmsportCheckResultImpl.ADD_TIME.greaterOrEqual(OcDateTimeUtils.string2LocalDateTime(begin_time)));
+        }
+
+        if(end_time!=null){
+            predicateList.add(OcTmsportCheckResultImpl.ADD_TIME.lessOrEqual(OcDateTimeUtils.string2LocalDateTime(end_time)));
+        }
         if (tm_outer_order_id != null) {
             predicateList.add(OcTmsportCheckResultImpl.TM_OUTER_ORDER_ID.equal(tm_outer_order_id));
         }
@@ -93,6 +109,7 @@ public class AccountCheckResource {
                     OcTmsportCheckResultVO tianmaCheckResult = new OcTmsportCheckResultVO();
                     tianmaCheckResult.setId(o.getId());
                     tianmaCheckResult.setTmOuterOrderId(o.getTmOuterOrderId().get());
+                    tianmaCheckResult.setTmOrderIds(o.getTmOrderIds().get());
                     tianmaCheckResult.setTmOrderNum(o.getTmOrderNum().getAsLong());
                     tianmaCheckResult.setTmNum(o.getTmNum().getAsLong());
                     tianmaCheckResult.setTbOrderNum(o.getTbOrderNum().getAsLong());
@@ -111,8 +128,6 @@ public class AccountCheckResource {
                 })
                 .collect(Collectors.toList());
         pageResult.setRows(tianmaCheckResultList);
-
-
         return pageResult;
     }
 

@@ -420,6 +420,12 @@ public class AccountCheck {
                     OcTmsportCheckResult ocTmsportCheckResult = yetTmsportCheckResultMap.get(tianmaCheckResult.getTmOuterOrderId());
                     if (ocTmsportCheckResult != null) {
                         ocTmsportCheckResult.setAddTime(LocalDateTime.now());
+
+
+                        String citiesCommaSeparated = tianmaCheckResult.getTmOrders().stream()
+                                .map(o-> o.getOrderId()).collect(Collectors.joining(","));
+
+                        ocTmsportCheckResult.setTmOrderIds(citiesCommaSeparated);
                         ocTmsportCheckResult.setTbOrderNum(tianmaCheckResult.getTbOrderNum());
                         ocTmsportCheckResult.setTbNum(tianmaCheckResult.getTbNum());
                         ocTmsportCheckResult.setTbTotalFee(tianmaCheckResult.getTbTotalFee());
@@ -436,6 +442,10 @@ public class AccountCheck {
                         ocTmsportCheckResultManager.update(ocTmsportCheckResult);
                     } else {
                         ocTmsportCheckResult = new OcTmsportCheckResultImpl();
+                        String citiesCommaSeparated = tianmaCheckResult.getTmOrders().stream()
+                                .map(o-> o.getOrderId()).collect(Collectors.joining(","));
+
+                        ocTmsportCheckResult.setTmOrderIds(citiesCommaSeparated);
                         ocTmsportCheckResult.setAddTime(LocalDateTime.now());
                         ocTmsportCheckResult.setTbOrderNum(tianmaCheckResult.getTbOrderNum());
                         ocTmsportCheckResult.setTbNum(tianmaCheckResult.getTbNum());

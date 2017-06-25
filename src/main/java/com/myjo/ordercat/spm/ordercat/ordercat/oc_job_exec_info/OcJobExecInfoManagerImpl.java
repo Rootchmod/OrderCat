@@ -11,7 +11,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.generated.Genera
  * 
  * @author myjo
  */
-public final class OcJobExecInfoManagerImpl extends GeneratedOcJobExecInfoManagerImpl implements OcJobExecInfoManager {
-    
-    
-}
+public final class OcJobExecInfoManagerImpl 
+extends GeneratedOcJobExecInfoManagerImpl 
+implements OcJobExecInfoManager {}

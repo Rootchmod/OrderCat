@@ -11,7 +11,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.generated.Genera
  * 
  * @author myjo
  */
-public interface OcJobExecInfoManager extends GeneratedOcJobExecInfoManager {
-    
-    
-}
+public interface OcJobExecInfoManager extends GeneratedOcJobExecInfoManager {}

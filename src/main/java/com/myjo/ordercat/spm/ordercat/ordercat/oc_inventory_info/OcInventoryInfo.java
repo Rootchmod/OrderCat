@@ -10,7 +10,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.generated.Gener
  * 
  * @author myjo
  */
-public interface OcInventoryInfo extends GeneratedOcInventoryInfo {
-    
-    
-}
+public interface OcInventoryInfo extends GeneratedOcInventoryInfo {}

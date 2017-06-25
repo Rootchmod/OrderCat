@@ -1,7 +1,7 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfo;
-import com.speedment.runtime.core.annotation.GeneratedCode;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.core.manager.Manager;
 
 /**

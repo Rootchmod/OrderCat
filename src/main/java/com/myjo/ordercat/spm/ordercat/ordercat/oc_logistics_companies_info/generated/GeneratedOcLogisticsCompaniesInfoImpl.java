@@ -1,7 +1,7 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfo;
-import com.speedment.runtime.core.annotation.GeneratedCode;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -26,6 +26,7 @@ public abstract class GeneratedOcLogisticsCompaniesInfoImpl implements OcLogisti
     private String lcCode;
     private String lcName;
     private String lcRegMailNo;
+    private Byte lcIsEnable;
     private Long execJobId;
     private LocalDateTime addTime;
     
@@ -56,6 +57,11 @@ public abstract class GeneratedOcLogisticsCompaniesInfoImpl implements OcLogisti
     @Override
     public Optional<String> getLcRegMailNo() {
         return Optional.ofNullable(lcRegMailNo);
+    }
+    
+    @Override
+    public Optional<Byte> getLcIsEnable() {
+        return Optional.ofNullable(lcIsEnable);
     }
     
     @Override
@@ -99,6 +105,12 @@ public abstract class GeneratedOcLogisticsCompaniesInfoImpl implements OcLogisti
     }
     
     @Override
+    public OcLogisticsCompaniesInfo setLcIsEnable(Byte lcIsEnable) {
+        this.lcIsEnable = lcIsEnable;
+        return this;
+    }
+    
+    @Override
     public OcLogisticsCompaniesInfo setExecJobId(Long execJobId) {
         this.execJobId = execJobId;
         return this;
@@ -118,6 +130,7 @@ public abstract class GeneratedOcLogisticsCompaniesInfoImpl implements OcLogisti
         sj.add("lcCode = "      + Objects.toString(OptionalUtil.unwrap(getLcCode())));
         sj.add("lcName = "      + Objects.toString(OptionalUtil.unwrap(getLcName())));
         sj.add("lcRegMailNo = " + Objects.toString(OptionalUtil.unwrap(getLcRegMailNo())));
+        sj.add("lcIsEnable = "  + Objects.toString(OptionalUtil.unwrap(getLcIsEnable())));
         sj.add("execJobId = "   + Objects.toString(OptionalUtil.unwrap(getExecJobId())));
         sj.add("addTime = "     + Objects.toString(getAddTime()));
         return "OcLogisticsCompaniesInfoImpl " + sj.toString();
@@ -133,6 +146,7 @@ public abstract class GeneratedOcLogisticsCompaniesInfoImpl implements OcLogisti
         if (!Objects.equals(this.getLcCode(), thatOcLogisticsCompaniesInfo.getLcCode())) {return false; }
         if (!Objects.equals(this.getLcName(), thatOcLogisticsCompaniesInfo.getLcName())) {return false; }
         if (!Objects.equals(this.getLcRegMailNo(), thatOcLogisticsCompaniesInfo.getLcRegMailNo())) {return false; }
+        if (!Objects.equals(this.getLcIsEnable(), thatOcLogisticsCompaniesInfo.getLcIsEnable())) {return false; }
         if (!Objects.equals(this.getExecJobId(), thatOcLogisticsCompaniesInfo.getExecJobId())) {return false; }
         if (!Objects.equals(this.getAddTime(), thatOcLogisticsCompaniesInfo.getAddTime())) {return false; }
         return true;
@@ -146,6 +160,7 @@ public abstract class GeneratedOcLogisticsCompaniesInfoImpl implements OcLogisti
         hash = 31 * hash + Objects.hashCode(getLcCode());
         hash = 31 * hash + Objects.hashCode(getLcName());
         hash = 31 * hash + Objects.hashCode(getLcRegMailNo());
+        hash = 31 * hash + Objects.hashCode(getLcIsEnable());
         hash = 31 * hash + Objects.hashCode(getExecJobId());
         hash = 31 * hash + Objects.hashCode(getAddTime());
         return hash;

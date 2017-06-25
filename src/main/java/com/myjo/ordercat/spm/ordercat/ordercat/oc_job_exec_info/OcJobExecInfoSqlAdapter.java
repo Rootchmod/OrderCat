@@ -11,7 +11,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.generated.Genera
  * 
  * @author myjo
  */
-public class OcJobExecInfoSqlAdapter extends GeneratedOcJobExecInfoSqlAdapter {
-    
-    
-}
+public class OcJobExecInfoSqlAdapter extends GeneratedOcJobExecInfoSqlAdapter {}

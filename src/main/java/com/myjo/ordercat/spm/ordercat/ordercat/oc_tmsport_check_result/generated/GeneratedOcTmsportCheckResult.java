@@ -1,9 +1,9 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResult;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
@@ -34,7 +34,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getId()} method.
      */
-    final LongField<OcTmsportCheckResult, Long> ID = LongField.create(
+    LongField<OcTmsportCheckResult, Long> ID = LongField.create(
         Identifier.ID,
         OcTmsportCheckResult::getId,
         OcTmsportCheckResult::setId,
@@ -43,10 +43,22 @@ public interface GeneratedOcTmsportCheckResult {
     );
     /**
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
+     * be obtained using the {@link OcTmsportCheckResult#getTmOrderIds()}
+     * method.
+     */
+    StringField<OcTmsportCheckResult, String> TM_ORDER_IDS = StringField.create(
+        Identifier.TM_ORDER_IDS,
+        o -> OptionalUtil.unwrap(o.getTmOrderIds()),
+        OcTmsportCheckResult::setTmOrderIds,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getTmOuterOrderId()}
      * method.
      */
-    final StringField<OcTmsportCheckResult, String> TM_OUTER_ORDER_ID = StringField.create(
+    StringField<OcTmsportCheckResult, String> TM_OUTER_ORDER_ID = StringField.create(
         Identifier.TM_OUTER_ORDER_ID,
         o -> OptionalUtil.unwrap(o.getTmOuterOrderId()),
         OcTmsportCheckResult::setTmOuterOrderId,
@@ -58,7 +70,7 @@ public interface GeneratedOcTmsportCheckResult {
      * be obtained using the {@link OcTmsportCheckResult#getTmOrderNum()}
      * method.
      */
-    final ComparableField<OcTmsportCheckResult, Long, Long> TM_ORDER_NUM = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, Long, Long> TM_ORDER_NUM = ComparableField.create(
         Identifier.TM_ORDER_NUM,
         o -> OptionalUtil.unwrap(o.getTmOrderNum()),
         OcTmsportCheckResult::setTmOrderNum,
@@ -69,7 +81,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getTmNum()} method.
      */
-    final ComparableField<OcTmsportCheckResult, Long, Long> TM_NUM = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, Long, Long> TM_NUM = ComparableField.create(
         Identifier.TM_NUM,
         o -> OptionalUtil.unwrap(o.getTmNum()),
         OcTmsportCheckResult::setTmNum,
@@ -81,7 +93,7 @@ public interface GeneratedOcTmsportCheckResult {
      * be obtained using the {@link OcTmsportCheckResult#getTbOrderNum()}
      * method.
      */
-    final ComparableField<OcTmsportCheckResult, Long, Long> TB_ORDER_NUM = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, Long, Long> TB_ORDER_NUM = ComparableField.create(
         Identifier.TB_ORDER_NUM,
         o -> OptionalUtil.unwrap(o.getTbOrderNum()),
         OcTmsportCheckResult::setTbOrderNum,
@@ -92,7 +104,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getTbNum()} method.
      */
-    final ComparableField<OcTmsportCheckResult, Long, Long> TB_NUM = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, Long, Long> TB_NUM = ComparableField.create(
         Identifier.TB_NUM,
         o -> OptionalUtil.unwrap(o.getTbNum()),
         OcTmsportCheckResult::setTbNum,
@@ -103,7 +115,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getTbCreated()} method.
      */
-    final ComparableField<OcTmsportCheckResult, Timestamp, LocalDateTime> TB_CREATED = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, Timestamp, LocalDateTime> TB_CREATED = ComparableField.create(
         Identifier.TB_CREATED,
         o -> OptionalUtil.unwrap(o.getTbCreated()),
         OcTmsportCheckResult::setTbCreated,
@@ -114,7 +126,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getTbPaytime()} method.
      */
-    final ComparableField<OcTmsportCheckResult, Timestamp, LocalDateTime> TB_PAYTIME = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, Timestamp, LocalDateTime> TB_PAYTIME = ComparableField.create(
         Identifier.TB_PAYTIME,
         o -> OptionalUtil.unwrap(o.getTbPaytime()),
         OcTmsportCheckResult::setTbPaytime,
@@ -125,7 +137,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getTbPrice()} method.
      */
-    final ComparableField<OcTmsportCheckResult, BigDecimal, BigDecimal> TB_PRICE = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, BigDecimal, BigDecimal> TB_PRICE = ComparableField.create(
         Identifier.TB_PRICE,
         o -> OptionalUtil.unwrap(o.getTbPrice()),
         OcTmsportCheckResult::setTbPrice,
@@ -136,7 +148,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getTbPayment()} method.
      */
-    final ComparableField<OcTmsportCheckResult, BigDecimal, BigDecimal> TB_PAYMENT = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, BigDecimal, BigDecimal> TB_PAYMENT = ComparableField.create(
         Identifier.TB_PAYMENT,
         o -> OptionalUtil.unwrap(o.getTbPayment()),
         OcTmsportCheckResult::setTbPayment,
@@ -148,7 +160,7 @@ public interface GeneratedOcTmsportCheckResult {
      * be obtained using the {@link OcTmsportCheckResult#getTbDiscountFee()}
      * method.
      */
-    final ComparableField<OcTmsportCheckResult, BigDecimal, BigDecimal> TB_DISCOUNT_FEE = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, BigDecimal, BigDecimal> TB_DISCOUNT_FEE = ComparableField.create(
         Identifier.TB_DISCOUNT_FEE,
         o -> OptionalUtil.unwrap(o.getTbDiscountFee()),
         OcTmsportCheckResult::setTbDiscountFee,
@@ -160,7 +172,7 @@ public interface GeneratedOcTmsportCheckResult {
      * be obtained using the {@link OcTmsportCheckResult#getTbTotalFee()}
      * method.
      */
-    final ComparableField<OcTmsportCheckResult, BigDecimal, BigDecimal> TB_TOTAL_FEE = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, BigDecimal, BigDecimal> TB_TOTAL_FEE = ComparableField.create(
         Identifier.TB_TOTAL_FEE,
         o -> OptionalUtil.unwrap(o.getTbTotalFee()),
         OcTmsportCheckResult::setTbTotalFee,
@@ -171,7 +183,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getDzStatus()} method.
      */
-    final StringField<OcTmsportCheckResult, String> DZ_STATUS = StringField.create(
+    StringField<OcTmsportCheckResult, String> DZ_STATUS = StringField.create(
         Identifier.DZ_STATUS,
         o -> OptionalUtil.unwrap(o.getDzStatus()),
         OcTmsportCheckResult::setDzStatus,
@@ -183,7 +195,7 @@ public interface GeneratedOcTmsportCheckResult {
      * be obtained using the {@link OcTmsportCheckResult#getDzDetailsMessage()}
      * method.
      */
-    final StringField<OcTmsportCheckResult, String> DZ_DETAILS_MESSAGE = StringField.create(
+    StringField<OcTmsportCheckResult, String> DZ_DETAILS_MESSAGE = StringField.create(
         Identifier.DZ_DETAILS_MESSAGE,
         o -> OptionalUtil.unwrap(o.getDzDetailsMessage()),
         OcTmsportCheckResult::setDzDetailsMessage,
@@ -194,7 +206,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getRemarks()} method.
      */
-    final StringField<OcTmsportCheckResult, String> REMARKS = StringField.create(
+    StringField<OcTmsportCheckResult, String> REMARKS = StringField.create(
         Identifier.REMARKS,
         o -> OptionalUtil.unwrap(o.getRemarks()),
         OcTmsportCheckResult::setRemarks,
@@ -205,7 +217,7 @@ public interface GeneratedOcTmsportCheckResult {
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getAddTime()} method.
      */
-    final ComparableField<OcTmsportCheckResult, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
+    ComparableField<OcTmsportCheckResult, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
         Identifier.ADD_TIME,
         OcTmsportCheckResult::getAddTime,
         OcTmsportCheckResult::setAddTime,
@@ -220,6 +232,15 @@ public interface GeneratedOcTmsportCheckResult {
      * @return the id of this OcTmsportCheckResult
      */
     long getId();
+    
+    /**
+     * Returns the tmOrderIds of this OcTmsportCheckResult. The tmOrderIds field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tmsport_check_result.tm_order_ids.
+     * 
+     * @return the tmOrderIds of this OcTmsportCheckResult
+     */
+    Optional<String> getTmOrderIds();
     
     /**
      * Returns the tmOuterOrderId of this OcTmsportCheckResult. The
@@ -364,6 +385,16 @@ public interface GeneratedOcTmsportCheckResult {
      * @return   this OcTmsportCheckResult instance
      */
     OcTmsportCheckResult setId(long id);
+    
+    /**
+     * Sets the tmOrderIds of this OcTmsportCheckResult. The tmOrderIds field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tmsport_check_result.tm_order_ids.
+     * 
+     * @param tmOrderIds to set of this OcTmsportCheckResult
+     * @return           this OcTmsportCheckResult instance
+     */
+    OcTmsportCheckResult setTmOrderIds(String tmOrderIds);
     
     /**
      * Sets the tmOuterOrderId of this OcTmsportCheckResult. The tmOuterOrderId
@@ -516,6 +547,7 @@ public interface GeneratedOcTmsportCheckResult {
     enum Identifier implements ColumnIdentifier<OcTmsportCheckResult> {
         
         ID                 ("id"),
+        TM_ORDER_IDS       ("tm_order_ids"),
         TM_OUTER_ORDER_ID  ("tm_outer_order_id"),
         TM_ORDER_NUM       ("tm_order_num"),
         TM_NUM             ("tm_num"),

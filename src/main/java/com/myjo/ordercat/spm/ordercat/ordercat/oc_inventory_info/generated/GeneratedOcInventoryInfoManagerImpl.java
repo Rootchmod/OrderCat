@@ -1,8 +1,8 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfo;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.manager.AbstractManager;
 import com.speedment.runtime.field.Field;
 import java.util.stream.Stream;
@@ -18,7 +18,9 @@ import java.util.stream.Stream;
  * @author Speedment
  */
 @GeneratedCode("Speedment")
-public abstract class GeneratedOcInventoryInfoManagerImpl extends AbstractManager<OcInventoryInfo> implements GeneratedOcInventoryInfoManager {
+public abstract class GeneratedOcInventoryInfoManagerImpl 
+extends AbstractManager<OcInventoryInfo> 
+implements GeneratedOcInventoryInfoManager {
     
     private final TableIdentifier<OcInventoryInfo> tableIdentifier;
     
@@ -34,7 +36,6 @@ public abstract class GeneratedOcInventoryInfoManagerImpl extends AbstractManage
     @Override
     public Stream<Field<OcInventoryInfo>> fields() {
         return Stream.of(
-            OcInventoryInfo.PURCHASE_PRICE,
             OcInventoryInfo.ID,
             OcInventoryInfo.GOODS_NO,
             OcInventoryInfo.WAREHOUSE_ID,
@@ -54,6 +55,7 @@ public abstract class GeneratedOcInventoryInfoManagerImpl extends AbstractManage
             OcInventoryInfo.PICK_DATE,
             OcInventoryInfo.THEDTIME,
             OcInventoryInfo.PROXY_PRICE,
+            OcInventoryInfo.PURCHASE_PRICE,
             OcInventoryInfo.SALES_PRICE,
             OcInventoryInfo.SALES_COUNT,
             OcInventoryInfo.EXPRESS_NAME,

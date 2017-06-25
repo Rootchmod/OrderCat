@@ -10,7 +10,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.generated.Gener
  * 
  * @author myjo
  */
-public final class OcInventoryInfoImpl extends GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
-    
-    
-}
+public final class OcInventoryInfoImpl 
+extends GeneratedOcInventoryInfoImpl 
+implements OcInventoryInfo {}

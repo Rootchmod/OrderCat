@@ -11,7 +11,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.generated.Gener
  * 
  * @author myjo
  */
-public final class OcWarehouseInfoManagerImpl extends GeneratedOcWarehouseInfoManagerImpl implements OcWarehouseInfoManager {
-    
-    
-}
+public final class OcWarehouseInfoManagerImpl 
+extends GeneratedOcWarehouseInfoManagerImpl 
+implements OcWarehouseInfoManager {}

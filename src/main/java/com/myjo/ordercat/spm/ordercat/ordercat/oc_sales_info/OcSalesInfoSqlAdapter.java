@@ -10,7 +10,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.generated.Generated
  * 
  * @author myjo
  */
-public class OcSalesInfoSqlAdapter extends GeneratedOcSalesInfoSqlAdapter {
-    
-    
-}
+public class OcSalesInfoSqlAdapter extends GeneratedOcSalesInfoSqlAdapter {}

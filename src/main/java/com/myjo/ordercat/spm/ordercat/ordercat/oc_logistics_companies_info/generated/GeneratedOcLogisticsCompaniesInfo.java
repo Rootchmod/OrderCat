@@ -1,9 +1,9 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfo;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
@@ -34,7 +34,7 @@ public interface GeneratedOcLogisticsCompaniesInfo {
      * can be obtained using the {@link OcLogisticsCompaniesInfo#getId()}
      * method.
      */
-    final LongField<OcLogisticsCompaniesInfo, Long> ID = LongField.create(
+    LongField<OcLogisticsCompaniesInfo, Long> ID = LongField.create(
         Identifier.ID,
         OcLogisticsCompaniesInfo::getId,
         OcLogisticsCompaniesInfo::setId,
@@ -46,7 +46,7 @@ public interface GeneratedOcLogisticsCompaniesInfo {
      * can be obtained using the {@link OcLogisticsCompaniesInfo#getLcId()}
      * method.
      */
-    final ComparableField<OcLogisticsCompaniesInfo, Long, Long> LC_ID = ComparableField.create(
+    ComparableField<OcLogisticsCompaniesInfo, Long, Long> LC_ID = ComparableField.create(
         Identifier.LC_ID,
         o -> OptionalUtil.unwrap(o.getLcId()),
         OcLogisticsCompaniesInfo::setLcId,
@@ -58,7 +58,7 @@ public interface GeneratedOcLogisticsCompaniesInfo {
      * can be obtained using the {@link OcLogisticsCompaniesInfo#getLcCode()}
      * method.
      */
-    final StringField<OcLogisticsCompaniesInfo, String> LC_CODE = StringField.create(
+    StringField<OcLogisticsCompaniesInfo, String> LC_CODE = StringField.create(
         Identifier.LC_CODE,
         o -> OptionalUtil.unwrap(o.getLcCode()),
         OcLogisticsCompaniesInfo::setLcCode,
@@ -70,7 +70,7 @@ public interface GeneratedOcLogisticsCompaniesInfo {
      * can be obtained using the {@link OcLogisticsCompaniesInfo#getLcName()}
      * method.
      */
-    final StringField<OcLogisticsCompaniesInfo, String> LC_NAME = StringField.create(
+    StringField<OcLogisticsCompaniesInfo, String> LC_NAME = StringField.create(
         Identifier.LC_NAME,
         o -> OptionalUtil.unwrap(o.getLcName()),
         OcLogisticsCompaniesInfo::setLcName,
@@ -82,7 +82,7 @@ public interface GeneratedOcLogisticsCompaniesInfo {
      * can be obtained using the {@link
      * OcLogisticsCompaniesInfo#getLcRegMailNo()} method.
      */
-    final StringField<OcLogisticsCompaniesInfo, String> LC_REG_MAIL_NO = StringField.create(
+    StringField<OcLogisticsCompaniesInfo, String> LC_REG_MAIL_NO = StringField.create(
         Identifier.LC_REG_MAIL_NO,
         o -> OptionalUtil.unwrap(o.getLcRegMailNo()),
         OcLogisticsCompaniesInfo::setLcRegMailNo,
@@ -91,10 +91,22 @@ public interface GeneratedOcLogisticsCompaniesInfo {
     );
     /**
      * This Field corresponds to the {@link OcLogisticsCompaniesInfo} field that
+     * can be obtained using the {@link
+     * OcLogisticsCompaniesInfo#getLcIsEnable()} method.
+     */
+    ComparableField<OcLogisticsCompaniesInfo, Byte, Byte> LC_IS_ENABLE = ComparableField.create(
+        Identifier.LC_IS_ENABLE,
+        o -> OptionalUtil.unwrap(o.getLcIsEnable()),
+        OcLogisticsCompaniesInfo::setLcIsEnable,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcLogisticsCompaniesInfo} field that
      * can be obtained using the {@link OcLogisticsCompaniesInfo#getExecJobId()}
      * method.
      */
-    final ComparableField<OcLogisticsCompaniesInfo, Long, Long> EXEC_JOB_ID = ComparableField.create(
+    ComparableField<OcLogisticsCompaniesInfo, Long, Long> EXEC_JOB_ID = ComparableField.create(
         Identifier.EXEC_JOB_ID,
         o -> OptionalUtil.unwrap(o.getExecJobId()),
         OcLogisticsCompaniesInfo::setExecJobId,
@@ -106,7 +118,7 @@ public interface GeneratedOcLogisticsCompaniesInfo {
      * can be obtained using the {@link OcLogisticsCompaniesInfo#getAddTime()}
      * method.
      */
-    final ComparableField<OcLogisticsCompaniesInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
+    ComparableField<OcLogisticsCompaniesInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
         Identifier.ADD_TIME,
         OcLogisticsCompaniesInfo::getAddTime,
         OcLogisticsCompaniesInfo::setAddTime,
@@ -157,6 +169,15 @@ public interface GeneratedOcLogisticsCompaniesInfo {
      * @return the lcRegMailNo of this OcLogisticsCompaniesInfo
      */
     Optional<String> getLcRegMailNo();
+    
+    /**
+     * Returns the lcIsEnable of this OcLogisticsCompaniesInfo. The lcIsEnable
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_logistics_companies_info.lc_is_enable.
+     * 
+     * @return the lcIsEnable of this OcLogisticsCompaniesInfo
+     */
+    Optional<Byte> getLcIsEnable();
     
     /**
      * Returns the execJobId of this OcLogisticsCompaniesInfo. The execJobId
@@ -226,6 +247,16 @@ public interface GeneratedOcLogisticsCompaniesInfo {
     OcLogisticsCompaniesInfo setLcRegMailNo(String lcRegMailNo);
     
     /**
+     * Sets the lcIsEnable of this OcLogisticsCompaniesInfo. The lcIsEnable
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_logistics_companies_info.lc_is_enable.
+     * 
+     * @param lcIsEnable to set of this OcLogisticsCompaniesInfo
+     * @return           this OcLogisticsCompaniesInfo instance
+     */
+    OcLogisticsCompaniesInfo setLcIsEnable(Byte lcIsEnable);
+    
+    /**
      * Sets the execJobId of this OcLogisticsCompaniesInfo. The execJobId field
      * corresponds to the database column
      * ordercat.ordercat.oc_logistics_companies_info.exec_job_id.
@@ -252,6 +283,7 @@ public interface GeneratedOcLogisticsCompaniesInfo {
         LC_CODE        ("lc_code"),
         LC_NAME        ("lc_name"),
         LC_REG_MAIL_NO ("lc_reg_mail_no"),
+        LC_IS_ENABLE   ("lc_is_enable"),
         EXEC_JOB_ID    ("exec_job_id"),
         ADD_TIME       ("add_time");
         

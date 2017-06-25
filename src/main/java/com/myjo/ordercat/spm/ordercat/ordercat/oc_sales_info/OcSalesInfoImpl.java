@@ -10,7 +10,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.generated.Generated
  * 
  * @author myjo
  */
-public final class OcSalesInfoImpl extends GeneratedOcSalesInfoImpl implements OcSalesInfo {
-    
-    
-}
+public final class OcSalesInfoImpl 
+extends GeneratedOcSalesInfoImpl 
+implements OcSalesInfo {}

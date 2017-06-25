@@ -1,7 +1,7 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
-import com.speedment.runtime.core.annotation.GeneratedCode;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.core.manager.Manager;
 
 /**

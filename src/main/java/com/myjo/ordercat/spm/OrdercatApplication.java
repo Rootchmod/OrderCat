@@ -10,7 +10,4 @@ import com.myjo.ordercat.spm.generated.GeneratedOrdercatApplication;
  * 
  * @author myjo
  */
-public interface OrdercatApplication extends GeneratedOrdercatApplication {
-    
-    
-}
+public interface OrdercatApplication extends GeneratedOrdercatApplication {}

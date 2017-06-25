@@ -11,7 +11,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.generated.Gener
  * 
  * @author myjo
  */
-public class OcWarehouseInfoSqlAdapter extends GeneratedOcWarehouseInfoSqlAdapter {
-    
-    
-}
+public class OcWarehouseInfoSqlAdapter extends GeneratedOcWarehouseInfoSqlAdapter {}

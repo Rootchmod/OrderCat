@@ -1,7 +1,7 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResult;
-import com.speedment.runtime.core.annotation.GeneratedCode;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +23,7 @@ import java.util.StringJoiner;
 public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportCheckResult {
     
     private long id;
+    private String tmOrderIds;
     private String tmOuterOrderId;
     private Long tmOrderNum;
     private Long tmNum;
@@ -46,6 +47,11 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     @Override
     public long getId() {
         return id;
+    }
+    
+    @Override
+    public Optional<String> getTmOrderIds() {
+        return Optional.ofNullable(tmOrderIds);
     }
     
     @Override
@@ -126,6 +132,12 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     @Override
     public OcTmsportCheckResult setId(long id) {
         this.id = id;
+        return this;
+    }
+    
+    @Override
+    public OcTmsportCheckResult setTmOrderIds(String tmOrderIds) {
+        this.tmOrderIds = tmOrderIds;
         return this;
     }
     
@@ -223,6 +235,7 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     public String toString() {
         final StringJoiner sj = new StringJoiner(", ", "{ ", " }");
         sj.add("id = "               + Objects.toString(getId()));
+        sj.add("tmOrderIds = "       + Objects.toString(OptionalUtil.unwrap(getTmOrderIds())));
         sj.add("tmOuterOrderId = "   + Objects.toString(OptionalUtil.unwrap(getTmOuterOrderId())));
         sj.add("tmOrderNum = "       + Objects.toString(OptionalUtil.unwrap(getTmOrderNum())));
         sj.add("tmNum = "            + Objects.toString(OptionalUtil.unwrap(getTmNum())));
@@ -247,6 +260,7 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
         if (!(that instanceof OcTmsportCheckResult)) { return false; }
         final OcTmsportCheckResult thatOcTmsportCheckResult = (OcTmsportCheckResult)that;
         if (this.getId() != thatOcTmsportCheckResult.getId()) {return false; }
+        if (!Objects.equals(this.getTmOrderIds(), thatOcTmsportCheckResult.getTmOrderIds())) {return false; }
         if (!Objects.equals(this.getTmOuterOrderId(), thatOcTmsportCheckResult.getTmOuterOrderId())) {return false; }
         if (!Objects.equals(this.getTmOrderNum(), thatOcTmsportCheckResult.getTmOrderNum())) {return false; }
         if (!Objects.equals(this.getTmNum(), thatOcTmsportCheckResult.getTmNum())) {return false; }
@@ -269,6 +283,7 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     public int hashCode() {
         int hash = 7;
         hash = 31 * hash + Long.hashCode(getId());
+        hash = 31 * hash + Objects.hashCode(getTmOrderIds());
         hash = 31 * hash + Objects.hashCode(getTmOuterOrderId());
         hash = 31 * hash + Objects.hashCode(getTmOrderNum());
         hash = 31 * hash + Objects.hashCode(getTmNum());

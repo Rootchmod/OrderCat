@@ -11,7 +11,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.gener
  * 
  * @author myjo
  */
-public class OcLogisticsCompaniesInfoSqlAdapter extends GeneratedOcLogisticsCompaniesInfoSqlAdapter {
-    
-    
-}
+public class OcLogisticsCompaniesInfoSqlAdapter extends GeneratedOcLogisticsCompaniesInfoSqlAdapter {}

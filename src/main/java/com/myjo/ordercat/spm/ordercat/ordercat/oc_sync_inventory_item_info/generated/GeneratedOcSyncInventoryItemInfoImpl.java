@@ -1,7 +1,7 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfo;
-import com.speedment.runtime.core.annotation.GeneratedCode;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import java.time.LocalDateTime;
 import java.util.Objects;

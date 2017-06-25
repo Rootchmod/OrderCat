@@ -10,7 +10,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.generated
  * 
  * @author myjo
  */
-public interface OcFenxiaoCheckResult extends GeneratedOcFenxiaoCheckResult {
-    
-    
-}
+public interface OcFenxiaoCheckResult extends GeneratedOcFenxiaoCheckResult {}

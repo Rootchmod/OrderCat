@@ -92,6 +92,7 @@ public class OcCsvUtils {
         for (OcTmsportCheckResult o : lists) {
             objects = new Object[]{
                     o.getId(),
+                    o.getTmOrderIds().isPresent()?o.getTmOrderIds():"",//天马IDs
                     o.getTmOuterOrderId().isPresent()?o.getTmOuterOrderId().get():"",//天马外部订单编码(淘宝订单)
                     o.getTmOrderNum().isPresent()?o.getTmOrderNum().getAsLong():"",//天马订单数量
                     o.getTmNum().isPresent() ? o.getTmNum().getAsLong() : "",//天马购买数量
@@ -126,6 +127,7 @@ public class OcCsvUtils {
 
             final String[] header = new String[]{
                     "序号",
+                    "天马订单",
                     "天马外部订单编码(淘宝订单)",
                     "天马订单数量",
                     "天马购买数量",

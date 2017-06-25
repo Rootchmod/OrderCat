@@ -2,11 +2,11 @@ package com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.generate
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResult;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultImpl;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.common.injector.annotation.ExecuteBefore;
 import com.speedment.common.injector.annotation.WithState;
 import com.speedment.runtime.config.Project;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.component.ProjectComponent;
 import com.speedment.runtime.core.component.sql.SqlPersistenceComponent;
 import com.speedment.runtime.core.component.sql.SqlStreamSupplierComponent;
@@ -40,7 +40,8 @@ public abstract class GeneratedOcFenxiaoCheckResultSqlAdapter {
     }
     
     @ExecuteBefore(RESOLVED)
-    void installMethodName(@WithState(RESOLVED) SqlStreamSupplierComponent streamSupplierComponent, @WithState(RESOLVED) SqlPersistenceComponent persistenceComponent) {
+    void installMethodName(@WithState(RESOLVED) SqlStreamSupplierComponent streamSupplierComponent,
+            @WithState(RESOLVED) SqlPersistenceComponent persistenceComponent) {
         streamSupplierComponent.install(tableIdentifier, this::apply);
         persistenceComponent.install(tableIdentifier);
     }

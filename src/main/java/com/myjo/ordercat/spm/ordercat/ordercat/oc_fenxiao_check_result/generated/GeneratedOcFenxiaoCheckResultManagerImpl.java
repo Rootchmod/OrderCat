@@ -1,8 +1,8 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResult;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.manager.AbstractManager;
 import com.speedment.runtime.field.Field;
 import java.util.stream.Stream;
@@ -18,7 +18,9 @@ import java.util.stream.Stream;
  * @author Speedment
  */
 @GeneratedCode("Speedment")
-public abstract class GeneratedOcFenxiaoCheckResultManagerImpl extends AbstractManager<OcFenxiaoCheckResult> implements GeneratedOcFenxiaoCheckResultManager {
+public abstract class GeneratedOcFenxiaoCheckResultManagerImpl 
+extends AbstractManager<OcFenxiaoCheckResult> 
+implements GeneratedOcFenxiaoCheckResultManager {
     
     private final TableIdentifier<OcFenxiaoCheckResult> tableIdentifier;
     

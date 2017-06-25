@@ -1,9 +1,9 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfo;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
@@ -32,7 +32,7 @@ public interface GeneratedOcSyncInventoryItemInfo {
      * This Field corresponds to the {@link OcSyncInventoryItemInfo} field that
      * can be obtained using the {@link OcSyncInventoryItemInfo#getId()} method.
      */
-    final LongField<OcSyncInventoryItemInfo, Long> ID = LongField.create(
+    LongField<OcSyncInventoryItemInfo, Long> ID = LongField.create(
         Identifier.ID,
         OcSyncInventoryItemInfo::getId,
         OcSyncInventoryItemInfo::setId,
@@ -44,7 +44,7 @@ public interface GeneratedOcSyncInventoryItemInfo {
      * can be obtained using the {@link OcSyncInventoryItemInfo#getNumIid()}
      * method.
      */
-    final StringField<OcSyncInventoryItemInfo, String> NUM_IID = StringField.create(
+    StringField<OcSyncInventoryItemInfo, String> NUM_IID = StringField.create(
         Identifier.NUM_IID,
         o -> OptionalUtil.unwrap(o.getNumIid()),
         OcSyncInventoryItemInfo::setNumIid,
@@ -56,7 +56,7 @@ public interface GeneratedOcSyncInventoryItemInfo {
      * can be obtained using the {@link OcSyncInventoryItemInfo#getStatus()}
      * method.
      */
-    final StringField<OcSyncInventoryItemInfo, String> STATUS = StringField.create(
+    StringField<OcSyncInventoryItemInfo, String> STATUS = StringField.create(
         Identifier.STATUS,
         OcSyncInventoryItemInfo::getStatus,
         OcSyncInventoryItemInfo::setStatus,
@@ -68,7 +68,7 @@ public interface GeneratedOcSyncInventoryItemInfo {
      * can be obtained using the {@link OcSyncInventoryItemInfo#getAddTime()}
      * method.
      */
-    final ComparableField<OcSyncInventoryItemInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
+    ComparableField<OcSyncInventoryItemInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
         Identifier.ADD_TIME,
         OcSyncInventoryItemInfo::getAddTime,
         OcSyncInventoryItemInfo::setAddTime,

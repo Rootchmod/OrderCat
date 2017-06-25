@@ -1,9 +1,9 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfo;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
@@ -33,7 +33,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getPurchasePrice()} method.
      */
-    final ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> PURCHASE_PRICE = ComparableField.create(
+    ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> PURCHASE_PRICE = ComparableField.create(
         Identifier.PURCHASE_PRICE,
         o -> OptionalUtil.unwrap(o.getPurchasePrice()),
         OcInventoryInfo::setPurchasePrice,
@@ -44,7 +44,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getId()} method.
      */
-    final LongField<OcInventoryInfo, Long> ID = LongField.create(
+    LongField<OcInventoryInfo, Long> ID = LongField.create(
         Identifier.ID,
         OcInventoryInfo::getId,
         OcInventoryInfo::setId,
@@ -55,7 +55,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getGoodsNo()} method.
      */
-    final StringField<OcInventoryInfo, String> GOODS_NO = StringField.create(
+    StringField<OcInventoryInfo, String> GOODS_NO = StringField.create(
         Identifier.GOODS_NO,
         o -> OptionalUtil.unwrap(o.getGoodsNo()),
         OcInventoryInfo::setGoodsNo,
@@ -66,7 +66,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getWarehouseId()} method.
      */
-    final ComparableField<OcInventoryInfo, Integer, Integer> WAREHOUSE_ID = ComparableField.create(
+    ComparableField<OcInventoryInfo, Integer, Integer> WAREHOUSE_ID = ComparableField.create(
         Identifier.WAREHOUSE_ID,
         o -> OptionalUtil.unwrap(o.getWarehouseId()),
         OcInventoryInfo::setWarehouseId,
@@ -77,7 +77,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getWarehouseName()} method.
      */
-    final StringField<OcInventoryInfo, String> WAREHOUSE_NAME = StringField.create(
+    StringField<OcInventoryInfo, String> WAREHOUSE_NAME = StringField.create(
         Identifier.WAREHOUSE_NAME,
         o -> OptionalUtil.unwrap(o.getWarehouseName()),
         OcInventoryInfo::setWarehouseName,
@@ -88,7 +88,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getSize1()} method.
      */
-    final StringField<OcInventoryInfo, String> SIZE1 = StringField.create(
+    StringField<OcInventoryInfo, String> SIZE1 = StringField.create(
         Identifier.SIZE1,
         o -> OptionalUtil.unwrap(o.getSize1()),
         OcInventoryInfo::setSize1,
@@ -99,7 +99,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getSize2()} method.
      */
-    final StringField<OcInventoryInfo, String> SIZE2 = StringField.create(
+    StringField<OcInventoryInfo, String> SIZE2 = StringField.create(
         Identifier.SIZE2,
         o -> OptionalUtil.unwrap(o.getSize2()),
         OcInventoryInfo::setSize2,
@@ -110,7 +110,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getBrand()} method.
      */
-    final StringField<OcInventoryInfo, String> BRAND = StringField.create(
+    StringField<OcInventoryInfo, String> BRAND = StringField.create(
         Identifier.BRAND,
         o -> OptionalUtil.unwrap(o.getBrand()),
         OcInventoryInfo::setBrand,
@@ -121,7 +121,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getMarketprice()} method.
      */
-    final ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> MARKETPRICE = ComparableField.create(
+    ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> MARKETPRICE = ComparableField.create(
         Identifier.MARKETPRICE,
         o -> OptionalUtil.unwrap(o.getMarketprice()),
         OcInventoryInfo::setMarketprice,
@@ -132,7 +132,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getNum2()} method.
      */
-    final ComparableField<OcInventoryInfo, Integer, Integer> NUM2 = ComparableField.create(
+    ComparableField<OcInventoryInfo, Integer, Integer> NUM2 = ComparableField.create(
         Identifier.NUM2,
         o -> OptionalUtil.unwrap(o.getNum2()),
         OcInventoryInfo::setNum2,
@@ -143,7 +143,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getDivision()} method.
      */
-    final StringField<OcInventoryInfo, String> DIVISION = StringField.create(
+    StringField<OcInventoryInfo, String> DIVISION = StringField.create(
         Identifier.DIVISION,
         o -> OptionalUtil.unwrap(o.getDivision()),
         OcInventoryInfo::setDivision,
@@ -154,7 +154,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getCate()} method.
      */
-    final StringField<OcInventoryInfo, String> CATE = StringField.create(
+    StringField<OcInventoryInfo, String> CATE = StringField.create(
         Identifier.CATE,
         o -> OptionalUtil.unwrap(o.getCate()),
         OcInventoryInfo::setCate,
@@ -165,7 +165,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getSex()} method.
      */
-    final StringField<OcInventoryInfo, String> SEX = StringField.create(
+    StringField<OcInventoryInfo, String> SEX = StringField.create(
         Identifier.SEX,
         o -> OptionalUtil.unwrap(o.getSex()),
         OcInventoryInfo::setSex,
@@ -176,7 +176,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getQuarter()} method.
      */
-    final StringField<OcInventoryInfo, String> QUARTER = StringField.create(
+    StringField<OcInventoryInfo, String> QUARTER = StringField.create(
         Identifier.QUARTER,
         o -> OptionalUtil.unwrap(o.getQuarter()),
         OcInventoryInfo::setQuarter,
@@ -187,7 +187,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getDiscount()} method.
      */
-    final StringField<OcInventoryInfo, String> DISCOUNT = StringField.create(
+    StringField<OcInventoryInfo, String> DISCOUNT = StringField.create(
         Identifier.DISCOUNT,
         o -> OptionalUtil.unwrap(o.getDiscount()),
         OcInventoryInfo::setDiscount,
@@ -198,7 +198,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getPickRate()} method.
      */
-    final ComparableField<OcInventoryInfo, Integer, Integer> PICK_RATE = ComparableField.create(
+    ComparableField<OcInventoryInfo, Integer, Integer> PICK_RATE = ComparableField.create(
         Identifier.PICK_RATE,
         o -> OptionalUtil.unwrap(o.getPickRate()),
         OcInventoryInfo::setPickRate,
@@ -210,9 +210,9 @@ public interface GeneratedOcInventoryInfo {
      * obtained using the {@link OcInventoryInfo#getWarehouseUpdateTime()}
      * method.
      */
-    final ComparableField<OcInventoryInfo, Timestamp, LocalDateTime> WAREHOUSE_UPDATE_TIME = ComparableField.create(
+    ComparableField<OcInventoryInfo, Timestamp, LocalDateTime> WAREHOUSE_UPDATE_TIME = ComparableField.create(
         Identifier.WAREHOUSE_UPDATE_TIME,
-        o -> OptionalUtil.unwrap(o.getWarehouseUpdateTime()),
+        OcInventoryInfo::getWarehouseUpdateTime,
         OcInventoryInfo::setWarehouseUpdateTime,
         new TimestampToLocalDateTimeMapper(), 
         false
@@ -221,7 +221,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getPickDate()} method.
      */
-    final StringField<OcInventoryInfo, String> PICK_DATE = StringField.create(
+    StringField<OcInventoryInfo, String> PICK_DATE = StringField.create(
         Identifier.PICK_DATE,
         o -> OptionalUtil.unwrap(o.getPickDate()),
         OcInventoryInfo::setPickDate,
@@ -232,7 +232,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getThedtime()} method.
      */
-    final StringField<OcInventoryInfo, String> THEDTIME = StringField.create(
+    StringField<OcInventoryInfo, String> THEDTIME = StringField.create(
         Identifier.THEDTIME,
         o -> OptionalUtil.unwrap(o.getThedtime()),
         OcInventoryInfo::setThedtime,
@@ -243,7 +243,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getProxyPrice()} method.
      */
-    final ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> PROXY_PRICE = ComparableField.create(
+    ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> PROXY_PRICE = ComparableField.create(
         Identifier.PROXY_PRICE,
         o -> OptionalUtil.unwrap(o.getProxyPrice()),
         OcInventoryInfo::setProxyPrice,
@@ -254,7 +254,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getSalesPrice()} method.
      */
-    final ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> SALES_PRICE = ComparableField.create(
+    ComparableField<OcInventoryInfo, BigDecimal, BigDecimal> SALES_PRICE = ComparableField.create(
         Identifier.SALES_PRICE,
         o -> OptionalUtil.unwrap(o.getSalesPrice()),
         OcInventoryInfo::setSalesPrice,
@@ -265,7 +265,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getSalesCount()} method.
      */
-    final ComparableField<OcInventoryInfo, Integer, Integer> SALES_COUNT = ComparableField.create(
+    ComparableField<OcInventoryInfo, Integer, Integer> SALES_COUNT = ComparableField.create(
         Identifier.SALES_COUNT,
         o -> OptionalUtil.unwrap(o.getSalesCount()),
         OcInventoryInfo::setSalesCount,
@@ -276,7 +276,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getExpressName()} method.
      */
-    final StringField<OcInventoryInfo, String> EXPRESS_NAME = StringField.create(
+    StringField<OcInventoryInfo, String> EXPRESS_NAME = StringField.create(
         Identifier.EXPRESS_NAME,
         o -> OptionalUtil.unwrap(o.getExpressName()),
         OcInventoryInfo::setExpressName,
@@ -287,7 +287,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getRetrunDesc()} method.
      */
-    final StringField<OcInventoryInfo, String> RETRUN_DESC = StringField.create(
+    StringField<OcInventoryInfo, String> RETRUN_DESC = StringField.create(
         Identifier.RETRUN_DESC,
         o -> OptionalUtil.unwrap(o.getRetrunDesc()),
         OcInventoryInfo::setRetrunDesc,
@@ -298,7 +298,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getReturnRate()} method.
      */
-    final ComparableField<OcInventoryInfo, Integer, Integer> RETURN_RATE = ComparableField.create(
+    ComparableField<OcInventoryInfo, Integer, Integer> RETURN_RATE = ComparableField.create(
         Identifier.RETURN_RATE,
         o -> OptionalUtil.unwrap(o.getReturnRate()),
         OcInventoryInfo::setReturnRate,
@@ -309,7 +309,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getEndT()} method.
      */
-    final StringField<OcInventoryInfo, String> END_T = StringField.create(
+    StringField<OcInventoryInfo, String> END_T = StringField.create(
         Identifier.END_T,
         o -> OptionalUtil.unwrap(o.getEndT()),
         OcInventoryInfo::setEndT,
@@ -320,7 +320,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getMark()} method.
      */
-    final StringField<OcInventoryInfo, String> MARK = StringField.create(
+    StringField<OcInventoryInfo, String> MARK = StringField.create(
         Identifier.MARK,
         o -> OptionalUtil.unwrap(o.getMark()),
         OcInventoryInfo::setMark,
@@ -331,7 +331,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getNumIid()} method.
      */
-    final StringField<OcInventoryInfo, String> NUM_IID = StringField.create(
+    StringField<OcInventoryInfo, String> NUM_IID = StringField.create(
         Identifier.NUM_IID,
         o -> OptionalUtil.unwrap(o.getNumIid()),
         OcInventoryInfo::setNumIid,
@@ -342,7 +342,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getAddTime()} method.
      */
-    final ComparableField<OcInventoryInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
+    ComparableField<OcInventoryInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
         Identifier.ADD_TIME,
         OcInventoryInfo::getAddTime,
         OcInventoryInfo::setAddTime,
@@ -353,7 +353,7 @@ public interface GeneratedOcInventoryInfo {
      * This Field corresponds to the {@link OcInventoryInfo} field that can be
      * obtained using the {@link OcInventoryInfo#getExecJobId()} method.
      */
-    final ComparableField<OcInventoryInfo, Integer, Integer> EXEC_JOB_ID = ComparableField.create(
+    ComparableField<OcInventoryInfo, Integer, Integer> EXEC_JOB_ID = ComparableField.create(
         Identifier.EXEC_JOB_ID,
         o -> OptionalUtil.unwrap(o.getExecJobId()),
         OcInventoryInfo::setExecJobId,
@@ -505,7 +505,7 @@ public interface GeneratedOcInventoryInfo {
      * 
      * @return the warehouseUpdateTime of this OcInventoryInfo
      */
-    Optional<LocalDateTime> getWarehouseUpdateTime();
+    LocalDateTime getWarehouseUpdateTime();
     
     /**
      * Returns the pickDate of this OcInventoryInfo. The pickDate field

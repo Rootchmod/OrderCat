@@ -10,7 +10,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.generated.Generated
  * 
  * @author myjo
  */
-public interface OcSalesInfo extends GeneratedOcSalesInfo {
-    
-    
-}
+public interface OcSalesInfo extends GeneratedOcSalesInfo {}

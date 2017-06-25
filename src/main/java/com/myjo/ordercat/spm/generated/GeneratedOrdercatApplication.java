@@ -1,7 +1,7 @@
 package com.myjo.ordercat.spm.generated;
 
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.core.Speedment;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 
 /**
  * The generated {@link
@@ -15,7 +15,4 @@ import com.speedment.runtime.core.annotation.GeneratedCode;
  * @author Speedment
  */
 @GeneratedCode("Speedment")
-public interface GeneratedOrdercatApplication extends Speedment {
-    
-    
-}
+public interface GeneratedOrdercatApplication extends Speedment {}

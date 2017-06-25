@@ -1,4 +1,4 @@
-DROP TABLE oc_warehouse_info;
+DROP TABLE IF EXISTS oc_warehouse_info;
 CREATE TABLE `oc_warehouse_info` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `warehouse_id` int(11) DEFAULT NULL COMMENT '仓库ID',
@@ -20,7 +20,7 @@ CREATE TABLE `oc_warehouse_info` (
   KEY `IDX_WAREHOUSE_NAME` (`warehouse_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓库信息';
 
-DROP TABLE oc_job_exec_info;
+DROP TABLE IF EXISTS oc_job_exec_info;
 CREATE TABLE `oc_job_exec_info` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `job_name` varchar(255) DEFAULT NULL COMMENT '任务名称',
@@ -37,7 +37,7 @@ ALTER TABLE oc_job_exec_info ADD COLUMN `error_message` TEXT AFTER `status`;
 
 
 
-DROP TABLE oc_sales_info;
+DROP TABLE IF EXISTS oc_sales_info;
 CREATE TABLE `oc_sales_info` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `numIid` varchar(255) COMMENT '淘宝商品编码',
@@ -51,7 +51,7 @@ CREATE TABLE `oc_sales_info` (
 
 
 
-DROP TABLE oc_logistics_companies_info;
+DROP TABLE IF EXISTS oc_logistics_companies_info;
 CREATE TABLE `oc_logistics_companies_info` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `lc_id` BIGINT DEFAULT NULL COMMENT '物流公司标识',
@@ -71,7 +71,7 @@ CREATE TABLE `oc_logistics_companies_info` (
 
 
 
-DROP TABLE oc_inventory_info;
+DROP TABLE IF EXISTS oc_inventory_info;
 CREATE TABLE `oc_inventory_info` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `goodsNo` varchar(255) NULL COMMENT '商品货号',
@@ -110,7 +110,7 @@ CREATE TABLE `oc_inventory_info` (
 
 
 
-DROP TABLE oc_sync_inventory_item_info;
+DROP TABLE IF EXISTS oc_sync_inventory_item_info;
 CREATE TABLE `oc_sync_inventory_item_info` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `numIid` varchar(255) COMMENT '淘宝商品编码',
@@ -121,7 +121,7 @@ CREATE TABLE `oc_sync_inventory_item_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='同步宝贝信息';
 
 
-DROP TABLE oc_fenxiao_check_result;
+DROP TABLE IF EXISTS oc_fenxiao_check_result;
 CREATE TABLE `oc_fenxiao_check_result` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tid` BIGINT DEFAULT NULL COMMENT '订单ID',
@@ -149,53 +149,19 @@ CREATE TABLE `oc_fenxiao_check_result` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分销对账结果表';
 
 
-DROP TABLE oc_tianma_check_result;
-CREATE TABLE `oc_tianma_check_result` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `tb_order_id` BIGINT DEFAULT NULL COMMENT '淘宝订单ID',
-  `tb_order_status` varchar(255)  COMMENT '淘宝订单状态',
-  `tb_numIid` BIGINT DEFAULT NULL COMMENT '淘宝宝贝ID',
-  `tb_title` varchar(1000) COMMENT '淘宝宝贝标题',
-  `tb_payment` decimal(25,10) COMMENT '淘宝支付价格',
-  `tb_refundID` BIGINT COMMENT '淘宝退款单ID',
-  `tb_refundStatus` varchar(255) COMMENT '淘宝退款状态',
-  `tb_num` BIGINT COMMENT '淘宝购买宝贝数量',
-  `tm_order_id` BIGINT DEFAULT NULL COMMENT '天马订单ID',
-  `tm_outer_order_id` varchar(255) NULL COMMENT '天马外部订单编码',
-  `tm_goods_no` varchar(255)  COMMENT '天马货号',
-  `tm_order_status` varchar(255)  COMMENT '天马订单状态',
-  `tm_delivery_no` varchar(255)  COMMENT '天马快递单号',
-  `tm_delivery_name` varchar(255)  COMMENT '天马快递名称',
-  `tm_warehouse_id` INTEGER(10)  COMMENT '天马仓库ID',
-  `tm_buyer_name` varchar(255)  COMMENT '天马买家名称',
-  `tm_warehouse_name` varchar(255)  COMMENT '天马仓库名称',
-  `tm_payPrice` decimal(25,10)  COMMENT '天马支付价格',
-  `tm_postFee` decimal(25,10)  COMMENT '天马运费',
-  `tm_noshipment_Remark` varchar(255)  COMMENT '天马订单备注',
-  `size1` varchar(255)  COMMENT '中国码',
-  `size2` varchar(255)  COMMENT '国外码',
-  `dz_status` varchar(255)  COMMENT '对账状态',
-  `dz_details_message` TEXT COMMENT '对账详细描述',
-  `remarks` TEXT COMMENT '备注(json格式)',
-  `add_time` timestamp NOT NULL COMMENT '添加日期',
-  PRIMARY KEY (`id`),
-  KEY `IDX_TM_ORDER_ID` (`tm_order_id`),
-  KEY `IDX_TB_ORDER_ID` (`tb_order_id`),
-  KEY `IDX_DZ_STATUS` (`dz_status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天马对账结果表';
+DROP TABLE IF EXISTS oc_tianma_check_result;
 
-
-
-DROP TABLE oc_tmsport_check_result;
+DROP TABLE IF EXISTS oc_tmsport_check_result;
 CREATE TABLE `oc_tmsport_check_result` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tm_order_ids` varchar(255) NULL COMMENT '天马订单ID',
   `tm_outer_order_id` varchar(255) NULL COMMENT '天马外部订单编码',
   `tm_order_num` BIGINT COMMENT '天马订单数量',
   `tm_num` BIGINT COMMENT '天马购买数量',
   `tb_order_num` BIGINT COMMENT '淘宝订单数量',
   `tb_num` BIGINT COMMENT '淘宝购买数量',
-  `tb_created` timestamp COMMENT '淘宝订单时间',
-  `tb_paytime` timestamp COMMENT '淘宝订单支付时间',
+  `tb_created` DATETIME DEFAULT NULL COMMENT '淘宝订单时间',
+  `tb_paytime` DATETIME DEFAULT NULL COMMENT '淘宝订单支付时间',
   `tb_price` decimal(25,10)  COMMENT '商品价格。精确到2位小数;单位:元。如:200.07，表示:200元7分',
   `tb_payment` decimal(25,10)  COMMENT '子订单实付金额。精确到2位小数，单位:元。如:200.07，表示:200元7分。对于多子订单的交易，计算公式如下：payment = price * num + adjust_fee - discount_fee ；单子订单交易，payment与主订单的payment一致，对于退款成功的子订单，由于主订单的优惠分摊金额，会造成该字段可能不为0.00元。建议使用退款前的实付金额减去退款单中的实际退款金额计算。',
   `tb_discountFee` decimal(25,10)  COMMENT '子订单级订单优惠金额。精确到2位小数;单位:元。如:200.07，表示:200元7分',
@@ -210,14 +176,14 @@ CREATE TABLE `oc_tmsport_check_result` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天马体育对账结果表';
 
 
-DROP TABLE oc_tm_order_records;
+DROP TABLE IF EXISTS oc_tm_order_records;
 CREATE TABLE `oc_tm_order_records` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tid` varchar(255) NULL COMMENT '淘宝订单ID',
   `type` varchar(255)  COMMENT '下单类型：手工补单，自动下单',
   `status` varchar(255)  COMMENT '下单状态：成功或失败',
-  'order_info' TEXT COMMENT '订单信息-json',
-  'fail_cause' TEXT COMMENT '失败原因',
+  `order_info` TEXT COMMENT '订单信息-json',
+  `fail_cause` TEXT COMMENT '失败原因',
   `wh_snapshot_data` TEXT COMMENT '仓库快照数据(自动机器下单时，才会有数据)',
   `machine_cid` TEXT COMMENT '下单机器CID(自动机器下单时，才会有数据)',
   `add_time` timestamp NOT NULL COMMENT '下单时间',

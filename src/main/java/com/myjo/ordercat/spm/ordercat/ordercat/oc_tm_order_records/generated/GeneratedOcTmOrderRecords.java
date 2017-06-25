@@ -1,9 +1,9 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
@@ -32,7 +32,7 @@ public interface GeneratedOcTmOrderRecords {
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getId()} method.
      */
-    final LongField<OcTmOrderRecords, Long> ID = LongField.create(
+    LongField<OcTmOrderRecords, Long> ID = LongField.create(
         Identifier.ID,
         OcTmOrderRecords::getId,
         OcTmOrderRecords::setId,
@@ -43,7 +43,7 @@ public interface GeneratedOcTmOrderRecords {
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getTid()} method.
      */
-    final StringField<OcTmOrderRecords, String> TID = StringField.create(
+    StringField<OcTmOrderRecords, String> TID = StringField.create(
         Identifier.TID,
         o -> OptionalUtil.unwrap(o.getTid()),
         OcTmOrderRecords::setTid,
@@ -54,7 +54,7 @@ public interface GeneratedOcTmOrderRecords {
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getType()} method.
      */
-    final StringField<OcTmOrderRecords, String> TYPE = StringField.create(
+    StringField<OcTmOrderRecords, String> TYPE = StringField.create(
         Identifier.TYPE,
         o -> OptionalUtil.unwrap(o.getType()),
         OcTmOrderRecords::setType,
@@ -65,7 +65,7 @@ public interface GeneratedOcTmOrderRecords {
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getStatus()} method.
      */
-    final StringField<OcTmOrderRecords, String> STATUS = StringField.create(
+    StringField<OcTmOrderRecords, String> STATUS = StringField.create(
         Identifier.STATUS,
         o -> OptionalUtil.unwrap(o.getStatus()),
         OcTmOrderRecords::setStatus,
@@ -76,7 +76,7 @@ public interface GeneratedOcTmOrderRecords {
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getOrderInfo()} method.
      */
-    final StringField<OcTmOrderRecords, String> ORDER_INFO = StringField.create(
+    StringField<OcTmOrderRecords, String> ORDER_INFO = StringField.create(
         Identifier.ORDER_INFO,
         o -> OptionalUtil.unwrap(o.getOrderInfo()),
         OcTmOrderRecords::setOrderInfo,
@@ -87,7 +87,7 @@ public interface GeneratedOcTmOrderRecords {
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getFailCause()} method.
      */
-    final StringField<OcTmOrderRecords, String> FAIL_CAUSE = StringField.create(
+    StringField<OcTmOrderRecords, String> FAIL_CAUSE = StringField.create(
         Identifier.FAIL_CAUSE,
         o -> OptionalUtil.unwrap(o.getFailCause()),
         OcTmOrderRecords::setFailCause,
@@ -98,7 +98,7 @@ public interface GeneratedOcTmOrderRecords {
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getWhSnapshotData()} method.
      */
-    final StringField<OcTmOrderRecords, String> WH_SNAPSHOT_DATA = StringField.create(
+    StringField<OcTmOrderRecords, String> WH_SNAPSHOT_DATA = StringField.create(
         Identifier.WH_SNAPSHOT_DATA,
         o -> OptionalUtil.unwrap(o.getWhSnapshotData()),
         OcTmOrderRecords::setWhSnapshotData,
@@ -109,7 +109,7 @@ public interface GeneratedOcTmOrderRecords {
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getMachineCid()} method.
      */
-    final StringField<OcTmOrderRecords, String> MACHINE_CID = StringField.create(
+    StringField<OcTmOrderRecords, String> MACHINE_CID = StringField.create(
         Identifier.MACHINE_CID,
         o -> OptionalUtil.unwrap(o.getMachineCid()),
         OcTmOrderRecords::setMachineCid,
@@ -120,7 +120,7 @@ public interface GeneratedOcTmOrderRecords {
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getAddTime()} method.
      */
-    final ComparableField<OcTmOrderRecords, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
+    ComparableField<OcTmOrderRecords, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
         Identifier.ADD_TIME,
         OcTmOrderRecords::getAddTime,
         OcTmOrderRecords::setAddTime,

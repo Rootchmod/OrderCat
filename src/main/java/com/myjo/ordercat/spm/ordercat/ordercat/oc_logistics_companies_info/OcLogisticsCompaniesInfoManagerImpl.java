@@ -11,7 +11,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.gener
  * 
  * @author myjo
  */
-public final class OcLogisticsCompaniesInfoManagerImpl extends GeneratedOcLogisticsCompaniesInfoManagerImpl implements OcLogisticsCompaniesInfoManager {
-    
-    
-}
+public final class OcLogisticsCompaniesInfoManagerImpl 
+extends GeneratedOcLogisticsCompaniesInfoManagerImpl 
+implements OcLogisticsCompaniesInfoManager {}

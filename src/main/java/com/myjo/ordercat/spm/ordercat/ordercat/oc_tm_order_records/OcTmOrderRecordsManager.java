@@ -11,7 +11,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.generated.Gen
  * 
  * @author myjo
  */
-public interface OcTmOrderRecordsManager extends GeneratedOcTmOrderRecordsManager {
-    
-    
-}
+public interface OcTmOrderRecordsManager extends GeneratedOcTmOrderRecordsManager {}

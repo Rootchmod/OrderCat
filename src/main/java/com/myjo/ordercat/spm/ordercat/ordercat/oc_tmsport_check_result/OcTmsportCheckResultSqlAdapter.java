@@ -11,7 +11,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.generated
  * 
  * @author myjo
  */
-public class OcTmsportCheckResultSqlAdapter extends GeneratedOcTmsportCheckResultSqlAdapter {
-    
-    
-}
+public class OcTmsportCheckResultSqlAdapter extends GeneratedOcTmsportCheckResultSqlAdapter {}

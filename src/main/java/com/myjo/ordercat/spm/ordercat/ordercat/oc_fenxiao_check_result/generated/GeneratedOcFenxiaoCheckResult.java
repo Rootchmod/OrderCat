@@ -1,9 +1,9 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResult;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
@@ -34,7 +34,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getId()} method.
      */
-    final LongField<OcFenxiaoCheckResult, Long> ID = LongField.create(
+    LongField<OcFenxiaoCheckResult, Long> ID = LongField.create(
         Identifier.ID,
         OcFenxiaoCheckResult::getId,
         OcFenxiaoCheckResult::setId,
@@ -45,7 +45,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getTid()} method.
      */
-    final ComparableField<OcFenxiaoCheckResult, Long, Long> TID = ComparableField.create(
+    ComparableField<OcFenxiaoCheckResult, Long, Long> TID = ComparableField.create(
         Identifier.TID,
         o -> OptionalUtil.unwrap(o.getTid()),
         OcFenxiaoCheckResult::setTid,
@@ -57,7 +57,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * be obtained using the {@link OcFenxiaoCheckResult#getOrderStatus()}
      * method.
      */
-    final StringField<OcFenxiaoCheckResult, String> ORDER_STATUS = StringField.create(
+    StringField<OcFenxiaoCheckResult, String> ORDER_STATUS = StringField.create(
         Identifier.ORDER_STATUS,
         o -> OptionalUtil.unwrap(o.getOrderStatus()),
         OcFenxiaoCheckResult::setOrderStatus,
@@ -68,7 +68,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getRefundId()} method.
      */
-    final ComparableField<OcFenxiaoCheckResult, Long, Long> REFUND_ID = ComparableField.create(
+    ComparableField<OcFenxiaoCheckResult, Long, Long> REFUND_ID = ComparableField.create(
         Identifier.REFUND_ID,
         o -> OptionalUtil.unwrap(o.getRefundId()),
         OcFenxiaoCheckResult::setRefundId,
@@ -79,7 +79,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getNumIid()} method.
      */
-    final ComparableField<OcFenxiaoCheckResult, Long, Long> NUM_IID = ComparableField.create(
+    ComparableField<OcFenxiaoCheckResult, Long, Long> NUM_IID = ComparableField.create(
         Identifier.NUM_IID,
         o -> OptionalUtil.unwrap(o.getNumIid()),
         OcFenxiaoCheckResult::setNumIid,
@@ -90,7 +90,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getTitle()} method.
      */
-    final StringField<OcFenxiaoCheckResult, String> TITLE = StringField.create(
+    StringField<OcFenxiaoCheckResult, String> TITLE = StringField.create(
         Identifier.TITLE,
         OcFenxiaoCheckResult::getTitle,
         OcFenxiaoCheckResult::setTitle,
@@ -101,7 +101,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getFenxiaoId()} method.
      */
-    final ComparableField<OcFenxiaoCheckResult, Long, Long> FENXIAO_ID = ComparableField.create(
+    ComparableField<OcFenxiaoCheckResult, Long, Long> FENXIAO_ID = ComparableField.create(
         Identifier.FENXIAO_ID,
         o -> OptionalUtil.unwrap(o.getFenxiaoId()),
         OcFenxiaoCheckResult::setFenxiaoId,
@@ -113,7 +113,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * be obtained using the {@link OcFenxiaoCheckResult#getSupplierNick()}
      * method.
      */
-    final StringField<OcFenxiaoCheckResult, String> SUPPLIER_NICK = StringField.create(
+    StringField<OcFenxiaoCheckResult, String> SUPPLIER_NICK = StringField.create(
         Identifier.SUPPLIER_NICK,
         o -> OptionalUtil.unwrap(o.getSupplierNick()),
         OcFenxiaoCheckResult::setSupplierNick,
@@ -125,7 +125,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * be obtained using the {@link OcFenxiaoCheckResult#getDistributorNick()}
      * method.
      */
-    final StringField<OcFenxiaoCheckResult, String> DISTRIBUTOR_NICK = StringField.create(
+    StringField<OcFenxiaoCheckResult, String> DISTRIBUTOR_NICK = StringField.create(
         Identifier.DISTRIBUTOR_NICK,
         o -> OptionalUtil.unwrap(o.getDistributorNick()),
         OcFenxiaoCheckResult::setDistributorNick,
@@ -137,7 +137,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * be obtained using the {@link
      * OcFenxiaoCheckResult#getFenxiaoRefundStatus()} method.
      */
-    final StringField<OcFenxiaoCheckResult, String> FENXIAO_REFUND_STATUS = StringField.create(
+    StringField<OcFenxiaoCheckResult, String> FENXIAO_REFUND_STATUS = StringField.create(
         Identifier.FENXIAO_REFUND_STATUS,
         o -> OptionalUtil.unwrap(o.getFenxiaoRefundStatus()),
         OcFenxiaoCheckResult::setFenxiaoRefundStatus,
@@ -149,7 +149,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * be obtained using the {@link OcFenxiaoCheckResult#getFenxiaoRefundFee()}
      * method.
      */
-    final ComparableField<OcFenxiaoCheckResult, BigDecimal, BigDecimal> FENXIAO_REFUND_FEE = ComparableField.create(
+    ComparableField<OcFenxiaoCheckResult, BigDecimal, BigDecimal> FENXIAO_REFUND_FEE = ComparableField.create(
         Identifier.FENXIAO_REFUND_FEE,
         o -> OptionalUtil.unwrap(o.getFenxiaoRefundFee()),
         OcFenxiaoCheckResult::setFenxiaoRefundFee,
@@ -161,7 +161,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * be obtained using the {@link OcFenxiaoCheckResult#getFenxiaoPaySupFee()}
      * method.
      */
-    final ComparableField<OcFenxiaoCheckResult, BigDecimal, BigDecimal> FENXIAO_PAY_SUP_FEE = ComparableField.create(
+    ComparableField<OcFenxiaoCheckResult, BigDecimal, BigDecimal> FENXIAO_PAY_SUP_FEE = ComparableField.create(
         Identifier.FENXIAO_PAY_SUP_FEE,
         o -> OptionalUtil.unwrap(o.getFenxiaoPaySupFee()),
         OcFenxiaoCheckResult::setFenxiaoPaySupFee,
@@ -173,7 +173,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * be obtained using the {@link OcFenxiaoCheckResult#getFenxiaoRefundDesc()}
      * method.
      */
-    final StringField<OcFenxiaoCheckResult, String> FENXIAO_REFUND_DESC = StringField.create(
+    StringField<OcFenxiaoCheckResult, String> FENXIAO_REFUND_DESC = StringField.create(
         Identifier.FENXIAO_REFUND_DESC,
         o -> OptionalUtil.unwrap(o.getFenxiaoRefundDesc()),
         OcFenxiaoCheckResult::setFenxiaoRefundDesc,
@@ -185,7 +185,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * be obtained using the {@link
      * OcFenxiaoCheckResult#getFenxiaoRefundReason()} method.
      */
-    final StringField<OcFenxiaoCheckResult, String> FENXIAO_REFUND_REASON = StringField.create(
+    StringField<OcFenxiaoCheckResult, String> FENXIAO_REFUND_REASON = StringField.create(
         Identifier.FENXIAO_REFUND_REASON,
         o -> OptionalUtil.unwrap(o.getFenxiaoRefundReason()),
         OcFenxiaoCheckResult::setFenxiaoRefundReason,
@@ -196,7 +196,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getStatus()} method.
      */
-    final StringField<OcFenxiaoCheckResult, String> STATUS = StringField.create(
+    StringField<OcFenxiaoCheckResult, String> STATUS = StringField.create(
         Identifier.STATUS,
         o -> OptionalUtil.unwrap(o.getStatus()),
         OcFenxiaoCheckResult::setStatus,
@@ -207,7 +207,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getRemarks()} method.
      */
-    final StringField<OcFenxiaoCheckResult, String> REMARKS = StringField.create(
+    StringField<OcFenxiaoCheckResult, String> REMARKS = StringField.create(
         Identifier.REMARKS,
         o -> OptionalUtil.unwrap(o.getRemarks()),
         OcFenxiaoCheckResult::setRemarks,
@@ -218,7 +218,7 @@ public interface GeneratedOcFenxiaoCheckResult {
      * This Field corresponds to the {@link OcFenxiaoCheckResult} field that can
      * be obtained using the {@link OcFenxiaoCheckResult#getAddTime()} method.
      */
-    final ComparableField<OcFenxiaoCheckResult, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
+    ComparableField<OcFenxiaoCheckResult, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
         Identifier.ADD_TIME,
         OcFenxiaoCheckResult::getAddTime,
         OcFenxiaoCheckResult::setAddTime,

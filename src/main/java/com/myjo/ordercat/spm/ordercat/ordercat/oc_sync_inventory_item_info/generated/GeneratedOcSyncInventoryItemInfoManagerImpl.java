@@ -1,8 +1,8 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfo;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.manager.AbstractManager;
 import com.speedment.runtime.field.Field;
 import java.util.stream.Stream;
@@ -18,7 +18,9 @@ import java.util.stream.Stream;
  * @author Speedment
  */
 @GeneratedCode("Speedment")
-public abstract class GeneratedOcSyncInventoryItemInfoManagerImpl extends AbstractManager<OcSyncInventoryItemInfo> implements GeneratedOcSyncInventoryItemInfoManager {
+public abstract class GeneratedOcSyncInventoryItemInfoManagerImpl 
+extends AbstractManager<OcSyncInventoryItemInfo> 
+implements GeneratedOcSyncInventoryItemInfoManager {
     
     private final TableIdentifier<OcSyncInventoryItemInfo> tableIdentifier;
     

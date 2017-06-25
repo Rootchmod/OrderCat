@@ -22,6 +22,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoMan
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import com.myjo.ordercat.utils.OcEncryptionUtils;
@@ -102,10 +103,15 @@ public class Main {
         OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager = app.getOrThrow(OcSyncInventoryItemInfoManager.class);
         OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager = app.getOrThrow(OcFenxiaoCheckResultManager.class);
         OcTmsportCheckResultManager ocTmsportCheckResultManager = app.getOrThrow(OcTmsportCheckResultManager.class);
+        OcTmOrderRecordsManager ocTmOrderRecordsManager = app.getOrThrow(OcTmOrderRecordsManager.class);
 
 
         OrderCatContext.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
         OrderCatContext.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
+        OrderCatContext.setOcJobExecInfoManager(ocJobExecInfoManager);
+        OrderCatContext.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
+        OrderCatContext.setOcWarehouseInfoManager(ocWarehouseInfoManager);
+
 
         Logger.info("初始化[speedment]-完成.");
 
@@ -142,6 +148,10 @@ public class Main {
         ac.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
         ac.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
 
+
+        OrderOperate orderOperate = new OrderOperate(tianmaSportHttp,taoBaoHttp);
+        orderOperate.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
+        OrderCatContext.setOrderOperate(orderOperate);
 
         tianmaSportHttp.getVerifyCodeImage();
 

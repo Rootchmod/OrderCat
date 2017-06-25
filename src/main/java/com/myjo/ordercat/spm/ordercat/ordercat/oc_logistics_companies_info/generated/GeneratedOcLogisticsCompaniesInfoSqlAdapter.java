@@ -2,11 +2,11 @@ package com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.gene
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoImpl;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.common.injector.annotation.ExecuteBefore;
 import com.speedment.common.injector.annotation.WithState;
 import com.speedment.runtime.config.Project;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.component.ProjectComponent;
 import com.speedment.runtime.core.component.sql.SqlPersistenceComponent;
 import com.speedment.runtime.core.component.sql.SqlStreamSupplierComponent;
@@ -40,7 +40,8 @@ public abstract class GeneratedOcLogisticsCompaniesInfoSqlAdapter {
     }
     
     @ExecuteBefore(RESOLVED)
-    void installMethodName(@WithState(RESOLVED) SqlStreamSupplierComponent streamSupplierComponent, @WithState(RESOLVED) SqlPersistenceComponent persistenceComponent) {
+    void installMethodName(@WithState(RESOLVED) SqlStreamSupplierComponent streamSupplierComponent,
+            @WithState(RESOLVED) SqlPersistenceComponent persistenceComponent) {
         streamSupplierComponent.install(tableIdentifier, this::apply);
         persistenceComponent.install(tableIdentifier);
     }
@@ -53,8 +54,9 @@ public abstract class GeneratedOcLogisticsCompaniesInfoSqlAdapter {
             entity.setLcCode(      resultSet.getString(3)                         );
             entity.setLcName(      resultSet.getString(4)                         );
             entity.setLcRegMailNo( resultSet.getString(5)                         );
-            entity.setExecJobId(   getLong(resultSet, 6)                          );
-            entity.setAddTime(     addTimeHelper.apply(resultSet.getTimestamp(7)) );
+            entity.setLcIsEnable(  getByte(resultSet, 6)                          );
+            entity.setExecJobId(   getLong(resultSet, 7)                          );
+            entity.setAddTime(     addTimeHelper.apply(resultSet.getTimestamp(8)) );
         } catch (final SQLException sqle) {
             throw new SpeedmentException(sqle);
         }

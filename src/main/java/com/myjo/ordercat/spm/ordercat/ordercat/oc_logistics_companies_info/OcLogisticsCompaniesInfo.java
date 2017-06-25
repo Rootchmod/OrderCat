@@ -10,7 +10,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.gener
  * 
  * @author myjo
  */
-public interface OcLogisticsCompaniesInfo extends GeneratedOcLogisticsCompaniesInfo {
-    
-    
-}
+public interface OcLogisticsCompaniesInfo extends GeneratedOcLogisticsCompaniesInfo {}

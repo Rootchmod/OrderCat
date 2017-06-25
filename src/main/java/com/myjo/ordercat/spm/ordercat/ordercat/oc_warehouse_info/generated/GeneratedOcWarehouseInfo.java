@@ -1,9 +1,9 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfo;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
@@ -32,7 +32,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getId()} method.
      */
-    final LongField<OcWarehouseInfo, Long> ID = LongField.create(
+    LongField<OcWarehouseInfo, Long> ID = LongField.create(
         Identifier.ID,
         OcWarehouseInfo::getId,
         OcWarehouseInfo::setId,
@@ -43,7 +43,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getWarehouseId()} method.
      */
-    final ComparableField<OcWarehouseInfo, Integer, Integer> WAREHOUSE_ID = ComparableField.create(
+    ComparableField<OcWarehouseInfo, Integer, Integer> WAREHOUSE_ID = ComparableField.create(
         Identifier.WAREHOUSE_ID,
         o -> OptionalUtil.unwrap(o.getWarehouseId()),
         OcWarehouseInfo::setWarehouseId,
@@ -54,7 +54,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getWarehouseName()} method.
      */
-    final StringField<OcWarehouseInfo, String> WAREHOUSE_NAME = StringField.create(
+    StringField<OcWarehouseInfo, String> WAREHOUSE_NAME = StringField.create(
         Identifier.WAREHOUSE_NAME,
         OcWarehouseInfo::getWarehouseName,
         OcWarehouseInfo::setWarehouseName,
@@ -65,7 +65,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getPickRate()} method.
      */
-    final ComparableField<OcWarehouseInfo, Integer, Integer> PICK_RATE = ComparableField.create(
+    ComparableField<OcWarehouseInfo, Integer, Integer> PICK_RATE = ComparableField.create(
         Identifier.PICK_RATE,
         o -> OptionalUtil.unwrap(o.getPickRate()),
         OcWarehouseInfo::setPickRate,
@@ -76,7 +76,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getThedTime()} method.
      */
-    final ComparableField<OcWarehouseInfo, Integer, Integer> THED_TIME = ComparableField.create(
+    ComparableField<OcWarehouseInfo, Integer, Integer> THED_TIME = ComparableField.create(
         Identifier.THED_TIME,
         o -> OptionalUtil.unwrap(o.getThedTime()),
         OcWarehouseInfo::setThedTime,
@@ -87,7 +87,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getExecJobId()} method.
      */
-    final ComparableField<OcWarehouseInfo, Integer, Integer> EXEC_JOB_ID = ComparableField.create(
+    ComparableField<OcWarehouseInfo, Integer, Integer> EXEC_JOB_ID = ComparableField.create(
         Identifier.EXEC_JOB_ID,
         o -> OptionalUtil.unwrap(o.getExecJobId()),
         OcWarehouseInfo::setExecJobId,
@@ -98,7 +98,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getPickDate()} method.
      */
-    final ComparableField<OcWarehouseInfo, Integer, Integer> PICK_DATE = ComparableField.create(
+    ComparableField<OcWarehouseInfo, Integer, Integer> PICK_DATE = ComparableField.create(
         Identifier.PICK_DATE,
         o -> OptionalUtil.unwrap(o.getPickDate()),
         OcWarehouseInfo::setPickDate,
@@ -110,7 +110,7 @@ public interface GeneratedOcWarehouseInfo {
      * obtained using the {@link OcWarehouseInfo#getUdpateWarehouseTime()}
      * method.
      */
-    final ComparableField<OcWarehouseInfo, Timestamp, LocalDateTime> UDPATE_WAREHOUSE_TIME = ComparableField.create(
+    ComparableField<OcWarehouseInfo, Timestamp, LocalDateTime> UDPATE_WAREHOUSE_TIME = ComparableField.create(
         Identifier.UDPATE_WAREHOUSE_TIME,
         o -> OptionalUtil.unwrap(o.getUdpateWarehouseTime()),
         OcWarehouseInfo::setUdpateWarehouseTime,
@@ -121,7 +121,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getMark()} method.
      */
-    final StringField<OcWarehouseInfo, String> MARK = StringField.create(
+    StringField<OcWarehouseInfo, String> MARK = StringField.create(
         Identifier.MARK,
         o -> OptionalUtil.unwrap(o.getMark()),
         OcWarehouseInfo::setMark,
@@ -132,7 +132,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getRetrunDesc()} method.
      */
-    final StringField<OcWarehouseInfo, String> RETRUN_DESC = StringField.create(
+    StringField<OcWarehouseInfo, String> RETRUN_DESC = StringField.create(
         Identifier.RETRUN_DESC,
         o -> OptionalUtil.unwrap(o.getRetrunDesc()),
         OcWarehouseInfo::setRetrunDesc,
@@ -143,7 +143,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getReturnRate()} method.
      */
-    final ComparableField<OcWarehouseInfo, Integer, Integer> RETURN_RATE = ComparableField.create(
+    ComparableField<OcWarehouseInfo, Integer, Integer> RETURN_RATE = ComparableField.create(
         Identifier.RETURN_RATE,
         o -> OptionalUtil.unwrap(o.getReturnRate()),
         OcWarehouseInfo::setReturnRate,
@@ -154,7 +154,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getExpressName()} method.
      */
-    final StringField<OcWarehouseInfo, String> EXPRESS_NAME = StringField.create(
+    StringField<OcWarehouseInfo, String> EXPRESS_NAME = StringField.create(
         Identifier.EXPRESS_NAME,
         o -> OptionalUtil.unwrap(o.getExpressName()),
         OcWarehouseInfo::setExpressName,
@@ -165,7 +165,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getEndT()} method.
      */
-    final StringField<OcWarehouseInfo, String> END_T = StringField.create(
+    StringField<OcWarehouseInfo, String> END_T = StringField.create(
         Identifier.END_T,
         o -> OptionalUtil.unwrap(o.getEndT()),
         OcWarehouseInfo::setEndT,
@@ -176,7 +176,7 @@ public interface GeneratedOcWarehouseInfo {
      * This Field corresponds to the {@link OcWarehouseInfo} field that can be
      * obtained using the {@link OcWarehouseInfo#getAddTime()} method.
      */
-    final ComparableField<OcWarehouseInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
+    ComparableField<OcWarehouseInfo, Timestamp, LocalDateTime> ADD_TIME = ComparableField.create(
         Identifier.ADD_TIME,
         OcWarehouseInfo::getAddTime,
         OcWarehouseInfo::setAddTime,

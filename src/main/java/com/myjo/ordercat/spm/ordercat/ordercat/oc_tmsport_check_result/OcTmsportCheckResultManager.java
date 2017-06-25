@@ -11,7 +11,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.generated
  * 
  * @author myjo
  */
-public interface OcTmsportCheckResultManager extends GeneratedOcTmsportCheckResultManager {
-    
-    
-}
+public interface OcTmsportCheckResultManager extends GeneratedOcTmsportCheckResultManager {}

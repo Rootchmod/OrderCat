@@ -1,9 +1,9 @@
 package com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.generated;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfo;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 import com.speedment.runtime.config.identifier.TableIdentifier;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 import com.speedment.runtime.field.ComparableField;
 import com.speedment.runtime.field.LongField;
@@ -32,7 +32,7 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getId()} method.
      */
-    final LongField<OcJobExecInfo, Long> ID = LongField.create(
+    LongField<OcJobExecInfo, Long> ID = LongField.create(
         Identifier.ID,
         OcJobExecInfo::getId,
         OcJobExecInfo::setId,
@@ -43,7 +43,7 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getJobName()} method.
      */
-    final StringField<OcJobExecInfo, String> JOB_NAME = StringField.create(
+    StringField<OcJobExecInfo, String> JOB_NAME = StringField.create(
         Identifier.JOB_NAME,
         o -> OptionalUtil.unwrap(o.getJobName()),
         OcJobExecInfo::setJobName,
@@ -54,7 +54,7 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getBeginTime()} method.
      */
-    final ComparableField<OcJobExecInfo, Timestamp, LocalDateTime> BEGIN_TIME = ComparableField.create(
+    ComparableField<OcJobExecInfo, Timestamp, LocalDateTime> BEGIN_TIME = ComparableField.create(
         Identifier.BEGIN_TIME,
         OcJobExecInfo::getBeginTime,
         OcJobExecInfo::setBeginTime,
@@ -65,7 +65,7 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getEndTime()} method.
      */
-    final ComparableField<OcJobExecInfo, Timestamp, LocalDateTime> END_TIME = ComparableField.create(
+    ComparableField<OcJobExecInfo, Timestamp, LocalDateTime> END_TIME = ComparableField.create(
         Identifier.END_TIME,
         o -> OptionalUtil.unwrap(o.getEndTime()),
         OcJobExecInfo::setEndTime,
@@ -76,7 +76,7 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getElapsed()} method.
      */
-    final ComparableField<OcJobExecInfo, Long, Long> ELAPSED = ComparableField.create(
+    ComparableField<OcJobExecInfo, Long, Long> ELAPSED = ComparableField.create(
         Identifier.ELAPSED,
         o -> OptionalUtil.unwrap(o.getElapsed()),
         OcJobExecInfo::setElapsed,
@@ -87,7 +87,7 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getStatus()} method.
      */
-    final StringField<OcJobExecInfo, String> STATUS = StringField.create(
+    StringField<OcJobExecInfo, String> STATUS = StringField.create(
         Identifier.STATUS,
         OcJobExecInfo::getStatus,
         OcJobExecInfo::setStatus,
@@ -98,7 +98,7 @@ public interface GeneratedOcJobExecInfo {
      * This Field corresponds to the {@link OcJobExecInfo} field that can be
      * obtained using the {@link OcJobExecInfo#getErrorMessage()} method.
      */
-    final StringField<OcJobExecInfo, String> ERROR_MESSAGE = StringField.create(
+    StringField<OcJobExecInfo, String> ERROR_MESSAGE = StringField.create(
         Identifier.ERROR_MESSAGE,
         o -> OptionalUtil.unwrap(o.getErrorMessage()),
         OcJobExecInfo::setErrorMessage,

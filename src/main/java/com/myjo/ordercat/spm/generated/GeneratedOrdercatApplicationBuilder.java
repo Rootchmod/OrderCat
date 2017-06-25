@@ -15,16 +15,14 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManagerI
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoSqlAdapter;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_tianma_check_result.OcTianmaCheckResultManagerImpl;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_tianma_check_result.OcTianmaCheckResultSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoSqlAdapter;
+import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.common.injector.Injector;
-import com.speedment.runtime.core.annotation.GeneratedCode;
 import com.speedment.runtime.core.internal.AbstractApplicationBuilder;
 
 /**
@@ -48,7 +46,6 @@ public abstract class GeneratedOrdercatApplicationBuilder extends AbstractApplic
         withManager(OcLogisticsCompaniesInfoManagerImpl.class);
         withManager(OcSalesInfoManagerImpl.class);
         withManager(OcSyncInventoryItemInfoManagerImpl.class);
-        withManager(OcTianmaCheckResultManagerImpl.class);
         withManager(OcTmsportCheckResultManagerImpl.class);
         withManager(OcTmOrderRecordsManagerImpl.class);
         withManager(OcWarehouseInfoManagerImpl.class);
@@ -58,7 +55,6 @@ public abstract class GeneratedOrdercatApplicationBuilder extends AbstractApplic
         withComponent(OcLogisticsCompaniesInfoSqlAdapter.class);
         withComponent(OcSalesInfoSqlAdapter.class);
         withComponent(OcSyncInventoryItemInfoSqlAdapter.class);
-        withComponent(OcTianmaCheckResultSqlAdapter.class);
         withComponent(OcTmsportCheckResultSqlAdapter.class);
         withComponent(OcTmOrderRecordsSqlAdapter.class);
         withComponent(OcWarehouseInfoSqlAdapter.class);

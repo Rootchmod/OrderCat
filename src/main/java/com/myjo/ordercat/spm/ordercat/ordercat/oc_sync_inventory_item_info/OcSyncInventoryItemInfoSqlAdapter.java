@@ -11,7 +11,4 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.gener
  * 
  * @author myjo
  */
-public class OcSyncInventoryItemInfoSqlAdapter extends GeneratedOcSyncInventoryItemInfoSqlAdapter {
-    
-    
-}
+public class OcSyncInventoryItemInfoSqlAdapter extends GeneratedOcSyncInventoryItemInfoSqlAdapter {}

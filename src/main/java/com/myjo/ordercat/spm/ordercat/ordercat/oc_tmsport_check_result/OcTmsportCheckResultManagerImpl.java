@@ -11,7 +11,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.generated
  * 
  * @author myjo
  */
-public final class OcTmsportCheckResultManagerImpl extends GeneratedOcTmsportCheckResultManagerImpl implements OcTmsportCheckResultManager {
-    
-    
-}
+public final class OcTmsportCheckResultManagerImpl 
+extends GeneratedOcTmsportCheckResultManagerImpl 
+implements OcTmsportCheckResultManager {}
