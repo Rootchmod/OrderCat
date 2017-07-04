@@ -14,7 +14,6 @@ artifact
 *.csv
 *.txt
 doc
-lib_tb
 oc.conf
 oc1.conf
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
