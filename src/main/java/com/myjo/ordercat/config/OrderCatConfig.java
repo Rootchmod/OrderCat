@@ -1,9 +1,6 @@
 package com.myjo.ordercat.config;
 
-import com.myjo.ordercat.domain.FocusWHInfoReplace;
-import com.myjo.ordercat.domain.InventoryQueryCondition;
-import com.myjo.ordercat.domain.PickRateDelCondition;
-import com.myjo.ordercat.domain.SalesPriceCalculatePolicy;
+import com.myjo.ordercat.domain.*;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
@@ -128,15 +125,6 @@ public class OrderCatConfig {
     public static String getGuessMailNoKeepJobTriggerCron(){
         return config.getString(String.format(SCHEDULER_CRON, "guessMailNoKeepJob_trigger_cron"));
     }
-
-
-
-
-
-
-
-
-
 
 
     public static String getSalesPriceEndReplace(){
@@ -357,6 +345,28 @@ public class OrderCatConfig {
     public static String getOrderOperateTmPayPwd() {
         return config.getString(String.format(ORDER_OPERATE, "tm_pay_pwd"));
     }
+
+
+    public static String getBreakEvenPricePolicyEquation() {
+        return config.getString(String.format(ORDER_OPERATE, "break_even_price_policy_equation"));
+    }
+
+
+
+
+    public static List<PickWhcountCalculatePolicy> getPickWhcountCalculatePolicy(){
+        List<PickWhcountCalculatePolicy> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "pick_whcount_calculate_policy"));
+        PickWhcountCalculatePolicy pickWhcountCalculatePolicy;
+        for(ConfigObject cb :list){
+            pickWhcountCalculatePolicy = ConfigBeanFactory.create(cb.toConfig(),PickWhcountCalculatePolicy.class);
+            rtList.add(pickWhcountCalculatePolicy);
+        }
+        return rtList;
+    }
+
+
+
 
 
 

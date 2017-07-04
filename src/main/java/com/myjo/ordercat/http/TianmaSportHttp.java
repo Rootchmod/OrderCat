@@ -286,6 +286,7 @@ public class TianmaSportHttp {
         Map<String,Object> rtMap = new HashMap<>();
 
         List<InventoryInfo> list = new ArrayList<>();
+        List<com.alibaba.fastjson.JSONObject> jsonObjectList = new ArrayList<>();
         String jsonstr = "";
         Logger.info("getSearchByArticlenoHttpUrl: " + OrderCatConfig.getSearchByArticlenoHttpUrl());
         Logger.info("Articleno: " + Articleno);
@@ -331,6 +332,7 @@ public class TianmaSportHttp {
             for (int i = 0; i < array.size(); i++) {
 
                 jsonObject = array.getJSONObject(i);
+
                 dd1 = StringUtils.substringBeforeLast(jsonObject.getString("pickRate"), "%");
                 dd2 = StringUtils.substringAfterLast(jsonObject.getString("pickRate"), "发货时效:");
 
@@ -352,10 +354,11 @@ public class TianmaSportHttp {
 
                 inventoryInfo.setUpdateTime(OcDateTimeUtils.string2LocalDateTime(jsonObject.getString("updateTime")));
                 list.add(inventoryInfo);
+                jsonObjectList.add(jsonObject);
+
             }
             rtMap.put("whlist",list);
-
-
+            rtMap.put("jsonObjectList",jsonObjectList);
 
             //产品ID
             String productID;

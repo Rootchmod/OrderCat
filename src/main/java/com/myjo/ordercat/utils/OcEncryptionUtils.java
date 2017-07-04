@@ -12,8 +12,6 @@ public class OcEncryptionUtils {
 
 
     //加密
-
-
     public static String base64Encoder(String str,int count) {
         String s = str;
         for(int i=0;i<count;i++){
@@ -21,8 +19,6 @@ public class OcEncryptionUtils {
         }
         return s;
     }
-
-
     public static String base64Encoder(String str) {
         byte[] b = null;
         String s = null;
@@ -36,8 +32,10 @@ public class OcEncryptionUtils {
         }
         return s;
     }
-    //解密
 
+
+    
+    //解密
     public static String base64Decoder(String str,int count){
         String s = str;
         for(int i=0;i<count;i++){

@@ -47,7 +47,7 @@ public class OrderOperateResource {
         boolean success;
         String message;
         try {
-            ocTmOrderRecords = oop.manualOrder(Long.valueOf(tid), wareHouseId, payPwd, null, null);
+            ocTmOrderRecords = oop.manualOrder(Long.valueOf(tid), wareHouseId, payPwd);
             if (TmOrderRecordStatus.FAILURE.getValue().equals(ocTmOrderRecords.getStatus().get())) {
                 success = false;
                 message = "下单失败:" + ocTmOrderRecords.getFailCause().get();
@@ -98,7 +98,7 @@ public class OrderOperateResource {
 
         List<OcTmOrderRecords> list = ocTmOrderRecordsManager.stream()
                 .filter(p1)
-                .sorted(OcTmOrderRecordsImpl.ADD_TIME.comparator())
+                .sorted(OcTmOrderRecordsImpl.ADD_TIME.comparator().reversed())
                 .skip((page - 1) * page_size)
                 .limit(page_size)
                 .collect(Collectors.toList());

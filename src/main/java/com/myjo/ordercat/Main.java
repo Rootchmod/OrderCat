@@ -149,7 +149,7 @@ public class Main {
         ac.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
 
 
-        OrderOperate orderOperate = new OrderOperate(tianmaSportHttp,taoBaoHttp);
+        OrderOperate orderOperate = new OrderOperate(tianmaSportHttp,taoBaoHttp,e);
         orderOperate.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
         OrderCatContext.setOrderOperate(orderOperate);
 

@@ -76,4 +76,35 @@ public class OcBigDecimalUtils {
     }
 
 
+    public static BigDecimal toBreakEvenPrice(ScriptEngine e, BigDecimal payAmount) {
+
+        BigDecimal breakEvenPrice = null;
+        try {
+            String ps = OrderCatConfig.getBreakEvenPricePolicyEquation();
+            String evalStr = ps.replaceAll("payAmount",payAmount.toPlainString());
+            Object ddd  = e.eval(evalStr);
+            Double rt = (double)ddd;
+            breakEvenPrice = new BigDecimal(rt);
+        } catch (final ScriptException se) {
+            se.printStackTrace();
+        }
+        return breakEvenPrice;
+    }
+
+    public static boolean pickWhcountCalculatePolicyJudge(ScriptEngine e, String x,String y, String judge) {
+        boolean rt = false;
+        try {
+            String ps = "("+judge+")";
+            String evalStr = ps.replaceAll("x",String.valueOf(x));
+            evalStr = evalStr.replaceAll("y",String.valueOf(y));
+            rt = ((Boolean) e.eval(evalStr)).booleanValue();
+        } catch (final ScriptException se) {
+            se.printStackTrace();
+        }
+        return rt;
+    }
+
+
+
+
 }
