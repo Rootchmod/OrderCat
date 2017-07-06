@@ -7,6 +7,7 @@ public class InventoryQueryCondition {
 
     private String brandName;
     private String quarter;
+    private String sex;
 
 
     public String getBrandName() {
@@ -23,5 +24,13 @@ public class InventoryQueryCondition {
 
     public void setQuarter(String quarter) {
         this.quarter = quarter;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }

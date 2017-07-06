@@ -1,6 +1,5 @@
 package com.myjo.ordercat.http;
 
-import com.aliyun.openservices.ons.api.*;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.exception.OCException;
@@ -11,13 +10,11 @@ import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.*;
 import com.taobao.api.domain.LogisticsCompany;
 import com.taobao.api.internal.tmc.TmcClient;
-import com.taobao.api.internal.util.WebUtils;
 import com.taobao.api.request.*;
 import com.taobao.api.response.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -381,7 +378,9 @@ public class TaoBaoHttp {
         PageResult<Trade> pageResult;
         do {
             pageResult = getSoldTrades(begin, end, status, pageNo, pageSize);
-            rtlist.addAll(pageResult.getRows());
+            if (pageResult != null) {
+                rtlist.addAll(pageResult.getRows());
+            }
             Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
             //++pageNo;
         } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
@@ -409,7 +408,11 @@ public class TaoBaoHttp {
         //req.setUseHasNext(true);
         TradesSoldGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
         if (rsp.isSuccess()) {
-            pr.setRows(rsp.getTrades());
+            List<Trade> list = rsp.getTrades();
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+            pr.setRows(list);
             pr.setTotal(rsp.getTotalResults());
         }
         return pr;
@@ -671,7 +674,7 @@ public class TaoBaoHttp {
 
     //taobao.trade.fullinfo.get
 
-    public Optional<Trade> getTaobaoTradeFullInfo(long tid){
+    public Optional<Trade> getTaobaoTradeFullInfo(long tid) {
 
 
 //        receiver_name String 东方不败收货人的姓名
@@ -686,9 +689,6 @@ public class TaoBaoHttp {
 //        receiver_district
 
 
-
-
-
         Trade trade = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
@@ -699,7 +699,7 @@ public class TaoBaoHttp {
             if (rsp.isSuccess()) {
                 trade = rsp.getTrade();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.error(e);
         }
         return Optional.ofNullable(trade);

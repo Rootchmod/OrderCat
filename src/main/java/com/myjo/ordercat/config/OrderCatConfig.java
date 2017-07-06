@@ -54,7 +54,7 @@ public class OrderCatConfig {
     }
 
     public static void init(String cs) throws Exception{
-        config = ConfigFactory.parseFile(new File(cs));
+        config = ConfigFactory.parseFile(new File(cs)).resolve();
 //        config.checkValid(ConfigFactory.defaultReference(),
 //                "tianma-sport",
 //                "order-cat",
@@ -278,6 +278,18 @@ public class OrderCatConfig {
         //return "麦巨对接测试";
         return config.getString(String.format(TIANMA_SPORT, "username"));
     }
+
+
+    public static String getTianmaMainHtml() {
+
+        return config.getString(String.format(TIANMA_SPORT, "main_html"));
+    }
+
+    public static String getTianmaSportHost() {
+
+        return config.getString(String.format(TIANMA_SPORT, "tianma_http_host"));
+    }
+
 
     public static String getTianmaSportPassWord() {
 

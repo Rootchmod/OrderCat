@@ -99,7 +99,8 @@ public class SyncInventory {
         for (InventoryQueryCondition iqc : list) {
             Logger.debug("dataGathering.InventoryQueryCondition.BrandName" + iqc.getBrandName());
             Logger.debug("dataGathering.InventoryQueryCondition.Quarter" + iqc.getQuarter());
-            tianmaSportHttp.inventoryDownGroup(fileName, iqc.getBrandName(), iqc.getQuarter());
+            Logger.debug("dataGathering.InventoryQueryCondition.Sex" + iqc.getSex());
+            tianmaSportHttp.inventoryDownGroup(fileName, iqc.getBrandName(), iqc.getSex(), iqc.getQuarter());
         }
         Logger.debug("SyncInventory.dataGathering.exec done.");
     }
@@ -174,6 +175,7 @@ public class SyncInventory {
         ocWarehouseInfoManager.stream()
                 .filter(OcWarehouseInfo.EXEC_JOB_ID.equal(execJobId.intValue()))
                 .forEach(ocWarehouseInfoManager.remover());
+
 
         Logger.info("同步配货率信息,job-id:" + execJobId);
         //抓取天马库存信息数据
@@ -445,8 +447,8 @@ public class SyncInventory {
 
         List<Sku> errorList = skus.parallelStream().filter(sku -> sku == null || sku.getOuterId() == null).collect(toList());
 
-        if(errorList!=null&&errorList.size()>0){
-            throw new OCException(String.format("宝贝[%s]-SKU[%s]的外部供应商编码为空!请检查!",String.valueOf(errorList.get(0).getNumIid()),String.valueOf(errorList.get(0).getSkuId())));
+        if (errorList != null && errorList.size() > 0) {
+            throw new OCException(String.format("宝贝[%s]-SKU[%s]的外部供应商编码为空!请检查!", String.valueOf(errorList.get(0).getNumIid()), String.valueOf(errorList.get(0).getSkuId())));
         }
 
 
@@ -531,9 +533,21 @@ public class SyncInventory {
         Logger.info("按照SKU,在天马库存中进行过滤后的条数:" + intersectionList.size());
 
 
-        //赋值宝贝ID
+        //赋值宝贝ID 当一个货号对应多个宝贝ID时,取销量最高的那个宝贝ID进行赋值
         intersectionList.parallelStream().forEach(inventoryInfo -> {
-            inventoryInfo.setNumIid(inventoryInfoInCsvNumIidMap.get(inventoryInfo.getGoodsNo()).get(0).getNumIid());
+            List<Sku> skus1 = inventoryInfoInCsvNumIidMap.get(inventoryInfo.getGoodsNo());
+            Map<String, Optional<Sku>> map = skus1.parallelStream().collect(
+                    groupingBy(
+                            i -> (OcStringUtils.getGoodsNoByOuterId(i.getOuterId())),
+                            Collectors.maxBy(Comparator.comparingLong(i ->
+                                    tradesMap.get(String.valueOf(i.getNumIid())) == null ? 0 : tradesMap.get(String.valueOf(i.getNumIid())).getSalesCount().getAsInt()))
+                    ));
+            Optional<Map.Entry<String, Optional<Sku>>> tt = map.entrySet().parallelStream().findAny();
+            long numIid;
+            if (tt.isPresent()) {
+                numIid = tt.get().getValue().get().getNumIid();
+                inventoryInfo.setNumIid(numIid);
+            }
         });
 
         // 对库存信息进行配货率匹配
@@ -679,8 +693,6 @@ public class SyncInventory {
         });
 
 
-
-
         //所有仓库，对应尺码最低价格
         Map<String, Optional<InventoryInfo>> whSizePriceMap = intersectionList
                 .parallelStream()
@@ -790,7 +802,7 @@ public class SyncInventory {
             if (OrderCatConfig.isProduction()) {
                 skuNumIidMap.entrySet().parallelStream()
                         //.filter(longListEntry -> longListEntry.getKey() == 540062300867l || longListEntry.getKey() == 543451776272l)
-                        //.filter(longListEntry -> longListEntry.getKey() == 549857468792l)
+                        .filter(longListEntry -> longListEntry.getKey() == 548748302544l)
                         .forEach(longListEntry -> {
                             Logger.info(String.format("开始同步-商品ID: [%d] 的SKU价格与库存. ", longListEntry.getKey()));
                             try {
@@ -877,7 +889,6 @@ public class SyncInventory {
                         });
 
             } else {
-
 
 
 //                Logger.info(String.format("过滤平均采购价格"));

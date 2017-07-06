@@ -31,39 +31,39 @@ public class OrderOperateResource {
     //private final static int PAGE_SIZE = 50;
     private static final Logger Logger = LogManager.getLogger(OrderOperate.class);
 
-    @POST
-    @Produces("application/json;charset=utf-8")
-    @Path("/manualOrder")
-    @ApiOperation(value = "手工下单接口", response = Map.class)
-    public Map<String, Object> fenxiaoCheckAddRemark(
-            @ApiParam(required = true, name = "tid", value = "淘宝订单ID") @FormParam("tid") String tid,
-            @ApiParam(required = true, name = "wareHouseId", value = "备注") @FormParam("wareHouseId") String wareHouseId,
-            @ApiParam(required = true, name = "payPwd", value = "密码") @FormParam("payPwd") String payPwd
-    ) {
-        Logger.info(String.format("/order-operate/manualOrder tid:%s,wareHouseId:%s,payPwd:*******", tid, wareHouseId));
-        Map<String, Object> rt = new HashMap<>();
-        OrderOperate oop = OrderCatContext.getOrderOperate();
-        OcTmOrderRecords ocTmOrderRecords = null;
-        boolean success;
-        String message;
-        try {
-            ocTmOrderRecords = oop.manualOrder(Long.valueOf(tid), wareHouseId, payPwd);
-            if (TmOrderRecordStatus.FAILURE.getValue().equals(ocTmOrderRecords.getStatus().get())) {
-                success = false;
-                message = "下单失败:" + ocTmOrderRecords.getFailCause().get();
-            } else {
-                success = true;
-                message = "下单成功!";
-            }
-        } catch (Exception e) {
-            success = false;
-            message = e.getMessage();
-        }
-        rt.put("success", success);
-        rt.put("message", message);
-        rt.put("ocTmOrderRecords", ocTmOrderRecords);
-        return rt;
-    }
+//    @POST
+//    @Produces("application/json;charset=utf-8")
+//    @Path("/manualOrder")
+//    @ApiOperation(value = "手工下单接口", response = Map.class)
+//    public Map<String, Object> fenxiaoCheckAddRemark(
+//            @ApiParam(required = true, name = "tid", value = "淘宝订单ID") @FormParam("tid") String tid,
+//            @ApiParam(required = true, name = "wareHouseId", value = "备注") @FormParam("wareHouseId") String wareHouseId,
+//            @ApiParam(required = true, name = "payPwd", value = "密码") @FormParam("payPwd") String payPwd
+//    ) {
+//        Logger.info(String.format("/order-operate/manualOrder tid:%s,wareHouseId:%s,payPwd:*******", tid, wareHouseId));
+//        Map<String, Object> rt = new HashMap<>();
+//        OrderOperate oop = OrderCatContext.getOrderOperate();
+//        OcTmOrderRecords ocTmOrderRecords = null;
+//        boolean success;
+//        String message;
+//        try {
+//            ocTmOrderRecords = oop.manualOrder(Long.valueOf(tid), wareHouseId, payPwd);
+//            if (TmOrderRecordStatus.FAILURE.getValue().equals(ocTmOrderRecords.getStatus().get())) {
+//                success = false;
+//                message = "下单失败:" + ocTmOrderRecords.getFailCause().get();
+//            } else {
+//                success = true;
+//                message = "下单成功!";
+//            }
+//        } catch (Exception e) {
+//            success = false;
+//            message = e.getMessage();
+//        }
+//        rt.put("success", success);
+//        rt.put("message", message);
+//        rt.put("ocTmOrderRecords", ocTmOrderRecords);
+//        return rt;
+//    }
 
 
     @GET

@@ -64,8 +64,8 @@ public class TianmaSportHttp {
     public String main_html() throws Exception {
         Logger.info(" pass into main_html");
         String rt = null;
-        HttpResponse<String> jsonResponse = Unirest.get("http://www.tianmasport.com/ms/main.shtml")
-                .header("Host", "www.tianmasport.com")
+        HttpResponse<String> jsonResponse = Unirest.get(OrderCatConfig.getTianmaMainHtml())
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
                 .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
@@ -94,8 +94,16 @@ public class TianmaSportHttp {
         Logger.info("http tianmaSport login sessionId: " + sessionId);
 
 
+        String pwd = OcEncryptionUtils.base64Decoder(OrderCatConfig.getTianmaSportPassWord(),5);
+        String nickName = OrderCatConfig.getTianmaSportUserName();
+
+        Logger.info("http tianmaSport login pwd: " + pwd);
+        Logger.info("http tianmaSport login nickName: " + nickName);
+
+
+
         HttpResponse<JsonNode> jsonResponse = Unirest.post(OrderCatConfig.getTianmaSportLoginHttpUrl())
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Accept", "application/json, text/javascript, */*; q=0.01")
                 .header("Origin", "http://www.tianmasport.com")
@@ -106,8 +114,8 @@ public class TianmaSportHttp {
                 .header("Accept-Encoding", "gzip, deflate")
                 .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
                 //.header("Cookie", sessionId)
-                .field("nickName", OrderCatConfig.getTianmaSportUserName())
-                .field("pwd", OcEncryptionUtils.base64Decoder(OrderCatConfig.getTianmaSportPassWord(),5))
+                .field("nickName", nickName)
+                .field("pwd", pwd)
                 .field("verifyCode", verifyCode)
                 .field("remember", "on")
                 .asJson();
@@ -128,7 +136,7 @@ public class TianmaSportHttp {
 
 
         HttpResponse<JsonNode> jsonResponse = Unirest.post(OrderCatConfig.getTradeOrderAddRemarkHttpUrl())
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Accept", "application/json, text/javascript, */*; q=0.01")
                 .header("Origin", "http://www.tianmasport.com")
@@ -165,9 +173,11 @@ public class TianmaSportHttp {
         Logger.debug(millis);
         Logger.debug(dtStr);
 
+        String url = OrderCatConfig.getTianmaSportVcHttpUrl();
+
         HttpResponse<InputStream> response =
-                Unirest.get(String.format(OrderCatConfig.getTianmaSportVcHttpUrl(), millis))
-                        .header("Host", "www.tianmasport.com")
+                Unirest.get(String.format(url, millis))
+                        .header("Host", OrderCatConfig.getTianmaSportHost())
                         .header("Connection", "keep-alive")
                         .header("User-Agent", USER_AGENT)
                         .header("Accept", "image/webp,image/*,*/*;q=0.8")
@@ -188,15 +198,16 @@ public class TianmaSportHttp {
     }
 
 
-    public void inventoryDownGroup(String fileName, String brandName, String quarter) throws Exception {
+    public void inventoryDownGroup(String fileName, String brandName,String sex, String quarter) throws Exception {
         Logger.info("inventory_down_group_http_url: " + OrderCatConfig.getTianmaSportIDGHttpUrl());
         Logger.info("brandName: " + brandName);
         Logger.info("quarter: " + quarter);
+        Logger.info("sex: " + sex);
 
         String sessionId = map.get("seesion_id");
         Logger.info("http tianmaSport login sessionId: " + sessionId);
         HttpResponse<JsonNode> response = Unirest.post(OrderCatConfig.getTianmaSportIDGHttpUrl())
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Accept", "*/*")
                 .header("Origin", "http://www.tianmasport.com")
@@ -214,7 +225,7 @@ public class TianmaSportHttp {
                 .field("minInnerNum", "")
                 .field("maxInnerNum", "")
                 .field("size1", "")
-                .field("sex", "")
+                .field("sex", sex.equals("全部")?"":sex)
                 .field("division", "")
                 .field("cate", "")
                 .field("quarter", quarter)
@@ -230,6 +241,8 @@ public class TianmaSportHttp {
             String path = rt.getString("path");
             Logger.info("inventoryDownGroup return path:" + path);
             dataDownLoad(path, fileName);
+        }else {
+            Logger.error(rt.getString("msg"));
         }
     }
 
@@ -243,7 +256,7 @@ public class TianmaSportHttp {
 
         HttpResponse<InputStream> response =
                 Unirest.get(String.format(OrderCatConfig.getTianmaSportDownLoadHttpUrl(), path))
-                        .header("Host", "www.tianmasport.com")
+                        .header("Host", OrderCatConfig.getTianmaSportHost())
                         .header("Connection", "keep-alive")
                         .header("Upgrade-Insecure-Requests", "1")
                         .header("User-Agent", USER_AGENT)
@@ -293,7 +306,7 @@ public class TianmaSportHttp {
         String sessionId = map.get("seesion_id");
         Logger.info("http tianmaSport login sessionId: " + sessionId);
         HttpResponse<String> response = Unirest.post(OrderCatConfig.getSearchByArticlenoHttpUrl())
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Accept", "*/*")
                 .header("Origin", "http://www.tianmasport.com")
@@ -479,7 +492,7 @@ public class TianmaSportHttp {
         String sessionId = map.get("seesion_id");
         Logger.info("http tianmaSport login sessionId: " + sessionId);
         HttpResponse<JsonNode> response = Unirest.post(OrderCatConfig.getTradeOrdersDataListHttpUrl())
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Accept", "*/*")
                 .header("Origin", "http://www.tianmasport.com")
@@ -565,7 +578,7 @@ public class TianmaSportHttp {
 
         List<TmArea> list = new ArrayList<>();
         HttpResponse<JsonNode> response = Unirest.get(String.format(OrderCatConfig.getTianmaGetAreaHttpUrl(), pid))
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
                 .header("User-Agent", USER_AGENT)
@@ -618,7 +631,7 @@ public class TianmaSportHttp {
 
         List<TmPostage> list = new ArrayList<>();
         HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/order/getPostage.do"))
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
                 .header("User-Agent", USER_AGENT)
@@ -675,7 +688,7 @@ public class TianmaSportHttp {
         });
         String rt;
         HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/order/booking.do"))
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
                 .header("User-Agent", USER_AGENT)
@@ -733,7 +746,7 @@ public class TianmaSportHttp {
 
         String rt;
         HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/tradeInfo/updataBalance.do"))
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
                 .header("User-Agent", USER_AGENT)
@@ -778,7 +791,7 @@ public class TianmaSportHttp {
 
         String rt;
         HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/tradeInfo/mergePostage.do"))
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
                 .header("User-Agent", USER_AGENT)
@@ -828,7 +841,7 @@ public class TianmaSportHttp {
 
         String rt = null;
         HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/order/defaultPostage.do"))
-                .header("Host", "www.tianmasport.com")
+                .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
                 .header("User-Agent", USER_AGENT)
