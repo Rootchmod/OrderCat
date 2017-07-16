@@ -706,7 +706,7 @@ public class TianmaSportHttp {
                 .field("city", requestMap.get("city"))
                 .field("recv_name", requestMap.get("recv_name"))
                 .field("jsonStr", requestMap.get("jsonStr"))
-                .field("remark", "")
+                .field("remark", requestMap.get("remark"))
                 .field("area_id", requestMap.get("area_id"))
                 .field("zipcode", requestMap.get("zipcode"))
                 .field("recv_tel", requestMap.get("recv_tel"))
