@@ -342,6 +342,31 @@ public class OrderCatConfig {
 
 
 
+    public static String getPostageHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "get_postage_http_url"));
+    }
+
+    public static String getDefaultPostageHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "get_default_postage_http_url"));
+    }
+
+
+
+    public static String getOrderBookingHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "order_booking_http_url"));
+    }
+    public static String getUpdateBalanceHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "update_balance_http_url"));
+    }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -378,6 +403,47 @@ public class OrderCatConfig {
     }
 
 
+
+    public static List<NotOrderWareHousePolicy> getNotOrderWareHousePolicy(){
+        List<NotOrderWareHousePolicy> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "not_order_warehouse_policy"));
+        NotOrderWareHousePolicy notOrderWareHouse;
+        for(ConfigObject cb :list){
+            notOrderWareHouse = ConfigBeanFactory.create(cb.toConfig(),NotOrderWareHousePolicy.class);
+            rtList.add(notOrderWareHouse);
+        }
+        return rtList;
+    }
+
+
+    public static List<CycleWhComp> getCycleWhComp(){
+        List<CycleWhComp> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "cycle_wh_comp"));
+        CycleWhComp cycleWhComp;
+        for(ConfigObject cb :list){
+            cycleWhComp = ConfigBeanFactory.create(cb.toConfig(),CycleWhComp.class);
+            rtList.add(cycleWhComp);
+        }
+        return rtList;
+    }
+
+
+    public static List<PriorityOrderWhPolicy> getPriorityOrderWhPolicy(){
+        List<PriorityOrderWhPolicy> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "priority_order_warehouse_policy"));
+        PriorityOrderWhPolicy priorityOrderWhPolicy;
+        for(ConfigObject cb :list){
+            priorityOrderWhPolicy = ConfigBeanFactory.create(cb.toConfig(),PriorityOrderWhPolicy.class);
+            rtList.add(priorityOrderWhPolicy);
+        }
+        return rtList;
+    }
+
+
+
+    public static String getCycleWhCompPolicy() {
+        return config.getString(String.format(ORDER_OPERATE, "cycle_wh_comp_policy"));
+    }
 
 
 

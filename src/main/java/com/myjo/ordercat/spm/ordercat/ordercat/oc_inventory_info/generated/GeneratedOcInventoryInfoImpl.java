@@ -138,8 +138,8 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
     }
     
     @Override
-    public LocalDateTime getWarehouseUpdateTime() {
-        return warehouseUpdateTime;
+    public Optional<LocalDateTime> getWarehouseUpdateTime() {
+        return Optional.ofNullable(warehouseUpdateTime);
     }
     
     @Override
@@ -406,7 +406,7 @@ public abstract class GeneratedOcInventoryInfoImpl implements OcInventoryInfo {
         sj.add("quarter = "             + Objects.toString(OptionalUtil.unwrap(getQuarter())));
         sj.add("discount = "            + Objects.toString(OptionalUtil.unwrap(getDiscount())));
         sj.add("pickRate = "            + Objects.toString(OptionalUtil.unwrap(getPickRate())));
-        sj.add("warehouseUpdateTime = " + Objects.toString(getWarehouseUpdateTime()));
+        sj.add("warehouseUpdateTime = " + Objects.toString(OptionalUtil.unwrap(getWarehouseUpdateTime())));
         sj.add("pickDate = "            + Objects.toString(OptionalUtil.unwrap(getPickDate())));
         sj.add("thedtime = "            + Objects.toString(OptionalUtil.unwrap(getThedtime())));
         sj.add("proxyPrice = "          + Objects.toString(OptionalUtil.unwrap(getProxyPrice())));

@@ -1,7 +1,9 @@
 package com.myjo.ordercat.utils;
 
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfo;
+import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,4 +23,13 @@ public class OcLcUtils {
         }
         return codeList;
     }
+
+    public static BigDecimal getPickRate(String str){
+        String dd1 = StringUtils.substringBeforeLast(str, "%");
+        BigDecimal x = new BigDecimal(dd1.replaceAll("配货率：", ""));
+        return x;
+    }
+
+
+
 }

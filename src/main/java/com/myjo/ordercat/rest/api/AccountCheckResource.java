@@ -50,6 +50,9 @@ public class AccountCheckResource {
             @ApiParam(name = "dz_status", value = "对账状态") @QueryParam("dz_status") String dz_status,
             @ApiParam(name = "begin_time", value = "开始时间") @QueryParam("begin_time") String begin_time,
             @ApiParam(name = "end_time", value = "结束时间") @QueryParam("end_time") String end_time,
+            @ApiParam(name = "order_begin_time", value = "开始时间") @QueryParam("order_begin_time") String order_begin_time,
+            @ApiParam(name = "order_end_time", value = "结束时间") @QueryParam("order_end_time") String order_end_time,
+
             @ApiParam(required = true, name = "page_size", value = "分页大小") @QueryParam("page_size") int page_size,
             @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
@@ -76,6 +79,17 @@ public class AccountCheckResource {
         if(end_time!=null){
             predicateList.add(OcTmsportCheckResultImpl.ADD_TIME.lessOrEqual(OcDateTimeUtils.string2LocalDateTime(end_time)));
         }
+
+        if(order_begin_time!=null){
+            predicateList.add(OcTmsportCheckResultImpl.TB_CREATED.greaterOrEqual(OcDateTimeUtils.string2LocalDateTime(order_begin_time)));
+        }
+
+        if(order_end_time!=null){
+            predicateList.add(OcTmsportCheckResultImpl.TB_CREATED.lessOrEqual(OcDateTimeUtils.string2LocalDateTime(order_end_time)));
+        }
+
+
+
         if (tm_outer_order_id != null) {
             predicateList.add(OcTmsportCheckResultImpl.TM_OUTER_ORDER_ID.equal(tm_outer_order_id));
         }

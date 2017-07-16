@@ -212,7 +212,7 @@ public interface GeneratedOcInventoryInfo {
      */
     ComparableField<OcInventoryInfo, Timestamp, LocalDateTime> WAREHOUSE_UPDATE_TIME = ComparableField.create(
         Identifier.WAREHOUSE_UPDATE_TIME,
-        OcInventoryInfo::getWarehouseUpdateTime,
+        o -> OptionalUtil.unwrap(o.getWarehouseUpdateTime()),
         OcInventoryInfo::setWarehouseUpdateTime,
         new TimestampToLocalDateTimeMapper(), 
         false
@@ -505,7 +505,7 @@ public interface GeneratedOcInventoryInfo {
      * 
      * @return the warehouseUpdateTime of this OcInventoryInfo
      */
-    LocalDateTime getWarehouseUpdateTime();
+    Optional<LocalDateTime> getWarehouseUpdateTime();
     
     /**
      * Returns the pickDate of this OcInventoryInfo. The pickDate field

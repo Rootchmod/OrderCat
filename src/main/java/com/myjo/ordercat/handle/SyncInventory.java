@@ -802,7 +802,7 @@ public class SyncInventory {
             if (OrderCatConfig.isProduction()) {
                 skuNumIidMap.entrySet().parallelStream()
                         //.filter(longListEntry -> longListEntry.getKey() == 540062300867l || longListEntry.getKey() == 543451776272l)
-                        .filter(longListEntry -> longListEntry.getKey() == 548748302544l)
+                        //.filter(longListEntry -> longListEntry.getKey() == 548748302544l)
                         .forEach(longListEntry -> {
                             Logger.info(String.format("开始同步-商品ID: [%d] 的SKU价格与库存. ", longListEntry.getKey()));
                             try {
@@ -821,41 +821,41 @@ public class SyncInventory {
             throw new OCException("csvListSukMap接口SKU映射为空!请检查!");
         }
         //同步的宝贝入库
-        Logger.info(String.format("记录同步过的宝贝[ 增量 ]"));
-
-        ocSyncInventoryItemInfoManager.stream()
-                .map(OcSyncInventoryItemInfo.STATUS.setTo(SyncInventoryItemStatus.NOT_SYNCHRONIZED.getValue()))
-                .forEach(ocSyncInventoryItemInfoManager.updater());
-
-        Map<String, OcSyncInventoryItemInfo> osiiMap = ocSyncInventoryItemInfoManager
-                .stream()
-                .collect(Collectors.toMap(o -> o.getNumIid().get(), Function.identity()));
-        Logger.info(String.format("同步过的宝贝数量为-size:[%d]", osiiMap.size()));
-
-
-        String itemId;
-        OcSyncInventoryItemInfo ocSyncInventoryItemInfo;
-        for (Map.Entry<Long, List<Sku>> entry : skuNumIidMap.entrySet()) {
-//            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-            itemId = String.valueOf(entry.getKey().longValue());
-            if (osiiMap.get(itemId) == null) {
-                ocSyncInventoryItemInfo = new OcSyncInventoryItemInfoImpl();
-                ocSyncInventoryItemInfo.setNumIid(itemId);
-                ocSyncInventoryItemInfo.setStatus(SyncInventoryItemStatus.ARE_SYNCHRONIZED.getValue());
-                ocSyncInventoryItemInfo.setAddTime(LocalDateTime.now());
-                ocSyncInventoryItemInfoManager.persist(ocSyncInventoryItemInfo);
-            } else {
-                ocSyncInventoryItemInfoManager.stream()
-                        .filter(OcSyncInventoryItemInfo.NUM_IID.equal(itemId))
-                        .map(OcSyncInventoryItemInfo.STATUS.setTo(SyncInventoryItemStatus.ARE_SYNCHRONIZED.getValue()))
-                        .forEach(ocSyncInventoryItemInfoManager.updater());
-            }
-        }
-
-        osiiMap = ocSyncInventoryItemInfoManager
-                .stream()
-                .collect(Collectors.toMap(o -> o.getNumIid().get(), Function.identity()));
-        Logger.info(String.format("再次同步后的宝贝数量为-size:[%d]", osiiMap.size()));
+//        Logger.info(String.format("记录同步过的宝贝[ 增量 ]"));
+//
+//        ocSyncInventoryItemInfoManager.stream()
+//                .map(OcSyncInventoryItemInfo.STATUS.setTo(SyncInventoryItemStatus.NOT_SYNCHRONIZED.getValue()))
+//                .forEach(ocSyncInventoryItemInfoManager.updater());
+//
+//        Map<String, OcSyncInventoryItemInfo> osiiMap = ocSyncInventoryItemInfoManager
+//                .stream()
+//                .collect(Collectors.toMap(o -> o.getNumIid().get(), Function.identity()));
+//        Logger.info(String.format("同步过的宝贝数量为-size:[%d]", osiiMap.size()));
+//
+//
+//        String itemId;
+//        OcSyncInventoryItemInfo ocSyncInventoryItemInfo;
+//        for (Map.Entry<Long, List<Sku>> entry : skuNumIidMap.entrySet()) {
+////            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+//            itemId = String.valueOf(entry.getKey().longValue());
+//            if (osiiMap.get(itemId) == null) {
+//                ocSyncInventoryItemInfo = new OcSyncInventoryItemInfoImpl();
+//                ocSyncInventoryItemInfo.setNumIid(itemId);
+//                ocSyncInventoryItemInfo.setStatus(SyncInventoryItemStatus.ARE_SYNCHRONIZED.getValue());
+//                ocSyncInventoryItemInfo.setAddTime(LocalDateTime.now());
+//                ocSyncInventoryItemInfoManager.persist(ocSyncInventoryItemInfo);
+//            } else {
+//                ocSyncInventoryItemInfoManager.stream()
+//                        .filter(OcSyncInventoryItemInfo.NUM_IID.equal(itemId))
+//                        .map(OcSyncInventoryItemInfo.STATUS.setTo(SyncInventoryItemStatus.ARE_SYNCHRONIZED.getValue()))
+//                        .forEach(ocSyncInventoryItemInfoManager.updater());
+//            }
+//        }
+//
+//        osiiMap = ocSyncInventoryItemInfoManager
+//                .stream()
+//                .collect(Collectors.toMap(o -> o.getNumIid().get(), Function.identity()));
+//        Logger.info(String.format("再次同步后的宝贝数量为-size:[%d]", osiiMap.size()));
 
         //删除
         delDataGatheringFile(OrderCatConfig.getInventoryGroupIwhfile());

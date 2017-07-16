@@ -1,22 +1,9 @@
 {
-  "data": [
-    {
-      "cpCode": "YTO",
-      "cpName": "圆通速递"
-    },
-    {
-      "cpCode": "SF",
-      "cpName": "顺丰速运"
-    },
-    {
-      "cpCode": "BESTQJT",
-      "cpName": "百世快运"
-    },
-    {
-      "cpCode": "",
-      "cpName": "请选择物流公司"
-    }
-  ],
-  "success": true,
-  "message": null
+  "content": "{\"buyer_nick\":\"刘东的购物机构\",\"payment\":\"1009.00\",\"status\":\"WAIT_SELLER_SEND_GOODS\",\"iid\":545868122753,\"oid\":37013788773767381,\"tid\":37013788773767381,\"type\":\"guarantee_trade\",\"post_fee\":\"10.00\",\"seller_nick\":\"麦巨鞋类专营店\"}",
+  "topic": "taobao_trade_TradeBuyerPay",
+  "outgoing_id": 0,
+  "publish_time": 1500097893831,
+  "user_id": 738840638,
+  "user_nick": "麦巨鞋类专营店",
+  "publisher_appkey": "12497914"
 }

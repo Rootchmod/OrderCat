@@ -38,12 +38,25 @@ implements GeneratedOcTmOrderRecordsManager {
         return Stream.of(
             OcTmOrderRecords.ID,
             OcTmOrderRecords.TID,
+            OcTmOrderRecords.TM_ORDER_ID,
+            OcTmOrderRecords.GOODS_NO,
+            OcTmOrderRecords.SIZE,
+            OcTmOrderRecords.FREIGHT_PRICE_STR,
+            OcTmOrderRecords.WH_ID,
+            OcTmOrderRecords.WH_NAME,
+            OcTmOrderRecords.WH_PICK_RATE,
+            OcTmOrderRecords.WH_PROXY_PRICE,
+            OcTmOrderRecords.WH_UPDATE_TIME,
+            OcTmOrderRecords.WH_INVENTORY_COUNT,
             OcTmOrderRecords.TYPE,
+            OcTmOrderRecords.TB_PAY_AMOUNT,
             OcTmOrderRecords.STATUS,
             OcTmOrderRecords.ORDER_INFO,
             OcTmOrderRecords.FAIL_CAUSE,
+            OcTmOrderRecords.BREAK_EVEN_PRICE,
             OcTmOrderRecords.WH_SNAPSHOT_DATA,
             OcTmOrderRecords.MACHINE_CID,
+            OcTmOrderRecords.ELAPSED,
             OcTmOrderRecords.ADD_TIME
         );
     }

@@ -1,5 +1,6 @@
 package com.myjo.ordercat;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyun.openservices.ons.api.*;
 import com.aol.micro.server.MicroserverApp;
 import com.aol.micro.server.config.Microserver;
@@ -26,11 +27,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderReco
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import com.myjo.ordercat.utils.OcEncryptionUtils;
-import com.speedment.runtime.core.ApplicationBuilder;
-import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import com.taobao.api.request.JushitaJmsUserAddRequest;
-import com.taobao.api.response.JushitaJmsUserAddResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -41,6 +37,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -84,8 +81,8 @@ public class Main {
                 .withUsername(OrderCatConfig.getDBUsername())
                 .withPassword(OcEncryptionUtils.base64Decoder(OrderCatConfig.getDBPassword(),5))
                 //.withLogging(ApplicationBuilder.LogType.CONNECTION)
-                .withParam("connectionpool.maxAge", "8000")
-                .withParam("connectionpool.maxRetainSize", "20")
+                //.withParam("connectionpool.maxAge", "8000")
+                //.withParam("connectionpool.maxRetainSize", "20")
                 .build();
 
 
@@ -217,21 +214,69 @@ public class Main {
 //            orderOperate.manualOrder(28219168266790387l,"182",null,null);
         }
         else if (action.equals("order_robot")) {
-            TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
-            JushitaJmsUserAddRequest req = new JushitaJmsUserAddRequest();
-            req.setTopicNames("taobao_trade_TradeBuyerPay");
-            JushitaJmsUserAddResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-            Logger.info(rsp.getBody());
+//            TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+//            JushitaJmsUserAddRequest req = new JushitaJmsUserAddRequest();
+//            req.setTopicNames("taobao_trade_TradeBuyerPay");
+//            JushitaJmsUserAddResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+//            Logger.info(rsp.getBody());
+//            Properties properties = new Properties();
+//            properties.put(PropertyKeyConst.ConsumerId, consumerId);
+//            properties.put(PropertyKeyConst.AccessKey,  OrderCatConfig.getTaobaoApiAppKey());
+//            properties.put(PropertyKeyConst.SecretKey,  OrderCatConfig.getTaobaoApiAppSecret());
+//            Consumer consumer = ONSFactory.createConsumer(properties);
+//            consumer.subscribe("rmq_sys_jst_23279400", "*", (Message message, ConsumeContext context) -> {
+//                Logger.info("Receive: " + message);
+//
+//
+//                String msg_body=null;
+//                try {
+//                    msg_body = new String(message.getBody(),"UTF-8");
+//                } catch (UnsupportedEncodingException e1) {
+//                    e1.printStackTrace();
+//                }
+//                com.alibaba.fastjson.JSONObject object = JSON.parseObject(msg_body);
+//
+//                long tid = object.getLongValue("tid");
+//
+//
+//                Logger.info("tid: " + tid);
+//
+//                return Action.CommitMessage;
+//            });
+//            consumer.start();
+
+
+
             Properties properties = new Properties();
-            properties.put(PropertyKeyConst.ConsumerId, consumerId);
-            properties.put(PropertyKeyConst.AccessKey,  OrderCatConfig.getTaobaoApiAppKey());
-            properties.put(PropertyKeyConst.SecretKey,  OrderCatConfig.getTaobaoApiAppSecret());
+            properties.put(PropertyKeyConst.ConsumerId, "CID_MJ_MT1");
+            properties.put(PropertyKeyConst.AccessKey, OrderCatConfig.getTaobaoApiAppKey());
+            properties.put(PropertyKeyConst.SecretKey, OrderCatConfig.getTaobaoApiAppSecret());
             Consumer consumer = ONSFactory.createConsumer(properties);
-            consumer.subscribe("rmq_sys_jst_23279400", "*", (message, context) -> {
-                Logger.info("Receive: " + message);
-                return Action.CommitMessage;
+            consumer.subscribe("rmq_sys_jst_23279400", "*", new MessageListener() {
+                public Action consume(Message message, ConsumeContext context) {
+                    System.out.println("Receive: " + message);
+
+                    String msg_body=null;
+                    try {
+                        msg_body = new String(message.getBody(), "UTF-8");
+                    } catch (UnsupportedEncodingException e1) {
+                        e1.printStackTrace();
+                    }
+                    com.alibaba.fastjson.JSONObject object = JSON.parseObject(msg_body);
+
+                    com.alibaba.fastjson.JSONObject contentObject = object.getJSONObject("content");
+
+                    long tid = contentObject.getLongValue("tid");
+
+                    orderOperate.autoOrder(tid,"CID_MJ_MT1");
+
+                    Logger.info(String.format("Order TID:%d",tid));
+                    return Action.CommitMessage;
+                }
             });
             consumer.start();
+            System.out.println("Consumer Started");
+
             Logger.info(String.format("Consumer-[%s] Started",consumerId));
         }
         else if (action.equals("start")) {
@@ -298,16 +343,16 @@ public class Main {
             sched.scheduleJob(job2, trigger2);
 
             //FenxiaoAccountCheckJob
-            JobDetail job3 = newJob(FenxiaoAccountCheckJob.class)
-                    .usingJobData(map1)
-                    .withIdentity(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue(), "myjo")
-                    .build();
-
-            CronTrigger trigger3 = newTrigger()
-                    .withIdentity(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue() + "Trigger", "myjo")
-                    .withSchedule(cronSchedule(OrderCatConfig.getFenxiaoAccountCheckJobTriggerCron()))
-                    .build();
-            sched.scheduleJob(job3, trigger3);
+//            JobDetail job3 = newJob(FenxiaoAccountCheckJob.class)
+//                    .usingJobData(map1)
+//                    .withIdentity(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue(), "myjo")
+//                    .build();
+//
+//            CronTrigger trigger3 = newTrigger()
+//                    .withIdentity(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue() + "Trigger", "myjo")
+//                    .withSchedule(cronSchedule(OrderCatConfig.getFenxiaoAccountCheckJobTriggerCron()))
+//                    .build();
+//            sched.scheduleJob(job3, trigger3);
 
             //AutoSendGoodsJob
             JobDetail job4 = newJob(AutoSendGoodsJob.class)

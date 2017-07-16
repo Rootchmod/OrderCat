@@ -10,9 +10,12 @@ import com.speedment.runtime.field.LongField;
 import com.speedment.runtime.field.StringField;
 import com.speedment.runtime.typemapper.TypeMapper;
 import com.speedment.runtime.typemapper.time.TimestampToLocalDateTimeMapper;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 
 /**
  * The generated base for the {@link
@@ -52,12 +55,133 @@ public interface GeneratedOcTmOrderRecords {
     );
     /**
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getTmOrderId()} method.
+     */
+    StringField<OcTmOrderRecords, String> TM_ORDER_ID = StringField.create(
+        Identifier.TM_ORDER_ID,
+        o -> OptionalUtil.unwrap(o.getTmOrderId()),
+        OcTmOrderRecords::setTmOrderId,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getGoodsNo()} method.
+     */
+    StringField<OcTmOrderRecords, String> GOODS_NO = StringField.create(
+        Identifier.GOODS_NO,
+        o -> OptionalUtil.unwrap(o.getGoodsNo()),
+        OcTmOrderRecords::setGoodsNo,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getSize()} method.
+     */
+    StringField<OcTmOrderRecords, String> SIZE = StringField.create(
+        Identifier.SIZE,
+        o -> OptionalUtil.unwrap(o.getSize()),
+        OcTmOrderRecords::setSize,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getFreightPriceStr()} method.
+     */
+    StringField<OcTmOrderRecords, String> FREIGHT_PRICE_STR = StringField.create(
+        Identifier.FREIGHT_PRICE_STR,
+        o -> OptionalUtil.unwrap(o.getFreightPriceStr()),
+        OcTmOrderRecords::setFreightPriceStr,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getWhId()} method.
+     */
+    ComparableField<OcTmOrderRecords, Integer, Integer> WH_ID = ComparableField.create(
+        Identifier.WH_ID,
+        o -> OptionalUtil.unwrap(o.getWhId()),
+        OcTmOrderRecords::setWhId,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getWhName()} method.
+     */
+    StringField<OcTmOrderRecords, String> WH_NAME = StringField.create(
+        Identifier.WH_NAME,
+        o -> OptionalUtil.unwrap(o.getWhName()),
+        OcTmOrderRecords::setWhName,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getWhPickRate()} method.
+     */
+    ComparableField<OcTmOrderRecords, Integer, Integer> WH_PICK_RATE = ComparableField.create(
+        Identifier.WH_PICK_RATE,
+        o -> OptionalUtil.unwrap(o.getWhPickRate()),
+        OcTmOrderRecords::setWhPickRate,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getWhProxyPrice()} method.
+     */
+    ComparableField<OcTmOrderRecords, BigDecimal, BigDecimal> WH_PROXY_PRICE = ComparableField.create(
+        Identifier.WH_PROXY_PRICE,
+        o -> OptionalUtil.unwrap(o.getWhProxyPrice()),
+        OcTmOrderRecords::setWhProxyPrice,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getWhUpdateTime()} method.
+     */
+    ComparableField<OcTmOrderRecords, Timestamp, LocalDateTime> WH_UPDATE_TIME = ComparableField.create(
+        Identifier.WH_UPDATE_TIME,
+        o -> OptionalUtil.unwrap(o.getWhUpdateTime()),
+        OcTmOrderRecords::setWhUpdateTime,
+        new TimestampToLocalDateTimeMapper(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getWhInventoryCount()} method.
+     */
+    ComparableField<OcTmOrderRecords, Integer, Integer> WH_INVENTORY_COUNT = ComparableField.create(
+        Identifier.WH_INVENTORY_COUNT,
+        o -> OptionalUtil.unwrap(o.getWhInventoryCount()),
+        OcTmOrderRecords::setWhInventoryCount,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getType()} method.
      */
     StringField<OcTmOrderRecords, String> TYPE = StringField.create(
         Identifier.TYPE,
         o -> OptionalUtil.unwrap(o.getType()),
         OcTmOrderRecords::setType,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getTbPayAmount()} method.
+     */
+    ComparableField<OcTmOrderRecords, BigDecimal, BigDecimal> TB_PAY_AMOUNT = ComparableField.create(
+        Identifier.TB_PAY_AMOUNT,
+        o -> OptionalUtil.unwrap(o.getTbPayAmount()),
+        OcTmOrderRecords::setTbPayAmount,
         TypeMapper.identity(), 
         false
     );
@@ -96,6 +220,17 @@ public interface GeneratedOcTmOrderRecords {
     );
     /**
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getBreakEvenPrice()} method.
+     */
+    ComparableField<OcTmOrderRecords, BigDecimal, BigDecimal> BREAK_EVEN_PRICE = ComparableField.create(
+        Identifier.BREAK_EVEN_PRICE,
+        o -> OptionalUtil.unwrap(o.getBreakEvenPrice()),
+        OcTmOrderRecords::setBreakEvenPrice,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getWhSnapshotData()} method.
      */
     StringField<OcTmOrderRecords, String> WH_SNAPSHOT_DATA = StringField.create(
@@ -113,6 +248,17 @@ public interface GeneratedOcTmOrderRecords {
         Identifier.MACHINE_CID,
         o -> OptionalUtil.unwrap(o.getMachineCid()),
         OcTmOrderRecords::setMachineCid,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getElapsed()} method.
+     */
+    ComparableField<OcTmOrderRecords, Long, Long> ELAPSED = ComparableField.create(
+        Identifier.ELAPSED,
+        o -> OptionalUtil.unwrap(o.getElapsed()),
+        OcTmOrderRecords::setElapsed,
         TypeMapper.identity(), 
         false
     );
@@ -145,12 +291,108 @@ public interface GeneratedOcTmOrderRecords {
     Optional<String> getTid();
     
     /**
+     * Returns the tmOrderId of this OcTmOrderRecords. The tmOrderId field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.tm_order_id.
+     * 
+     * @return the tmOrderId of this OcTmOrderRecords
+     */
+    Optional<String> getTmOrderId();
+    
+    /**
+     * Returns the goodsNo of this OcTmOrderRecords. The goodsNo field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.goodsNo.
+     * 
+     * @return the goodsNo of this OcTmOrderRecords
+     */
+    Optional<String> getGoodsNo();
+    
+    /**
+     * Returns the size of this OcTmOrderRecords. The size field corresponds to
+     * the database column ordercat.ordercat.oc_tm_order_records.size.
+     * 
+     * @return the size of this OcTmOrderRecords
+     */
+    Optional<String> getSize();
+    
+    /**
+     * Returns the freightPriceStr of this OcTmOrderRecords. The freightPriceStr
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.freight_price_str.
+     * 
+     * @return the freightPriceStr of this OcTmOrderRecords
+     */
+    Optional<String> getFreightPriceStr();
+    
+    /**
+     * Returns the whId of this OcTmOrderRecords. The whId field corresponds to
+     * the database column ordercat.ordercat.oc_tm_order_records.wh_id.
+     * 
+     * @return the whId of this OcTmOrderRecords
+     */
+    OptionalInt getWhId();
+    
+    /**
+     * Returns the whName of this OcTmOrderRecords. The whName field corresponds
+     * to the database column ordercat.ordercat.oc_tm_order_records.wh_name.
+     * 
+     * @return the whName of this OcTmOrderRecords
+     */
+    Optional<String> getWhName();
+    
+    /**
+     * Returns the whPickRate of this OcTmOrderRecords. The whPickRate field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.wh_pick_rate.
+     * 
+     * @return the whPickRate of this OcTmOrderRecords
+     */
+    OptionalInt getWhPickRate();
+    
+    /**
+     * Returns the whProxyPrice of this OcTmOrderRecords. The whProxyPrice field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.wh_proxy_price.
+     * 
+     * @return the whProxyPrice of this OcTmOrderRecords
+     */
+    Optional<BigDecimal> getWhProxyPrice();
+    
+    /**
+     * Returns the whUpdateTime of this OcTmOrderRecords. The whUpdateTime field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.wh_update_time.
+     * 
+     * @return the whUpdateTime of this OcTmOrderRecords
+     */
+    Optional<LocalDateTime> getWhUpdateTime();
+    
+    /**
+     * Returns the whInventoryCount of this OcTmOrderRecords. The
+     * whInventoryCount field corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.wh_inventory_count.
+     * 
+     * @return the whInventoryCount of this OcTmOrderRecords
+     */
+    OptionalInt getWhInventoryCount();
+    
+    /**
      * Returns the type of this OcTmOrderRecords. The type field corresponds to
      * the database column ordercat.ordercat.oc_tm_order_records.type.
      * 
      * @return the type of this OcTmOrderRecords
      */
     Optional<String> getType();
+    
+    /**
+     * Returns the tbPayAmount of this OcTmOrderRecords. The tbPayAmount field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.tb_payAmount.
+     * 
+     * @return the tbPayAmount of this OcTmOrderRecords
+     */
+    Optional<BigDecimal> getTbPayAmount();
     
     /**
      * Returns the status of this OcTmOrderRecords. The status field corresponds
@@ -179,6 +421,15 @@ public interface GeneratedOcTmOrderRecords {
     Optional<String> getFailCause();
     
     /**
+     * Returns the breakEvenPrice of this OcTmOrderRecords. The breakEvenPrice
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.break_even_price.
+     * 
+     * @return the breakEvenPrice of this OcTmOrderRecords
+     */
+    Optional<BigDecimal> getBreakEvenPrice();
+    
+    /**
      * Returns the whSnapshotData of this OcTmOrderRecords. The whSnapshotData
      * field corresponds to the database column
      * ordercat.ordercat.oc_tm_order_records.wh_snapshot_data.
@@ -195,6 +446,15 @@ public interface GeneratedOcTmOrderRecords {
      * @return the machineCid of this OcTmOrderRecords
      */
     Optional<String> getMachineCid();
+    
+    /**
+     * Returns the elapsed of this OcTmOrderRecords. The elapsed field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.elapsed.
+     * 
+     * @return the elapsed of this OcTmOrderRecords
+     */
+    OptionalLong getElapsed();
     
     /**
      * Returns the addTime of this OcTmOrderRecords. The addTime field
@@ -224,6 +484,102 @@ public interface GeneratedOcTmOrderRecords {
     OcTmOrderRecords setTid(String tid);
     
     /**
+     * Sets the tmOrderId of this OcTmOrderRecords. The tmOrderId field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.tm_order_id.
+     * 
+     * @param tmOrderId to set of this OcTmOrderRecords
+     * @return          this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setTmOrderId(String tmOrderId);
+    
+    /**
+     * Sets the goodsNo of this OcTmOrderRecords. The goodsNo field corresponds
+     * to the database column ordercat.ordercat.oc_tm_order_records.goodsNo.
+     * 
+     * @param goodsNo to set of this OcTmOrderRecords
+     * @return        this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setGoodsNo(String goodsNo);
+    
+    /**
+     * Sets the size of this OcTmOrderRecords. The size field corresponds to the
+     * database column ordercat.ordercat.oc_tm_order_records.size.
+     * 
+     * @param size to set of this OcTmOrderRecords
+     * @return     this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setSize(String size);
+    
+    /**
+     * Sets the freightPriceStr of this OcTmOrderRecords. The freightPriceStr
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.freight_price_str.
+     * 
+     * @param freightPriceStr to set of this OcTmOrderRecords
+     * @return                this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setFreightPriceStr(String freightPriceStr);
+    
+    /**
+     * Sets the whId of this OcTmOrderRecords. The whId field corresponds to the
+     * database column ordercat.ordercat.oc_tm_order_records.wh_id.
+     * 
+     * @param whId to set of this OcTmOrderRecords
+     * @return     this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setWhId(Integer whId);
+    
+    /**
+     * Sets the whName of this OcTmOrderRecords. The whName field corresponds to
+     * the database column ordercat.ordercat.oc_tm_order_records.wh_name.
+     * 
+     * @param whName to set of this OcTmOrderRecords
+     * @return       this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setWhName(String whName);
+    
+    /**
+     * Sets the whPickRate of this OcTmOrderRecords. The whPickRate field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.wh_pick_rate.
+     * 
+     * @param whPickRate to set of this OcTmOrderRecords
+     * @return           this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setWhPickRate(Integer whPickRate);
+    
+    /**
+     * Sets the whProxyPrice of this OcTmOrderRecords. The whProxyPrice field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.wh_proxy_price.
+     * 
+     * @param whProxyPrice to set of this OcTmOrderRecords
+     * @return             this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setWhProxyPrice(BigDecimal whProxyPrice);
+    
+    /**
+     * Sets the whUpdateTime of this OcTmOrderRecords. The whUpdateTime field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.wh_update_time.
+     * 
+     * @param whUpdateTime to set of this OcTmOrderRecords
+     * @return             this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setWhUpdateTime(LocalDateTime whUpdateTime);
+    
+    /**
+     * Sets the whInventoryCount of this OcTmOrderRecords. The whInventoryCount
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.wh_inventory_count.
+     * 
+     * @param whInventoryCount to set of this OcTmOrderRecords
+     * @return                 this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setWhInventoryCount(Integer whInventoryCount);
+    
+    /**
      * Sets the type of this OcTmOrderRecords. The type field corresponds to the
      * database column ordercat.ordercat.oc_tm_order_records.type.
      * 
@@ -231,6 +587,16 @@ public interface GeneratedOcTmOrderRecords {
      * @return     this OcTmOrderRecords instance
      */
     OcTmOrderRecords setType(String type);
+    
+    /**
+     * Sets the tbPayAmount of this OcTmOrderRecords. The tbPayAmount field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.tb_payAmount.
+     * 
+     * @param tbPayAmount to set of this OcTmOrderRecords
+     * @return            this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setTbPayAmount(BigDecimal tbPayAmount);
     
     /**
      * Sets the status of this OcTmOrderRecords. The status field corresponds to
@@ -262,6 +628,16 @@ public interface GeneratedOcTmOrderRecords {
     OcTmOrderRecords setFailCause(String failCause);
     
     /**
+     * Sets the breakEvenPrice of this OcTmOrderRecords. The breakEvenPrice
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.break_even_price.
+     * 
+     * @param breakEvenPrice to set of this OcTmOrderRecords
+     * @return               this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setBreakEvenPrice(BigDecimal breakEvenPrice);
+    
+    /**
      * Sets the whSnapshotData of this OcTmOrderRecords. The whSnapshotData
      * field corresponds to the database column
      * ordercat.ordercat.oc_tm_order_records.wh_snapshot_data.
@@ -282,6 +658,15 @@ public interface GeneratedOcTmOrderRecords {
     OcTmOrderRecords setMachineCid(String machineCid);
     
     /**
+     * Sets the elapsed of this OcTmOrderRecords. The elapsed field corresponds
+     * to the database column ordercat.ordercat.oc_tm_order_records.elapsed.
+     * 
+     * @param elapsed to set of this OcTmOrderRecords
+     * @return        this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setElapsed(Long elapsed);
+    
+    /**
      * Sets the addTime of this OcTmOrderRecords. The addTime field corresponds
      * to the database column ordercat.ordercat.oc_tm_order_records.add_time.
      * 
@@ -292,15 +677,28 @@ public interface GeneratedOcTmOrderRecords {
     
     enum Identifier implements ColumnIdentifier<OcTmOrderRecords> {
         
-        ID               ("id"),
-        TID              ("tid"),
-        TYPE             ("type"),
-        STATUS           ("status"),
-        ORDER_INFO       ("order_info"),
-        FAIL_CAUSE       ("fail_cause"),
-        WH_SNAPSHOT_DATA ("wh_snapshot_data"),
-        MACHINE_CID      ("machine_cid"),
-        ADD_TIME         ("add_time");
+        ID                 ("id"),
+        TID                ("tid"),
+        TM_ORDER_ID        ("tm_order_id"),
+        GOODS_NO           ("goodsNo"),
+        SIZE               ("size"),
+        FREIGHT_PRICE_STR  ("freight_price_str"),
+        WH_ID              ("wh_id"),
+        WH_NAME            ("wh_name"),
+        WH_PICK_RATE       ("wh_pick_rate"),
+        WH_PROXY_PRICE     ("wh_proxy_price"),
+        WH_UPDATE_TIME     ("wh_update_time"),
+        WH_INVENTORY_COUNT ("wh_inventory_count"),
+        TYPE               ("type"),
+        TB_PAY_AMOUNT      ("tb_payAmount"),
+        STATUS             ("status"),
+        ORDER_INFO         ("order_info"),
+        FAIL_CAUSE         ("fail_cause"),
+        BREAK_EVEN_PRICE   ("break_even_price"),
+        WH_SNAPSHOT_DATA   ("wh_snapshot_data"),
+        MACHINE_CID        ("machine_cid"),
+        ELAPSED            ("elapsed"),
+        ADD_TIME           ("add_time");
         
         private final String columnName;
         private final TableIdentifier<OcTmOrderRecords> tableIdentifier;

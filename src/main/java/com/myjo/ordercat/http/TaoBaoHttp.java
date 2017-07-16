@@ -692,7 +692,7 @@ public class TaoBaoHttp {
         Trade trade = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
-        req.setFields("tid,type,status,payment,orders,receiver_name,receiver_state,receiver_address,receiver_zip,receiver_mobile,receiver_phone,received_payment,receiver_city,receiver_district");
+        req.setFields("tid,type,status,payment,orders,receiver_name,receiver_state,receiver_address,receiver_zip,receiver_mobile,receiver_phone,received_payment,receiver_city,receiver_district,buyer_message");
         req.setTid(tid);
         try {
             TradeFullinfoGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
@@ -704,6 +704,26 @@ public class TaoBaoHttp {
         }
         return Optional.ofNullable(trade);
     }
+
+    public void addTradeMemo(long tid,String memo,long flag){
+
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        TradeMemoAddRequest req = new TradeMemoAddRequest();
+        req.setTid(tid);
+        req.setMemo(memo);
+        req.setFlag(flag);
+
+        try {
+            TradeMemoAddResponse rsp = client.execute(req,  OrderCatConfig.getTaobaoApiSessionKey());
+            if (rsp.isSuccess()) {
+                Logger.info(rsp.getBody());
+            }
+        } catch (Exception e) {
+            Logger.error(e);
+        }
+    }
+
+
 
 
 }

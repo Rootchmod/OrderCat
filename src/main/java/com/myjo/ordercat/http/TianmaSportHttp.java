@@ -242,7 +242,12 @@ public class TianmaSportHttp {
             Logger.info("inventoryDownGroup return path:" + path);
             dataDownLoad(path, fileName);
         }else {
-            Logger.error(rt.getString("msg"));
+            String msg = rt.getString("msg");
+            if(msg.indexOf("没有可导出的信息")>-1){
+                Logger.error("msg:"+rt.getString("msg"));
+            }else {
+                throw new OCException("msg:"+msg);
+            }
         }
     }
 
@@ -630,7 +635,7 @@ public class TianmaSportHttp {
                 weight));
 
         List<TmPostage> list = new ArrayList<>();
-        HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/order/getPostage.do"))
+        HttpResponse<JsonNode> response = Unirest.post(String.format(OrderCatConfig.getPostageHttpUrl()))
                 .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
@@ -687,7 +692,7 @@ public class TianmaSportHttp {
             Logger.info(String.format("%s=%s",o.getKey(),o.getValue()));
         });
         String rt;
-        HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/order/booking.do"))
+        HttpResponse<JsonNode> response = Unirest.post(String.format(OrderCatConfig.getOrderBookingHttpUrl()))
                 .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
@@ -745,7 +750,7 @@ public class TianmaSportHttp {
                 orderId));
 
         String rt;
-        HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/tradeInfo/updataBalance.do"))
+        HttpResponse<JsonNode> response = Unirest.post(String.format(OrderCatConfig.getUpdateBalanceHttpUrl()))
                 .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")
@@ -840,7 +845,7 @@ public class TianmaSportHttp {
                 weight));
 
         String rt = null;
-        HttpResponse<JsonNode> response = Unirest.post(String.format("http://www.tianmasport.com/ms/order/defaultPostage.do"))
+        HttpResponse<JsonNode> response = Unirest.post(String.format(OrderCatConfig.getDefaultPostageHttpUrl()))
                 .header("Host", OrderCatConfig.getTianmaSportHost())
                 .header("Connection", "keep-alive")
                 .header("Upgrade-Insecure-Requests", "1")

@@ -3,9 +3,12 @@ package com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.generated;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
 import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.StringJoiner;
 
 /**
@@ -22,12 +25,25 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     
     private long id;
     private String tid;
+    private String tmOrderId;
+    private String goodsNo;
+    private String size;
+    private String freightPriceStr;
+    private Integer whId;
+    private String whName;
+    private Integer whPickRate;
+    private BigDecimal whProxyPrice;
+    private LocalDateTime whUpdateTime;
+    private Integer whInventoryCount;
     private String type;
+    private BigDecimal tbPayAmount;
     private String status;
     private String orderInfo;
     private String failCause;
+    private BigDecimal breakEvenPrice;
     private String whSnapshotData;
     private String machineCid;
+    private Long elapsed;
     private LocalDateTime addTime;
     
     protected GeneratedOcTmOrderRecordsImpl() {
@@ -45,8 +61,63 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     }
     
     @Override
+    public Optional<String> getTmOrderId() {
+        return Optional.ofNullable(tmOrderId);
+    }
+    
+    @Override
+    public Optional<String> getGoodsNo() {
+        return Optional.ofNullable(goodsNo);
+    }
+    
+    @Override
+    public Optional<String> getSize() {
+        return Optional.ofNullable(size);
+    }
+    
+    @Override
+    public Optional<String> getFreightPriceStr() {
+        return Optional.ofNullable(freightPriceStr);
+    }
+    
+    @Override
+    public OptionalInt getWhId() {
+        return OptionalUtil.ofNullable(whId);
+    }
+    
+    @Override
+    public Optional<String> getWhName() {
+        return Optional.ofNullable(whName);
+    }
+    
+    @Override
+    public OptionalInt getWhPickRate() {
+        return OptionalUtil.ofNullable(whPickRate);
+    }
+    
+    @Override
+    public Optional<BigDecimal> getWhProxyPrice() {
+        return Optional.ofNullable(whProxyPrice);
+    }
+    
+    @Override
+    public Optional<LocalDateTime> getWhUpdateTime() {
+        return Optional.ofNullable(whUpdateTime);
+    }
+    
+    @Override
+    public OptionalInt getWhInventoryCount() {
+        return OptionalUtil.ofNullable(whInventoryCount);
+    }
+    
+    @Override
     public Optional<String> getType() {
         return Optional.ofNullable(type);
+    }
+    
+    @Override
+    public Optional<BigDecimal> getTbPayAmount() {
+        return Optional.ofNullable(tbPayAmount);
     }
     
     @Override
@@ -65,6 +136,11 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     }
     
     @Override
+    public Optional<BigDecimal> getBreakEvenPrice() {
+        return Optional.ofNullable(breakEvenPrice);
+    }
+    
+    @Override
     public Optional<String> getWhSnapshotData() {
         return Optional.ofNullable(whSnapshotData);
     }
@@ -72,6 +148,11 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     @Override
     public Optional<String> getMachineCid() {
         return Optional.ofNullable(machineCid);
+    }
+    
+    @Override
+    public OptionalLong getElapsed() {
+        return OptionalUtil.ofNullable(elapsed);
     }
     
     @Override
@@ -92,8 +173,74 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     }
     
     @Override
+    public OcTmOrderRecords setTmOrderId(String tmOrderId) {
+        this.tmOrderId = tmOrderId;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setGoodsNo(String goodsNo) {
+        this.goodsNo = goodsNo;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setSize(String size) {
+        this.size = size;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setFreightPriceStr(String freightPriceStr) {
+        this.freightPriceStr = freightPriceStr;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setWhId(Integer whId) {
+        this.whId = whId;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setWhName(String whName) {
+        this.whName = whName;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setWhPickRate(Integer whPickRate) {
+        this.whPickRate = whPickRate;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setWhProxyPrice(BigDecimal whProxyPrice) {
+        this.whProxyPrice = whProxyPrice;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setWhUpdateTime(LocalDateTime whUpdateTime) {
+        this.whUpdateTime = whUpdateTime;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setWhInventoryCount(Integer whInventoryCount) {
+        this.whInventoryCount = whInventoryCount;
+        return this;
+    }
+    
+    @Override
     public OcTmOrderRecords setType(String type) {
         this.type = type;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setTbPayAmount(BigDecimal tbPayAmount) {
+        this.tbPayAmount = tbPayAmount;
         return this;
     }
     
@@ -116,6 +263,12 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     }
     
     @Override
+    public OcTmOrderRecords setBreakEvenPrice(BigDecimal breakEvenPrice) {
+        this.breakEvenPrice = breakEvenPrice;
+        return this;
+    }
+    
+    @Override
     public OcTmOrderRecords setWhSnapshotData(String whSnapshotData) {
         this.whSnapshotData = whSnapshotData;
         return this;
@@ -128,6 +281,12 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     }
     
     @Override
+    public OcTmOrderRecords setElapsed(Long elapsed) {
+        this.elapsed = elapsed;
+        return this;
+    }
+    
+    @Override
     public OcTmOrderRecords setAddTime(LocalDateTime addTime) {
         this.addTime = addTime;
         return this;
@@ -136,15 +295,28 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     @Override
     public String toString() {
         final StringJoiner sj = new StringJoiner(", ", "{ ", " }");
-        sj.add("id = "             + Objects.toString(getId()));
-        sj.add("tid = "            + Objects.toString(OptionalUtil.unwrap(getTid())));
-        sj.add("type = "           + Objects.toString(OptionalUtil.unwrap(getType())));
-        sj.add("status = "         + Objects.toString(OptionalUtil.unwrap(getStatus())));
-        sj.add("orderInfo = "      + Objects.toString(OptionalUtil.unwrap(getOrderInfo())));
-        sj.add("failCause = "      + Objects.toString(OptionalUtil.unwrap(getFailCause())));
-        sj.add("whSnapshotData = " + Objects.toString(OptionalUtil.unwrap(getWhSnapshotData())));
-        sj.add("machineCid = "     + Objects.toString(OptionalUtil.unwrap(getMachineCid())));
-        sj.add("addTime = "        + Objects.toString(getAddTime()));
+        sj.add("id = "               + Objects.toString(getId()));
+        sj.add("tid = "              + Objects.toString(OptionalUtil.unwrap(getTid())));
+        sj.add("tmOrderId = "        + Objects.toString(OptionalUtil.unwrap(getTmOrderId())));
+        sj.add("goodsNo = "          + Objects.toString(OptionalUtil.unwrap(getGoodsNo())));
+        sj.add("size = "             + Objects.toString(OptionalUtil.unwrap(getSize())));
+        sj.add("freightPriceStr = "  + Objects.toString(OptionalUtil.unwrap(getFreightPriceStr())));
+        sj.add("whId = "             + Objects.toString(OptionalUtil.unwrap(getWhId())));
+        sj.add("whName = "           + Objects.toString(OptionalUtil.unwrap(getWhName())));
+        sj.add("whPickRate = "       + Objects.toString(OptionalUtil.unwrap(getWhPickRate())));
+        sj.add("whProxyPrice = "     + Objects.toString(OptionalUtil.unwrap(getWhProxyPrice())));
+        sj.add("whUpdateTime = "     + Objects.toString(OptionalUtil.unwrap(getWhUpdateTime())));
+        sj.add("whInventoryCount = " + Objects.toString(OptionalUtil.unwrap(getWhInventoryCount())));
+        sj.add("type = "             + Objects.toString(OptionalUtil.unwrap(getType())));
+        sj.add("tbPayAmount = "      + Objects.toString(OptionalUtil.unwrap(getTbPayAmount())));
+        sj.add("status = "           + Objects.toString(OptionalUtil.unwrap(getStatus())));
+        sj.add("orderInfo = "        + Objects.toString(OptionalUtil.unwrap(getOrderInfo())));
+        sj.add("failCause = "        + Objects.toString(OptionalUtil.unwrap(getFailCause())));
+        sj.add("breakEvenPrice = "   + Objects.toString(OptionalUtil.unwrap(getBreakEvenPrice())));
+        sj.add("whSnapshotData = "   + Objects.toString(OptionalUtil.unwrap(getWhSnapshotData())));
+        sj.add("machineCid = "       + Objects.toString(OptionalUtil.unwrap(getMachineCid())));
+        sj.add("elapsed = "          + Objects.toString(OptionalUtil.unwrap(getElapsed())));
+        sj.add("addTime = "          + Objects.toString(getAddTime()));
         return "OcTmOrderRecordsImpl " + sj.toString();
     }
     
@@ -155,12 +327,25 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
         final OcTmOrderRecords thatOcTmOrderRecords = (OcTmOrderRecords)that;
         if (this.getId() != thatOcTmOrderRecords.getId()) {return false; }
         if (!Objects.equals(this.getTid(), thatOcTmOrderRecords.getTid())) {return false; }
+        if (!Objects.equals(this.getTmOrderId(), thatOcTmOrderRecords.getTmOrderId())) {return false; }
+        if (!Objects.equals(this.getGoodsNo(), thatOcTmOrderRecords.getGoodsNo())) {return false; }
+        if (!Objects.equals(this.getSize(), thatOcTmOrderRecords.getSize())) {return false; }
+        if (!Objects.equals(this.getFreightPriceStr(), thatOcTmOrderRecords.getFreightPriceStr())) {return false; }
+        if (!Objects.equals(this.getWhId(), thatOcTmOrderRecords.getWhId())) {return false; }
+        if (!Objects.equals(this.getWhName(), thatOcTmOrderRecords.getWhName())) {return false; }
+        if (!Objects.equals(this.getWhPickRate(), thatOcTmOrderRecords.getWhPickRate())) {return false; }
+        if (!Objects.equals(this.getWhProxyPrice(), thatOcTmOrderRecords.getWhProxyPrice())) {return false; }
+        if (!Objects.equals(this.getWhUpdateTime(), thatOcTmOrderRecords.getWhUpdateTime())) {return false; }
+        if (!Objects.equals(this.getWhInventoryCount(), thatOcTmOrderRecords.getWhInventoryCount())) {return false; }
         if (!Objects.equals(this.getType(), thatOcTmOrderRecords.getType())) {return false; }
+        if (!Objects.equals(this.getTbPayAmount(), thatOcTmOrderRecords.getTbPayAmount())) {return false; }
         if (!Objects.equals(this.getStatus(), thatOcTmOrderRecords.getStatus())) {return false; }
         if (!Objects.equals(this.getOrderInfo(), thatOcTmOrderRecords.getOrderInfo())) {return false; }
         if (!Objects.equals(this.getFailCause(), thatOcTmOrderRecords.getFailCause())) {return false; }
+        if (!Objects.equals(this.getBreakEvenPrice(), thatOcTmOrderRecords.getBreakEvenPrice())) {return false; }
         if (!Objects.equals(this.getWhSnapshotData(), thatOcTmOrderRecords.getWhSnapshotData())) {return false; }
         if (!Objects.equals(this.getMachineCid(), thatOcTmOrderRecords.getMachineCid())) {return false; }
+        if (!Objects.equals(this.getElapsed(), thatOcTmOrderRecords.getElapsed())) {return false; }
         if (!Objects.equals(this.getAddTime(), thatOcTmOrderRecords.getAddTime())) {return false; }
         return true;
     }
@@ -170,12 +355,25 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
         int hash = 7;
         hash = 31 * hash + Long.hashCode(getId());
         hash = 31 * hash + Objects.hashCode(getTid());
+        hash = 31 * hash + Objects.hashCode(getTmOrderId());
+        hash = 31 * hash + Objects.hashCode(getGoodsNo());
+        hash = 31 * hash + Objects.hashCode(getSize());
+        hash = 31 * hash + Objects.hashCode(getFreightPriceStr());
+        hash = 31 * hash + Objects.hashCode(getWhId());
+        hash = 31 * hash + Objects.hashCode(getWhName());
+        hash = 31 * hash + Objects.hashCode(getWhPickRate());
+        hash = 31 * hash + Objects.hashCode(getWhProxyPrice());
+        hash = 31 * hash + Objects.hashCode(getWhUpdateTime());
+        hash = 31 * hash + Objects.hashCode(getWhInventoryCount());
         hash = 31 * hash + Objects.hashCode(getType());
+        hash = 31 * hash + Objects.hashCode(getTbPayAmount());
         hash = 31 * hash + Objects.hashCode(getStatus());
         hash = 31 * hash + Objects.hashCode(getOrderInfo());
         hash = 31 * hash + Objects.hashCode(getFailCause());
+        hash = 31 * hash + Objects.hashCode(getBreakEvenPrice());
         hash = 31 * hash + Objects.hashCode(getWhSnapshotData());
         hash = 31 * hash + Objects.hashCode(getMachineCid());
+        hash = 31 * hash + Objects.hashCode(getElapsed());
         hash = 31 * hash + Objects.hashCode(getAddTime());
         return hash;
     }

@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import static com.speedment.common.injector.State.RESOLVED;
+import static com.speedment.runtime.core.internal.util.sql.ResultSetUtil.*;
 
 /**
  * The generated Sql Adapter for a {@link
@@ -32,6 +33,7 @@ import static com.speedment.common.injector.State.RESOLVED;
 public abstract class GeneratedOcTmOrderRecordsSqlAdapter {
     
     private final TableIdentifier<OcTmOrderRecords> tableIdentifier;
+    private SqlTypeMapperHelper<Timestamp, LocalDateTime> whUpdateTimeHelper;
     private SqlTypeMapperHelper<Timestamp, LocalDateTime> addTimeHelper;
     
     protected GeneratedOcTmOrderRecordsSqlAdapter() {
@@ -48,15 +50,28 @@ public abstract class GeneratedOcTmOrderRecordsSqlAdapter {
     protected OcTmOrderRecords apply(ResultSet resultSet) throws SpeedmentException {
         final OcTmOrderRecords entity = createEntity();
         try {
-            entity.setId(             resultSet.getLong(1)                           );
-            entity.setTid(            resultSet.getString(2)                         );
-            entity.setType(           resultSet.getString(3)                         );
-            entity.setStatus(         resultSet.getString(4)                         );
-            entity.setOrderInfo(      resultSet.getString(5)                         );
-            entity.setFailCause(      resultSet.getString(6)                         );
-            entity.setWhSnapshotData( resultSet.getString(7)                         );
-            entity.setMachineCid(     resultSet.getString(8)                         );
-            entity.setAddTime(        addTimeHelper.apply(resultSet.getTimestamp(9)) );
+            entity.setId(               resultSet.getLong(1)                                 );
+            entity.setTid(              resultSet.getString(2)                               );
+            entity.setTmOrderId(        resultSet.getString(3)                               );
+            entity.setGoodsNo(          resultSet.getString(4)                               );
+            entity.setSize(             resultSet.getString(5)                               );
+            entity.setFreightPriceStr(  resultSet.getString(6)                               );
+            entity.setWhId(             getInt(resultSet, 7)                                 );
+            entity.setWhName(           resultSet.getString(8)                               );
+            entity.setWhPickRate(       getInt(resultSet, 9)                                 );
+            entity.setWhProxyPrice(     resultSet.getBigDecimal(10)                          );
+            entity.setWhUpdateTime(     whUpdateTimeHelper.apply(resultSet.getTimestamp(11)) );
+            entity.setWhInventoryCount( getInt(resultSet, 12)                                );
+            entity.setType(             resultSet.getString(13)                              );
+            entity.setTbPayAmount(      resultSet.getBigDecimal(14)                          );
+            entity.setStatus(           resultSet.getString(15)                              );
+            entity.setOrderInfo(        resultSet.getString(16)                              );
+            entity.setFailCause(        resultSet.getString(17)                              );
+            entity.setBreakEvenPrice(   resultSet.getBigDecimal(18)                          );
+            entity.setWhSnapshotData(   resultSet.getString(19)                              );
+            entity.setMachineCid(       resultSet.getString(20)                              );
+            entity.setElapsed(          getLong(resultSet, 21)                               );
+            entity.setAddTime(          addTimeHelper.apply(resultSet.getTimestamp(22))      );
         } catch (final SQLException sqle) {
             throw new SpeedmentException(sqle);
         }
@@ -70,6 +85,7 @@ public abstract class GeneratedOcTmOrderRecordsSqlAdapter {
     @ExecuteBefore(RESOLVED)
     void createHelpers(ProjectComponent projectComponent) {
         final Project project = projectComponent.getProject();
+        whUpdateTimeHelper = SqlTypeMapperHelper.create(project, OcTmOrderRecords.WH_UPDATE_TIME, OcTmOrderRecords.class);
         addTimeHelper = SqlTypeMapperHelper.create(project, OcTmOrderRecords.ADD_TIME, OcTmOrderRecords.class);
     }
 }
