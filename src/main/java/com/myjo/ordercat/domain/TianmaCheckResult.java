@@ -26,6 +26,9 @@ public class TianmaCheckResult {
     private BigDecimal tbDiscountFee;
     private BigDecimal tbTotalFee;
 
+    private String tbTitle;
+    private String tbNickName;
+
 
     private TianmaCheckStatus dzStatus;
     private String dzDetailsMessage;
@@ -177,5 +180,21 @@ public class TianmaCheckResult {
 
     public void setTbPayment(BigDecimal tbPayment) {
         this.tbPayment = tbPayment;
+    }
+
+    public String getTbTitle() {
+        return tbTitle;
+    }
+
+    public void setTbTitle(String tbTitle) {
+        this.tbTitle = tbTitle;
+    }
+
+    public String getTbNickName() {
+        return tbNickName;
+    }
+
+    public void setTbNickName(String tbNickName) {
+        this.tbNickName = tbNickName;
     }
 }

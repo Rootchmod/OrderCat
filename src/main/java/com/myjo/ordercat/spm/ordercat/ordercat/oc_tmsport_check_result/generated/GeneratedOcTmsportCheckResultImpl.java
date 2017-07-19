@@ -27,6 +27,8 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     private String tmOuterOrderId;
     private Long tmOrderNum;
     private Long tmNum;
+    private String tbTitle;
+    private String tbNickname;
     private Long tbOrderNum;
     private Long tbNum;
     private LocalDateTime tbCreated;
@@ -37,6 +39,7 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     private BigDecimal tbTotalFee;
     private String dzStatus;
     private String dzDetailsMessage;
+    private String labourStatus;
     private String remarks;
     private LocalDateTime addTime;
     
@@ -67,6 +70,16 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     @Override
     public OptionalLong getTmNum() {
         return OptionalUtil.ofNullable(tmNum);
+    }
+    
+    @Override
+    public Optional<String> getTbTitle() {
+        return Optional.ofNullable(tbTitle);
+    }
+    
+    @Override
+    public Optional<String> getTbNickname() {
+        return Optional.ofNullable(tbNickname);
     }
     
     @Override
@@ -120,6 +133,11 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     }
     
     @Override
+    public Optional<String> getLabourStatus() {
+        return Optional.ofNullable(labourStatus);
+    }
+    
+    @Override
     public Optional<String> getRemarks() {
         return Optional.ofNullable(remarks);
     }
@@ -156,6 +174,18 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     @Override
     public OcTmsportCheckResult setTmNum(Long tmNum) {
         this.tmNum = tmNum;
+        return this;
+    }
+    
+    @Override
+    public OcTmsportCheckResult setTbTitle(String tbTitle) {
+        this.tbTitle = tbTitle;
+        return this;
+    }
+    
+    @Override
+    public OcTmsportCheckResult setTbNickname(String tbNickname) {
+        this.tbNickname = tbNickname;
         return this;
     }
     
@@ -220,6 +250,12 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
     }
     
     @Override
+    public OcTmsportCheckResult setLabourStatus(String labourStatus) {
+        this.labourStatus = labourStatus;
+        return this;
+    }
+    
+    @Override
     public OcTmsportCheckResult setRemarks(String remarks) {
         this.remarks = remarks;
         return this;
@@ -239,6 +275,8 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
         sj.add("tmOuterOrderId = "   + Objects.toString(OptionalUtil.unwrap(getTmOuterOrderId())));
         sj.add("tmOrderNum = "       + Objects.toString(OptionalUtil.unwrap(getTmOrderNum())));
         sj.add("tmNum = "            + Objects.toString(OptionalUtil.unwrap(getTmNum())));
+        sj.add("tbTitle = "          + Objects.toString(OptionalUtil.unwrap(getTbTitle())));
+        sj.add("tbNickname = "       + Objects.toString(OptionalUtil.unwrap(getTbNickname())));
         sj.add("tbOrderNum = "       + Objects.toString(OptionalUtil.unwrap(getTbOrderNum())));
         sj.add("tbNum = "            + Objects.toString(OptionalUtil.unwrap(getTbNum())));
         sj.add("tbCreated = "        + Objects.toString(OptionalUtil.unwrap(getTbCreated())));
@@ -249,6 +287,7 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
         sj.add("tbTotalFee = "       + Objects.toString(OptionalUtil.unwrap(getTbTotalFee())));
         sj.add("dzStatus = "         + Objects.toString(OptionalUtil.unwrap(getDzStatus())));
         sj.add("dzDetailsMessage = " + Objects.toString(OptionalUtil.unwrap(getDzDetailsMessage())));
+        sj.add("labourStatus = "     + Objects.toString(OptionalUtil.unwrap(getLabourStatus())));
         sj.add("remarks = "          + Objects.toString(OptionalUtil.unwrap(getRemarks())));
         sj.add("addTime = "          + Objects.toString(getAddTime()));
         return "OcTmsportCheckResultImpl " + sj.toString();
@@ -264,6 +303,8 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
         if (!Objects.equals(this.getTmOuterOrderId(), thatOcTmsportCheckResult.getTmOuterOrderId())) {return false; }
         if (!Objects.equals(this.getTmOrderNum(), thatOcTmsportCheckResult.getTmOrderNum())) {return false; }
         if (!Objects.equals(this.getTmNum(), thatOcTmsportCheckResult.getTmNum())) {return false; }
+        if (!Objects.equals(this.getTbTitle(), thatOcTmsportCheckResult.getTbTitle())) {return false; }
+        if (!Objects.equals(this.getTbNickname(), thatOcTmsportCheckResult.getTbNickname())) {return false; }
         if (!Objects.equals(this.getTbOrderNum(), thatOcTmsportCheckResult.getTbOrderNum())) {return false; }
         if (!Objects.equals(this.getTbNum(), thatOcTmsportCheckResult.getTbNum())) {return false; }
         if (!Objects.equals(this.getTbCreated(), thatOcTmsportCheckResult.getTbCreated())) {return false; }
@@ -274,6 +315,7 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
         if (!Objects.equals(this.getTbTotalFee(), thatOcTmsportCheckResult.getTbTotalFee())) {return false; }
         if (!Objects.equals(this.getDzStatus(), thatOcTmsportCheckResult.getDzStatus())) {return false; }
         if (!Objects.equals(this.getDzDetailsMessage(), thatOcTmsportCheckResult.getDzDetailsMessage())) {return false; }
+        if (!Objects.equals(this.getLabourStatus(), thatOcTmsportCheckResult.getLabourStatus())) {return false; }
         if (!Objects.equals(this.getRemarks(), thatOcTmsportCheckResult.getRemarks())) {return false; }
         if (!Objects.equals(this.getAddTime(), thatOcTmsportCheckResult.getAddTime())) {return false; }
         return true;
@@ -287,6 +329,8 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
         hash = 31 * hash + Objects.hashCode(getTmOuterOrderId());
         hash = 31 * hash + Objects.hashCode(getTmOrderNum());
         hash = 31 * hash + Objects.hashCode(getTmNum());
+        hash = 31 * hash + Objects.hashCode(getTbTitle());
+        hash = 31 * hash + Objects.hashCode(getTbNickname());
         hash = 31 * hash + Objects.hashCode(getTbOrderNum());
         hash = 31 * hash + Objects.hashCode(getTbNum());
         hash = 31 * hash + Objects.hashCode(getTbCreated());
@@ -297,6 +341,7 @@ public abstract class GeneratedOcTmsportCheckResultImpl implements OcTmsportChec
         hash = 31 * hash + Objects.hashCode(getTbTotalFee());
         hash = 31 * hash + Objects.hashCode(getDzStatus());
         hash = 31 * hash + Objects.hashCode(getDzDetailsMessage());
+        hash = 31 * hash + Objects.hashCode(getLabourStatus());
         hash = 31 * hash + Objects.hashCode(getRemarks());
         hash = 31 * hash + Objects.hashCode(getAddTime());
         return hash;

@@ -658,7 +658,7 @@ public class TaoBaoHttp {
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradeGetRequest req = new TradeGetRequest();
 
-        req.setFields("tid,type,status,payment,orders,created,pay_time,price,discount_fee,total_fee");
+        req.setFields("tid,title,buyer_nick,type,status,payment,orders,created,pay_time,price,discount_fee,total_fee,is_daixiao");
         req.setTid(tid);
         try {
             TradeGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
@@ -692,7 +692,7 @@ public class TaoBaoHttp {
         Trade trade = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
-        req.setFields("tid,type,status,payment,orders,receiver_name,receiver_state,receiver_address,receiver_zip,receiver_mobile,receiver_phone,received_payment,receiver_city,receiver_district,buyer_message");
+        req.setFields("tid,type,status,num,payment,orders,receiver_name,receiver_state,receiver_address,receiver_zip,receiver_mobile,receiver_phone,received_payment,receiver_city,receiver_district,buyer_message,is_daixiao");
         req.setTid(tid);
         try {
             TradeFullinfoGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());

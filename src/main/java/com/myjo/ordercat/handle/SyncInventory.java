@@ -671,6 +671,9 @@ public class SyncInventory {
         Logger.info(String.format("根据配货率与库存过滤-size:[%d]", intersectionList.size()));
 
 
+
+
+
         //商品-平均价格
         Map<String, Double> avgPriceMap = intersectionList
                 .parallelStream()

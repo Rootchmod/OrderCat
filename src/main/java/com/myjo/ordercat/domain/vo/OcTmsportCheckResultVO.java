@@ -30,6 +30,10 @@ public class OcTmsportCheckResultVO {
     private Date addTime;
 
 
+    private String tbTitle;
+    private String tbNickName;
+    private String labourStatus;
+
     public long getId() {
         return id;
     }
@@ -167,5 +171,30 @@ public class OcTmsportCheckResultVO {
 
     public void setTmOrderIds(String tmOrderIds) {
         this.tmOrderIds = tmOrderIds;
+    }
+
+
+    public String getTbTitle() {
+        return tbTitle;
+    }
+
+    public void setTbTitle(String tbTitle) {
+        this.tbTitle = tbTitle;
+    }
+
+    public String getTbNickName() {
+        return tbNickName;
+    }
+
+    public void setTbNickName(String tbNickName) {
+        this.tbNickName = tbNickName;
+    }
+
+    public String getLabourStatus() {
+        return labourStatus;
+    }
+
+    public void setLabourStatus(String labourStatus) {
+        this.labourStatus = labourStatus;
     }
 }

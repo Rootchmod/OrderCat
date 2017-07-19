@@ -447,6 +447,22 @@ public class OrderCatConfig {
 
 
 
+    public static Integer getOpPickRateLessThanDelLimit(){
+        return Integer.valueOf(config.getString(String.format(ORDER_OPERATE, "pick_rate_less_than_del_limit")));
+    }
+
+
+    public static List<PickRateDelCondition> getOpPickRateDelConditions(){
+        List<PickRateDelCondition> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "pick_rate_less_than_del_conditions"));
+        PickRateDelCondition prdc;
+        for(ConfigObject cb :list){
+            prdc = ConfigBeanFactory.create(cb.toConfig(),PickRateDelCondition.class);
+            rtList.add(prdc);
+        }
+        return rtList;
+    }
+
 
 
 

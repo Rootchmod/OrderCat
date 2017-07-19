@@ -282,4 +282,23 @@ class OrderOperateSpec extends Specification {
     }
 
 
+
+    def "cw-过滤配货率低于50"() {
+
+        setup:
+        def jsonObjectList = getJsonObjectList("过滤配货率.json")
+        def tmSkuId = "353521"
+        def payAmount = new BigDecimal("600");
+        def nowDate = OcDateTimeUtils.string2LocalDateTime("2017-07-10 09:00:00");
+
+        def whid = ""
+        when:
+        whid = orderOperate.computeWarehouseId(jsonObjectList, tmSkuId, payAmount, nowDate, "B")
+        then:
+        whid =="1"
+
+    }
+
+
+
 }

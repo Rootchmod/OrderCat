@@ -17,10 +17,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -30,40 +28,6 @@ import java.util.stream.Collectors;
 public class OrderOperateResource {
     //private final static int PAGE_SIZE = 50;
     private static final Logger Logger = LogManager.getLogger(OrderOperate.class);
-
-//    @POST
-//    @Produces("application/json;charset=utf-8")
-//    @Path("/manualOrder")
-//    @ApiOperation(value = "手工下单接口", response = Map.class)
-//    public Map<String, Object> fenxiaoCheckAddRemark(
-//            @ApiParam(required = true, name = "tid", value = "淘宝订单ID") @FormParam("tid") String tid,
-//            @ApiParam(required = true, name = "wareHouseId", value = "备注") @FormParam("wareHouseId") String wareHouseId,
-//            @ApiParam(required = true, name = "payPwd", value = "密码") @FormParam("payPwd") String payPwd
-//    ) {
-//        Logger.info(String.format("/order-operate/manualOrder tid:%s,wareHouseId:%s,payPwd:*******", tid, wareHouseId));
-//        Map<String, Object> rt = new HashMap<>();
-//        OrderOperate oop = OrderCatContext.getOrderOperate();
-//        OcTmOrderRecords ocTmOrderRecords = null;
-//        boolean success;
-//        String message;
-//        try {
-//            ocTmOrderRecords = oop.manualOrder(Long.valueOf(tid), wareHouseId, payPwd);
-//            if (TmOrderRecordStatus.FAILURE.getValue().equals(ocTmOrderRecords.getStatus().get())) {
-//                success = false;
-//                message = "下单失败:" + ocTmOrderRecords.getFailCause().get();
-//            } else {
-//                success = true;
-//                message = "下单成功!";
-//            }
-//        } catch (Exception e) {
-//            success = false;
-//            message = e.getMessage();
-//        }
-//        rt.put("success", success);
-//        rt.put("message", message);
-//        rt.put("ocTmOrderRecords", ocTmOrderRecords);
-//        return rt;
-//    }
 
 
     @GET
@@ -106,14 +70,49 @@ public class OrderOperateResource {
         List<OcTmOrderRecordsVO> ocTmOrderRecordsVOS = list.parallelStream()
                 .map(o -> {
                     OcTmOrderRecordsVO ocTmOrderRecordsVO = new OcTmOrderRecordsVO();
+//                    private long id; //序号
                     ocTmOrderRecordsVO.setId(o.getId());
-                    ocTmOrderRecordsVO.setTid(o.getTid().get());
-                    ocTmOrderRecordsVO.setType(o.getType().isPresent() ? o.getType().get() : "");
-                    ocTmOrderRecordsVO.setStatus(o.getStatus().get());
-                    ocTmOrderRecordsVO.setOrderInfo(o.getOrderInfo().isPresent() ? o.getOrderInfo().get() : "");
-                    ocTmOrderRecordsVO.setFailCause(o.getFailCause().isPresent() ? o.getFailCause().get() : "");
-                    ocTmOrderRecordsVO.setWhSnapshotData(o.getWhSnapshotData().isPresent() ? o.getWhSnapshotData().get() : "");
-                    ocTmOrderRecordsVO.setMachineCid(o.getMachineCid().isPresent() ? o.getMachineCid().get() : "");
+//                    private String tid; //'淘宝订单ID'
+                    ocTmOrderRecordsVO.setTid(o.getTid().orElse(""));
+//                    private String tmOrderId;//'天马订单ID'
+                    ocTmOrderRecordsVO.setTmOrderId(o.getTmOrderId().orElse(""));
+//                    private String goodsNo;//'商品货号'
+                    ocTmOrderRecordsVO.setGoodsNo(o.getGoodsNo().orElse(""));
+//                    private String size;//尺码
+                    ocTmOrderRecordsVO.setSize(o.getSize().orElse(""));
+//                    private String freightPriceStr;//运费
+                    ocTmOrderRecordsVO.setFreightPriceStr(o.getFreightPriceStr().orElse(""));
+//                    private Integer whId;//下单仓库
+                    ocTmOrderRecordsVO.setWhId(o.getWhId().orElse(0));
+//                    private String whName;//下单仓库名称
+                    ocTmOrderRecordsVO.setWhName(o.getWhName().orElse(""));
+//                    private Integer whPickRate;//下单仓库配货率,单位:百分比
+                    ocTmOrderRecordsVO.setWhPickRate(o.getWhPickRate().orElse(0));
+//                    private BigDecimal whProxyPrice;//下单仓库价格
+                    ocTmOrderRecordsVO.setWhProxyPrice(o.getWhProxyPrice().orElse(BigDecimal.ZERO));
+//                    private Date whUpdateTime;//下单仓库库存更新时间
+                    ocTmOrderRecordsVO.setWhUpdateTime(o.getWhUpdateTime().isPresent() ? OcDateTimeUtils.localDateTime2Date(o.getWhUpdateTime().get()) : null);
+//                    private Integer whInventoryCount;//下单仓库库存数
+                    ocTmOrderRecordsVO.setWhInventoryCount(o.getWhInventoryCount().orElse(0));
+//                    private String type;//下单类型：手工补单，自动下单
+                    ocTmOrderRecordsVO.setType(o.getType().orElse(""));
+//                    private BigDecimal tbPayAmount;//淘宝订单支付金额
+                    ocTmOrderRecordsVO.setTbPayAmount(o.getTbPayAmount().orElse(BigDecimal.ZERO));
+//                    private String status;//下单状态：成功或失败
+                    ocTmOrderRecordsVO.setStatus(o.getStatus().orElse(""));
+//                    private String orderInfo;//订单信息-json
+                    ocTmOrderRecordsVO.setOrderInfo(o.getOrderInfo().orElse(""));
+//                    private String failCause;//失败原因
+                    ocTmOrderRecordsVO.setFailCause(o.getFailCause().orElse(""));
+//                    private BigDecimal breakEvenPrice;//保本价(自动机器下单时，才会有数据)
+                    ocTmOrderRecordsVO.setBreakEvenPrice(o.getBreakEvenPrice().orElse(BigDecimal.ZERO));
+//                    private String whSnapshotData;//仓库快照数据
+                    ocTmOrderRecordsVO.setWhSnapshotData(o.getWhSnapshotData().orElse(""));
+//                    private String machineCid;//下单机器CID
+                    ocTmOrderRecordsVO.setMachineCid(o.getMachineCid().orElse(""));
+//                    private long elapsed;//执行耗时,单位:毫秒
+                    ocTmOrderRecordsVO.setElapsed(o.getElapsed().orElse(0));
+//                    private Date addTime;//下单时间
                     ocTmOrderRecordsVO.setAddTime(OcDateTimeUtils.localDateTime2Date(o.getAddTime()));
                     return ocTmOrderRecordsVO;
                 })

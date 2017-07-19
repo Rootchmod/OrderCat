@@ -96,6 +96,8 @@ public class OcCsvUtils {
                     o.getTmOuterOrderId().isPresent()?o.getTmOuterOrderId().get():"",//天马外部订单编码(淘宝订单)
                     o.getTmOrderNum().isPresent()?o.getTmOrderNum().getAsLong():"",//天马订单数量
                     o.getTmNum().isPresent() ? o.getTmNum().getAsLong() : "",//天马购买数量
+                    o.getTbTitle().isPresent() ? o.getTbTitle().get() : "",//淘宝宝贝标题
+                    o.getTbNickname().isPresent() ? o.getTbNickname().get() : "",//淘宝买家昵称
                     o.getTbOrderNum().isPresent()?o.getTbOrderNum().getAsLong():"",//淘宝订单数量
                     o.getTbNum().isPresent()?o.getTbNum().getAsLong():"",//淘宝购买数量
                     o.getTbCreated().isPresent()?OcDateTimeUtils.localDateTime2String(o.getTbCreated().get()):"",//'淘宝订单时间'
@@ -106,6 +108,7 @@ public class OcCsvUtils {
                     o.getTbTotalFee().isPresent()?o.getTbTotalFee().get().toPlainString():"",//应付金额
                     o.getDzStatus().isPresent()?o.getDzStatus().get():"",//'对账状态'
                     o.getDzDetailsMessage().isPresent()?o.getDzDetailsMessage().get():"",//''对账详细描述''
+                    o.getLabourStatus().isPresent()?o.getLabourStatus().get():"",//人工对账状态
                     o.getRemarks().isPresent()?o.getRemarks().get():"",//备注
                     OcDateTimeUtils.localDateTime2String(o.getAddTime()),//对账时间
             };
@@ -127,10 +130,12 @@ public class OcCsvUtils {
 
             final String[] header = new String[]{
                     "序号",
-                    "天马订单",
+                    "天马订单IDS",
                     "天马外部订单编码(淘宝订单)",
                     "天马订单数量",
                     "天马购买数量",
+                    "淘宝宝贝标题",
+                    "淘宝买家昵称",
                     "淘宝订单数量",
                     "淘宝购买数量",
                     "淘宝订单时间",
@@ -141,6 +146,7 @@ public class OcCsvUtils {
                     "应付金额",
                     "对账状态",
                     "对账详细描述",
+                    "人工对账状态",
                     "备注",
                     "对账日期",
             };

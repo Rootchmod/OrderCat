@@ -240,6 +240,8 @@ public class AccountCheck {
                 Optional<Trade> trade = taoBaoHttp.getTaobaoTrade(Long.valueOf(outerOrderId));
                 if (trade.isPresent()) {
                     tianmaCheckResult.setTrade(trade.get());
+                    tianmaCheckResult.setTbNickName(trade.get().getBuyerNick());
+                    tianmaCheckResult.setTbTitle(trade.get().getTitle());
                     tianmaCheckResult.setTbOrders(trade.get().getOrders());
                     tianmaCheckResult.setTbNum(getTaoBaoSubOrderNum(trade.get().getOrders()));
                     tianmaCheckResult.setTbOrderNum(Long.valueOf(trade.get().getOrders().size()));
@@ -426,6 +428,8 @@ public class AccountCheck {
                                 .map(o-> o.getOrderId()).collect(Collectors.joining(","));
 
                         ocTmsportCheckResult.setTmOrderIds(citiesCommaSeparated);
+                        ocTmsportCheckResult.setTbTitle(tianmaCheckResult.getTbTitle());
+                        ocTmsportCheckResult.setTbNickname(tianmaCheckResult.getTbNickName());
                         ocTmsportCheckResult.setTbOrderNum(tianmaCheckResult.getTbOrderNum());
                         ocTmsportCheckResult.setTbNum(tianmaCheckResult.getTbNum());
                         ocTmsportCheckResult.setTbTotalFee(tianmaCheckResult.getTbTotalFee());
@@ -447,6 +451,8 @@ public class AccountCheck {
 
                         ocTmsportCheckResult.setTmOrderIds(citiesCommaSeparated);
                         ocTmsportCheckResult.setAddTime(LocalDateTime.now());
+                        ocTmsportCheckResult.setTbTitle(tianmaCheckResult.getTbTitle());
+                        ocTmsportCheckResult.setTbNickname(tianmaCheckResult.getTbNickName());
                         ocTmsportCheckResult.setTbOrderNum(tianmaCheckResult.getTbOrderNum());
                         ocTmsportCheckResult.setTbNum(tianmaCheckResult.getTbNum());
                         ocTmsportCheckResult.setTbTotalFee(tianmaCheckResult.getTbTotalFee());

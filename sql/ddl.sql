@@ -154,10 +154,12 @@ DROP TABLE IF EXISTS oc_tianma_check_result;
 DROP TABLE IF EXISTS oc_tmsport_check_result;
 CREATE TABLE `oc_tmsport_check_result` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `tm_order_ids` varchar(255) NULL COMMENT '天马订单ID',
+  `tm_order_ids` varchar(8000) NULL COMMENT '天马订单ID',
   `tm_outer_order_id` varchar(255) NULL COMMENT '天马外部订单编码',
   `tm_order_num` BIGINT COMMENT '天马订单数量',
   `tm_num` BIGINT COMMENT '天马购买数量',
+  `tb_title` varchar(8000) NULL COMMENT '淘宝宝贝标题',
+  `tb_nickname`  varchar(255) NULL COMMENT '淘宝买家ID',
   `tb_order_num` BIGINT COMMENT '淘宝订单数量',
   `tb_num` BIGINT COMMENT '淘宝购买数量',
   `tb_created` DATETIME DEFAULT NULL COMMENT '淘宝订单时间',
@@ -168,11 +170,13 @@ CREATE TABLE `oc_tmsport_check_result` (
   `tb_totalFee` decimal(25,10)  COMMENT '应付金额（商品价格 * 商品数量 + 手工调整金额 - 子订单级订单优惠金额）。精确到2位小数;单位:元。如:200.07，表示:200元7分',
   `dz_status` varchar(255)  COMMENT '对账状态',
   `dz_details_message` TEXT COMMENT '对账详细描述',
+  `labour_status` TEXT COMMENT '人工状态',
   `remarks` TEXT COMMENT '备注(json格式)',
   `add_time` timestamp NOT NULL COMMENT '添加日期',
   PRIMARY KEY (`id`),
   KEY `IDX_TM_OUTER_ORDER_ID` (`tm_outer_order_id`),
-  KEY `IDX_DZ_STATUS` (`dz_status`)
+  KEY `IDX_DZ_STATUS` (`dz_status`),
+  KEY `IDX_LABOUR_STATUS` (`labour_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天马体育对账结果表';
 
 

@@ -41,6 +41,8 @@ implements GeneratedOcTmsportCheckResultManager {
             OcTmsportCheckResult.TM_OUTER_ORDER_ID,
             OcTmsportCheckResult.TM_ORDER_NUM,
             OcTmsportCheckResult.TM_NUM,
+            OcTmsportCheckResult.TB_TITLE,
+            OcTmsportCheckResult.TB_NICKNAME,
             OcTmsportCheckResult.TB_ORDER_NUM,
             OcTmsportCheckResult.TB_NUM,
             OcTmsportCheckResult.TB_CREATED,
@@ -51,6 +53,7 @@ implements GeneratedOcTmsportCheckResultManager {
             OcTmsportCheckResult.TB_TOTAL_FEE,
             OcTmsportCheckResult.DZ_STATUS,
             OcTmsportCheckResult.DZ_DETAILS_MESSAGE,
+            OcTmsportCheckResult.LABOUR_STATUS,
             OcTmsportCheckResult.REMARKS,
             OcTmsportCheckResult.ADD_TIME
         );

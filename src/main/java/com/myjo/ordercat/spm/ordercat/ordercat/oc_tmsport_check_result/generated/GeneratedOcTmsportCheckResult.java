@@ -90,6 +90,29 @@ public interface GeneratedOcTmsportCheckResult {
     );
     /**
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
+     * be obtained using the {@link OcTmsportCheckResult#getTbTitle()} method.
+     */
+    StringField<OcTmsportCheckResult, String> TB_TITLE = StringField.create(
+        Identifier.TB_TITLE,
+        o -> OptionalUtil.unwrap(o.getTbTitle()),
+        OcTmsportCheckResult::setTbTitle,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmsportCheckResult} field that can
+     * be obtained using the {@link OcTmsportCheckResult#getTbNickname()}
+     * method.
+     */
+    StringField<OcTmsportCheckResult, String> TB_NICKNAME = StringField.create(
+        Identifier.TB_NICKNAME,
+        o -> OptionalUtil.unwrap(o.getTbNickname()),
+        OcTmsportCheckResult::setTbNickname,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getTbOrderNum()}
      * method.
      */
@@ -204,6 +227,18 @@ public interface GeneratedOcTmsportCheckResult {
     );
     /**
      * This Field corresponds to the {@link OcTmsportCheckResult} field that can
+     * be obtained using the {@link OcTmsportCheckResult#getLabourStatus()}
+     * method.
+     */
+    StringField<OcTmsportCheckResult, String> LABOUR_STATUS = StringField.create(
+        Identifier.LABOUR_STATUS,
+        o -> OptionalUtil.unwrap(o.getLabourStatus()),
+        OcTmsportCheckResult::setLabourStatus,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmsportCheckResult} field that can
      * be obtained using the {@link OcTmsportCheckResult#getRemarks()} method.
      */
     StringField<OcTmsportCheckResult, String> REMARKS = StringField.create(
@@ -268,6 +303,24 @@ public interface GeneratedOcTmsportCheckResult {
      * @return the tmNum of this OcTmsportCheckResult
      */
     OptionalLong getTmNum();
+    
+    /**
+     * Returns the tbTitle of this OcTmsportCheckResult. The tbTitle field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tmsport_check_result.tb_title.
+     * 
+     * @return the tbTitle of this OcTmsportCheckResult
+     */
+    Optional<String> getTbTitle();
+    
+    /**
+     * Returns the tbNickname of this OcTmsportCheckResult. The tbNickname field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tmsport_check_result.tb_nickname.
+     * 
+     * @return the tbNickname of this OcTmsportCheckResult
+     */
+    Optional<String> getTbNickname();
     
     /**
      * Returns the tbOrderNum of this OcTmsportCheckResult. The tbOrderNum field
@@ -360,6 +413,15 @@ public interface GeneratedOcTmsportCheckResult {
     Optional<String> getDzDetailsMessage();
     
     /**
+     * Returns the labourStatus of this OcTmsportCheckResult. The labourStatus
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_tmsport_check_result.labour_status.
+     * 
+     * @return the labourStatus of this OcTmsportCheckResult
+     */
+    Optional<String> getLabourStatus();
+    
+    /**
      * Returns the remarks of this OcTmsportCheckResult. The remarks field
      * corresponds to the database column
      * ordercat.ordercat.oc_tmsport_check_result.remarks.
@@ -424,6 +486,26 @@ public interface GeneratedOcTmsportCheckResult {
      * @return      this OcTmsportCheckResult instance
      */
     OcTmsportCheckResult setTmNum(Long tmNum);
+    
+    /**
+     * Sets the tbTitle of this OcTmsportCheckResult. The tbTitle field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tmsport_check_result.tb_title.
+     * 
+     * @param tbTitle to set of this OcTmsportCheckResult
+     * @return        this OcTmsportCheckResult instance
+     */
+    OcTmsportCheckResult setTbTitle(String tbTitle);
+    
+    /**
+     * Sets the tbNickname of this OcTmsportCheckResult. The tbNickname field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tmsport_check_result.tb_nickname.
+     * 
+     * @param tbNickname to set of this OcTmsportCheckResult
+     * @return           this OcTmsportCheckResult instance
+     */
+    OcTmsportCheckResult setTbNickname(String tbNickname);
     
     /**
      * Sets the tbOrderNum of this OcTmsportCheckResult. The tbOrderNum field
@@ -525,6 +607,16 @@ public interface GeneratedOcTmsportCheckResult {
     OcTmsportCheckResult setDzDetailsMessage(String dzDetailsMessage);
     
     /**
+     * Sets the labourStatus of this OcTmsportCheckResult. The labourStatus
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_tmsport_check_result.labour_status.
+     * 
+     * @param labourStatus to set of this OcTmsportCheckResult
+     * @return             this OcTmsportCheckResult instance
+     */
+    OcTmsportCheckResult setLabourStatus(String labourStatus);
+    
+    /**
      * Sets the remarks of this OcTmsportCheckResult. The remarks field
      * corresponds to the database column
      * ordercat.ordercat.oc_tmsport_check_result.remarks.
@@ -551,6 +643,8 @@ public interface GeneratedOcTmsportCheckResult {
         TM_OUTER_ORDER_ID  ("tm_outer_order_id"),
         TM_ORDER_NUM       ("tm_order_num"),
         TM_NUM             ("tm_num"),
+        TB_TITLE           ("tb_title"),
+        TB_NICKNAME        ("tb_nickname"),
         TB_ORDER_NUM       ("tb_order_num"),
         TB_NUM             ("tb_num"),
         TB_CREATED         ("tb_created"),
@@ -561,6 +655,7 @@ public interface GeneratedOcTmsportCheckResult {
         TB_TOTAL_FEE       ("tb_totalFee"),
         DZ_STATUS          ("dz_status"),
         DZ_DETAILS_MESSAGE ("dz_details_message"),
+        LABOUR_STATUS      ("labour_status"),
         REMARKS            ("remarks"),
         ADD_TIME           ("add_time");
         

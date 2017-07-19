@@ -279,6 +279,43 @@ public class Main {
 
             Logger.info(String.format("Consumer-[%s] Started",consumerId));
         }
+        else if (action.equals("order_robot_clean")) {
+            Properties properties = new Properties();
+            properties.put(PropertyKeyConst.ConsumerId, "CID_MJ_MT1");
+            properties.put(PropertyKeyConst.AccessKey, OrderCatConfig.getTaobaoApiAppKey());
+            properties.put(PropertyKeyConst.SecretKey, OrderCatConfig.getTaobaoApiAppSecret());
+            Consumer consumer = ONSFactory.createConsumer(properties);
+            consumer.subscribe("rmq_sys_jst_23279400", "*", new MessageListener() {
+                public Action consume(Message message, ConsumeContext context) {
+                    System.out.println("Receive: " + message);
+
+                    String msg_body=null;
+                    try {
+                        msg_body = new String(message.getBody(), "UTF-8");
+                    } catch (UnsupportedEncodingException e1) {
+                        e1.printStackTrace();
+                    }
+                    com.alibaba.fastjson.JSONObject object = JSON.parseObject(msg_body);
+
+                    com.alibaba.fastjson.JSONObject contentObject = object.getJSONObject("content");
+
+                    long tid = contentObject.getLongValue("tid");
+
+
+
+                    Logger.info(String.format("Order TID:%d",tid));
+                    return Action.CommitMessage;
+                }
+            });
+            consumer.start();
+            System.out.println("Consumer Started");
+
+            Logger.info(String.format("Consumer-[%s] Started",consumerId));
+        }
+
+
+
+
         else if (action.equals("start")) {
 
 
