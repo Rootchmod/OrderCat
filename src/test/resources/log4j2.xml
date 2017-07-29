@@ -20,6 +20,9 @@
 
     <Loggers>
 
+        <Logger name="io.netty" level="ERROR" additivity="false" />
+        <Logger name="com.lambdaworks.redis" level="ERROR" additivity="false" />
+
 
 
         <logger name="com.myjo.ordercat" level="info"/>
@@ -28,6 +31,7 @@
         <logger name="org.eclipse.aether" level="info"/>
         <logger name="org.quartz.core" level="info"/>
         <logger name="org.springframework" level="error"/>
+        <logger name="com.lambdaworks.redis.protocol" level="error"/>
 
         <!--<Logger name="log4j.logger.org.apache.http" level="info"/>-->
         <Root level="all" >

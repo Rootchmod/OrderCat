@@ -187,7 +187,9 @@ dependencies {
     compile group: 'com.aol.microservices', name:'micro-swagger',version:'0.91.1'
 
 
-    //compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.3'
+
+    // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
+    compile 'biz.paluch.redis:lettuce:4.3.3.Final'
 
 
 

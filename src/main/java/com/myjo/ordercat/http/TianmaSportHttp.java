@@ -97,7 +97,9 @@ public class TianmaSportHttp {
         String pwd = OcEncryptionUtils.base64Decoder(OrderCatConfig.getTianmaSportPassWord(),5);
         String nickName = OrderCatConfig.getTianmaSportUserName();
 
-        Logger.info("http tianmaSport login pwd: " + pwd);
+        //Logger.info("http tianmaSport login pwd: " + pwd);
+        Logger.info("http tianmaSport login pwd: *****");
+
         Logger.info("http tianmaSport login nickName: " + nickName);
 
 
@@ -198,7 +200,12 @@ public class TianmaSportHttp {
     }
 
 
-    public void inventoryDownGroup(String fileName, String brandName,String sex, String quarter) throws Exception {
+    public void inventoryDownGroup(
+            String fileName,
+            String brandName,
+            String sex,
+            String quarter,
+            String division) throws Exception {
         Logger.info("inventory_down_group_http_url: " + OrderCatConfig.getTianmaSportIDGHttpUrl());
         Logger.info("brandName: " + brandName);
         Logger.info("quarter: " + quarter);
@@ -225,8 +232,8 @@ public class TianmaSportHttp {
                 .field("minInnerNum", "")
                 .field("maxInnerNum", "")
                 .field("size1", "")
-                .field("sex", sex.equals("全部")?"":sex)
-                .field("division", "")
+                .field("sex", sex)
+                .field("division", division)
                 .field("cate", "")
                 .field("quarter", quarter)
                 .field("maxDis", "")
@@ -324,8 +331,8 @@ public class TianmaSportHttp {
                 .field("articleno", Articleno)
                 .asString();
         int code = response.getStatus();
-        Logger.debug("http-status:" + code);
-        Logger.debug("http-status-text:" + response.getStatusText());
+        Logger.info("http-status:" + code);
+        Logger.info("http-status-text:" + response.getStatusText());
 
         if (code == 200) {
             String rt = response.getBody();
@@ -457,6 +464,9 @@ public class TianmaSportHttp {
 
 
             //Logger.info("JSON-String:" + jsonstr);
+        }else {
+            String rt = response.getBody();
+            throw new OCException(rt);
         }
         return rtMap;
     }

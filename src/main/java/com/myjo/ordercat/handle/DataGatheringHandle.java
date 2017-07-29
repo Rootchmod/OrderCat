@@ -27,7 +27,7 @@ public class DataGatheringHandle {
         Logger.debug("InventoryQueryCondition.list"+list.size());
         for(InventoryQueryCondition iqc :list){
             Logger.debug("InventoryQueryCondition.BrandName"+iqc.getBrandName());
-            Logger.debug("InventoryQueryCondition.Quarter"+iqc.getQuarter());
+            //Logger.debug("InventoryQueryCondition.Quarter"+iqc.getQuarter());
             //tianmaSportHttp.inventoryDownGroup(iqc.getBrandName(),iqc.getQuarter());
         }
         Logger.debug("InventoryQueryCondition.exec done.");

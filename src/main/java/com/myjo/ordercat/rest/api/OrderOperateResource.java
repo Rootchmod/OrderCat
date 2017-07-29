@@ -3,7 +3,6 @@ package com.myjo.ordercat.rest.api;
 import com.aol.micro.server.auto.discovery.Rest;
 import com.myjo.ordercat.context.OrderCatContext;
 import com.myjo.ordercat.domain.PageResult;
-import com.myjo.ordercat.domain.TmOrderRecordStatus;
 import com.myjo.ordercat.domain.vo.OcTmOrderRecordsVO;
 import com.myjo.ordercat.handle.OrderOperate;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
@@ -16,9 +15,13 @@ import com.wordnik.swagger.annotations.ApiParam;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -35,17 +38,32 @@ public class OrderOperateResource {
     @Path("/orderRecords")
     @ApiOperation(value = "下单记录", response = PageResult.class)
     public PageResult<OcTmOrderRecordsVO> tmsportCheckList(
+            @ApiParam(name = "tid", value = "淘宝订单ID") @QueryParam("tid") String tid,
+            @ApiParam(name = "status", value = "下单状态") @QueryParam("status") String status,
+            @ApiParam(name = "order_begin_time", value = "下单开始时间") @QueryParam("order_begin_time") String order_begin_time,
+            @ApiParam(name = "order_end_time", value = "下单结束时间") @QueryParam("order_end_time") String order_end_time,
             @ApiParam(required = true, name = "page_size", value = "分页大小") @QueryParam("page_size") int page_size,
             @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
-
         PageResult<OcTmOrderRecordsVO> pageResult = new PageResult<>();
-
-
         OcTmOrderRecordsManager ocTmOrderRecordsManager = OrderCatContext.getOcTmOrderRecordsManager();
-
-
         List<Predicate<OcTmOrderRecords>> predicateList = new ArrayList<>();
+
+        if (order_begin_time != null) {
+            predicateList.add(OcTmOrderRecordsImpl.ADD_TIME.greaterOrEqual(OcDateTimeUtils.string2LocalDateTime(order_begin_time)));
+        }
+
+        if (order_end_time != null) {
+            predicateList.add(OcTmOrderRecordsImpl.ADD_TIME.lessOrEqual(OcDateTimeUtils.string2LocalDateTime(order_end_time)));
+        }
+
+        if (tid != null) {
+            predicateList.add(OcTmOrderRecordsImpl.TID.equal(tid));
+        }
+
+        if (status != null) {
+            predicateList.add(OcTmOrderRecordsImpl.STATUS.equal(status));
+        }
 
         Predicate<OcTmOrderRecords> p1 = ocTmOrderRecords -> true;
 

@@ -141,8 +141,8 @@ public class Main {
 
 
         AccountCheck ac = new AccountCheck(tianmaSportHttp, taoBaoHttp);
-        ac.setOcSyncInventoryItemInfoManager(ocSyncInventoryItemInfoManager);
-        ac.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
+        //ac.setOcSyncInventoryItemInfoManager(ocSyncInventoryItemInfoManager);
+        //ac.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
         ac.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
 
 
@@ -178,8 +178,8 @@ public class Main {
         eh2.setOcJobExecInfoManager(ocJobExecInfoManager);
 
         ExecuteHandle eh3;
-        eh3 = new FenXiaoAcHandle(ac);
-        eh3.setJobName(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue());
+        eh3 = new AsRefundAcHandle(ac);
+        eh3.setJobName(JobName.AS_REFUND_ACCOUNT_CHECK_JOB.getValue());
         eh3.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
@@ -200,7 +200,7 @@ public class Main {
             eh2.exec();
         } else if (action.equals(JobName.SYNC_WAREHOUSE_JOB.getValue())) {
             eh.exec();
-        } else if (action.equals(JobName.FENXIAO_ACCOUNT_CHECK_JOB.getValue())) {
+        } else if (action.equals(JobName.AS_REFUND_ACCOUNT_CHECK_JOB.getValue())) {
             eh3.exec();
         } else if (action.equals(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue())) {
             eh1.exec();

@@ -4,18 +4,19 @@ import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResult;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultImpl;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfo;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_as_refund_check_result.OcAsRefundCheckResult;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_as_refund_check_result.OcAsRefundCheckResultImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_as_refund_check_result.OcAsRefundCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResult;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.utils.OcCsvUtils;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
 import com.myjo.ordercat.utils.OcStringUtils;
-import com.taobao.api.domain.*;
+import com.taobao.api.domain.Order;
+import com.taobao.api.domain.PurchaseOrder;
+import com.taobao.api.domain.Refund;
+import com.taobao.api.domain.Trade;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,8 +26,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingLong;
 
 /**
  * 对账相关
@@ -40,11 +45,8 @@ public class AccountCheck {
 
     private TaoBaoHttp taoBaoHttp;
 
-    private OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager;
-
-    private OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager;
-
     private OcTmsportCheckResultManager ocTmsportCheckResultManager;
+    private OcAsRefundCheckResultManager ocAsRefundCheckResultManager;
 
 
     public AccountCheck(TianmaSportHttp tianmaSportHttp, TaoBaoHttp taoBaoHttp) {
@@ -56,95 +58,6 @@ public class AccountCheck {
 //        //return t -> map.putIfAbsent(keyExtractor.apply(t), null) == null;
 //        return t -> map.containsKey(keyExtractor.apply(t)) == rt;
 //    }
-
-    public void fenxiaoCheck(Long execJobId) throws Exception {
-        Logger.info(String.format("开始进行分销对账,execJobId:[%d]", execJobId.longValue()));
-        LocalDateTime lend = LocalDateTime.now();
-        LocalDateTime lbegin = lend.minusDays(OrderCatConfig.getFenxiaoOrderDateIntervalDay());
-        Date begin = OcDateTimeUtils.localDateTime2Date(lbegin);
-        Date end = OcDateTimeUtils.localDateTime2Date(lend);
-
-        //查询退款成功的订单
-        List<Refund> refundlist = taoBaoHttp.getReceiveRefunds(begin, end);
-        Logger.info(String.format("查询淘宝退款成功的订单 [%s]-[%s] --- size:[%d]",
-                OcDateTimeUtils.localDateTime2String(lbegin),
-                OcDateTimeUtils.localDateTime2String(lend),
-                refundlist.size()));
-
-        //清空
-        //ocFenxiaoCheckResultManager.stream().forEach(ocFenxiaoCheckResultManager.remover());
-
-        //查询已经同步库存过的宝贝(为了过滤出分销退款订单)
-        Map<String, OcSyncInventoryItemInfo> osiiMap = ocSyncInventoryItemInfoManager
-                .stream()
-                .collect(Collectors.toMap(o -> o.getNumIid().get(), Function.identity()));
-        Logger.info(String.format("查询已经同步库存过的宝贝-size:[%d]", osiiMap.size()));
-
-
-        refundlist = refundlist.parallelStream()
-                //.filter(inventoryInfo -> inventoryInfo.getSize1().indexOf("Y")<0)
-                .filter(InventoryDataOperate.distinctByMap(o -> String.valueOf(o.getNumIid().longValue()), osiiMap, false))
-                .collect(Collectors.toList());
-        Logger.info(String.format("根据已经同步库存后的宝贝ID,过滤出分销退款列表-size:[%d]", refundlist.size()));
-
-
-        //过滤不进行对账的宝贝ID
-        List<String> noCheckList = OrderCatConfig.getFeixiaoNoCheckNumIidList();
-        noCheckList.parallelStream().forEach(s -> {
-            Logger.info(String.format("不进行检查的宝贝ID:[%s]", s));
-        });
-        Map<String, String> noCheckMap = noCheckList.parallelStream().collect(Collectors.toMap(o -> o, Function.identity()));
-        refundlist = refundlist
-                .stream()
-                .filter(InventoryDataOperate.distinctByMap(o -> String.valueOf(o.getNumIid().longValue()), noCheckMap, false))
-                .collect(Collectors.toList());
-
-        Logger.info(String.format("过滤不进行检查宝贝ID后-size:[%d]", refundlist.size()));
-
-        Map<Long, OcFenxiaoCheckResult> fenxiaoMap = ocFenxiaoCheckResultManager
-                .stream()
-                .collect(Collectors.toMap(o -> o.getRefundId().getAsLong(), Function.identity()));
-        //查找分销ID并赋值
-
-        OcFenxiaoCheckResult ofcr;
-        List<PurchaseOrder> purchaseOrderlist;
-        //RefundDetail refundDetail;
-        for (Refund r : refundlist) {
-            ofcr = fenxiaoMap.get(r.getRefundId());
-            if (ofcr == null) { //如果该退款是新的
-                ofcr = new OcFenxiaoCheckResultImpl();
-                ofcr.setTid(r.getTid());
-                ofcr.setNumIid(r.getNumIid());
-                ofcr.setRefundId(r.getRefundId());
-                ofcr.setTitle(r.getTitle());
-                ofcr.setOrderStatus(r.getOrderStatus());
-                purchaseOrderlist = taoBaoHttp.getFenxiaoOrdersByTcOrderId(r.getTid());
-                if (purchaseOrderlist != null && purchaseOrderlist.size() > 0) {
-                    ofcr.setFenxiaoId(purchaseOrderlist.get(0).getFenxiaoId());
-                    fxCheckAssignment(ofcr);
-                } else {
-                    ofcr.setStatus(FenxiaoCheckStatus.NOT_FENXIAO.getValue());
-                }
-                ofcr.setAddTime(LocalDateTime.now());
-                ocFenxiaoCheckResultManager.persist(ofcr);//插入
-            } else { //该退款曾经对过账对过账
-                //对账状态异常或者，没有分销退款需要再次对账
-                if (FenxiaoCheckStatus.STATUS_ERROR_FENXIAO_REFUND.getValue().equals(ofcr.getStatus().get()) ||
-                        FenxiaoCheckStatus.NOT_FENXIAO_REFUND.getValue().equals(ofcr.getStatus().get())) {
-                    fxCheckAssignment(ofcr);
-                    ofcr.setAddTime(LocalDateTime.now());
-                    ocFenxiaoCheckResultManager.update(ofcr);//更新
-                }
-            }
-        }
-
-        List<OcFenxiaoCheckResult> olist = ocFenxiaoCheckResultManager.stream().collect(Collectors.toList());
-
-        //输出结果CSV
-        OcCsvUtils.writeWithCsvOcFenxiaoCheckResultWriter(olist, execJobId);
-
-        Logger.info(String.format("分销对账-运行结束"));
-    }
 
 
     private boolean reserveCheckTmOrderStatus(TianmaOrderStatus status) {
@@ -425,7 +338,7 @@ public class AccountCheck {
 
 
                         String citiesCommaSeparated = tianmaCheckResult.getTmOrders().stream()
-                                .map(o-> o.getOrderId()).collect(Collectors.joining(","));
+                                .map(o -> o.getOrderId()).collect(Collectors.joining(","));
 
                         ocTmsportCheckResult.setTmOrderIds(citiesCommaSeparated);
                         ocTmsportCheckResult.setTbTitle(tianmaCheckResult.getTbTitle());
@@ -447,7 +360,7 @@ public class AccountCheck {
                     } else {
                         ocTmsportCheckResult = new OcTmsportCheckResultImpl();
                         String citiesCommaSeparated = tianmaCheckResult.getTmOrders().stream()
-                                .map(o-> o.getOrderId()).collect(Collectors.joining(","));
+                                .map(o -> o.getOrderId()).collect(Collectors.joining(","));
 
                         ocTmsportCheckResult.setTmOrderIds(citiesCommaSeparated);
                         ocTmsportCheckResult.setAddTime(LocalDateTime.now());
@@ -484,40 +397,336 @@ public class AccountCheck {
         Logger.info(String.format("天马对账-运行结束"));
     }
 
+    /**
+     * 售后退款对账
+     *
+     * @param execJobId
+     * @throws Exception
+     */
+    public void afterSalesRefundCheck(Long execJobId) throws Exception {
+        Logger.info(String.format("开始进行售后退款对账,execJobId:[%d]", execJobId.longValue()));
 
-    private void fxCheckAssignment(OcFenxiaoCheckResult ofcr) throws Exception {
-        RefundDetail refundDetail = taoBaoHttp.getFenxiaoRefundBySubOrderId(ofcr.getFenxiaoId().getAsLong());
-        if (refundDetail != null) {
-            ofcr.setDistributorNick(refundDetail.getDistributorNick());
-            ofcr.setFenxiaoPaySupFee(new BigDecimal(refundDetail.getPaySupFee()));
-            ofcr.setFenxiaoRefundDesc(refundDetail.getRefundDesc());
-            ofcr.setFenxiaoRefundReason(refundDetail.getRefundReason());
-            ofcr.setFenxiaoRefundStatus(refundDetail.getRefundStatus().toString());
-            ofcr.setFenxiaoRefundFee(new BigDecimal(refundDetail.getRefundFee()));
-            ofcr.setSupplierNick(refundDetail.getSupplierNick());
 
-            if (refundDetail.getRefundStatus() == 5l) {
-                ofcr.setStatus(FenxiaoCheckStatus.SUCCESS_REFUND.getValue());
-            } else {
-                ofcr.setStatus(FenxiaoCheckStatus.STATUS_ERROR_FENXIAO_REFUND.getValue());
+        Integer refundOrderDateIntervalDay = OrderCatConfig.getRefundOrderDateIntervalDay();
+        Logger.info(String.format("售后退款列表查询时间周期:[%d]天", refundOrderDateIntervalDay.intValue()));
+
+
+        //1、获取天猫售后退款订单，并将订单分为两类：退款中、已退款。
+        //下载一个时间周期内退款列表
+        LocalDateTime lend = LocalDateTime.now();
+        LocalDateTime lbegin = lend.minusDays(refundOrderDateIntervalDay);
+        Date startTime = OcDateTimeUtils.localDateTime2Date(lbegin);
+        Date endTime = OcDateTimeUtils.localDateTime2Date(lend);
+
+        //WAIT_BUYER_RETURN_GOODS 卖家已经同意退款，等待买家退货
+        //WAIT_SELLER_CONFIRM_GOODS 买家已经退货，等待卖家确认收货
+        //SUCCESS 退款成功
+        String status = "SUCCESS,WAIT_BUYER_RETURN_GOODS,WAIT_SELLER_CONFIRM_GOODS";
+
+        Logger.info(String.format("状态:[%s]  开始日期:[%s] --- 结束日期:[%s]",
+                status,
+                OcDateTimeUtils.localDateTime2String(lbegin),
+                OcDateTimeUtils.localDateTime2String(lend)
+        ));
+        List<Refund> list = taoBaoHttp.getReceiveRefunds(status, startTime, endTime);
+        Logger.info(String.format("taobao.refunds.receive.get - size:[%d]", list.size()));
+
+
+        //赋值转换
+        List<AsRefundCheckResult> arcrList = list.parallelStream()
+                .map(refund -> {
+                    Optional<Trade> optionalTrade = taoBaoHttp.getTaobaoTrade(refund.getTid());
+
+                    AsRefundCheckResult asRefundCheckResult = new AsRefundCheckResult();
+                    if(optionalTrade.isPresent()){
+                        Trade trade = optionalTrade.get();
+
+                        asRefundCheckResult.setRefundFee(refund.getRefundFee());
+                        asRefundCheckResult.setTotalFee(refund.getTotalFee());
+                        asRefundCheckResult.setRefundStatus(refund.getStatus());
+                        asRefundCheckResult.setRefundId(refund.getRefundId());
+                        asRefundCheckResult.setBuyerNick(trade.getBuyerNick());
+                        asRefundCheckResult.setOrdersCount(trade.getOrders().size());
+                        asRefundCheckResult.setRefundPhase(refund.getRefundPhase());
+//            if(trade.getNum()==null){
+//                asRefundCheckResult.setNum(0);
+//            }else {
+//                asRefundCheckResult.setNum(trade.getNum().intValue());
+//            }
+                        asRefundCheckResult.setNum(refund.getNum().intValue());
+
+                        asRefundCheckResult.setTid(refund.getTid());
+                        asRefundCheckResult.setIsDaixiao(trade.getIsDaixiao());
+                        Logger.info(String.format("退款单[%d],订单[%d],是否代销:[%s],num[%d]",
+                                asRefundCheckResult.getRefundId(),
+                                asRefundCheckResult.getTid(),
+                                asRefundCheckResult.getIsDaixiao().toString(),
+                                asRefundCheckResult.getNum()));
+                    }
+
+
+                    return asRefundCheckResult;
+                }).collect(Collectors.toList());
+        Logger.info(String.format("AsRefundCheckResult list - size:[%d]", arcrList.size()));
+
+
+        //过滤非供销平台的售中退款订单
+        arcrList = arcrList.parallelStream()
+                .filter(asRefundCheckResult -> !(asRefundCheckResult.getIsDaixiao() == false && asRefundCheckResult.getRefundPhase().equals("onsale")))
+                .collect(Collectors.toList());
+        Logger.info(String.format("过滤非供销平台的售中退款订单 - size:[%d]", arcrList.size()));
+
+
+        //2、获取订单宝贝销售价及订单申请退款金额：如果销售价>300元且申请退款金额<20元，则此订单直接为对账成功（此处300、20为可手动修改）
+        BigDecimal totalFee = OrderCatConfig.getRefundOrderApTotalFee();
+        BigDecimal refundFee = OrderCatConfig.getRefundOrderApRefundFee();
+        arcrList.parallelStream().forEach(asRefundCheckResult -> {
+            BigDecimal rf = new BigDecimal(asRefundCheckResult.getRefundFee());
+            BigDecimal tf = new BigDecimal(asRefundCheckResult.getTotalFee());
+            if (tf.compareTo(totalFee) == 1 && rf.compareTo(refundFee) == -1) {
+                asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_SUCCESS);
             }
-        } else {
-            ofcr.setStatus(FenxiaoCheckStatus.NOT_FENXIAO_REFUND.getValue());
-            if (ofcr.getOrderStatus().equals("TRADE_CLOSED")) {//没有退款信息，但是交易关闭。就是退款成功
-                ofcr.setStatus(FenxiaoCheckStatus.SUCCESS_REFUND.getValue());
-            }
-        }
+        });
+
+
+        //分类采购单
+        //WAIT_BUYER_CONFIRM_GOODS(待收货确认)
+        //TRADE_FINISHED(采购成功)
+        //TRADE_FOR_PAY(已付款)
+        //无退款
+        List<PurchaseOrder> wtkList = taoBaoHttp.getFenxiaoOrders(
+                "WAIT_BUYER_CONFIRM_GOODS,TRADE_FINISHED,TRADE_FOR_PAY",
+                startTime,
+                endTime);
+        Map<Long, List<PurchaseOrder>> wtkMap = wtkList.parallelStream().collect(
+                Collectors.groupingBy(purchaseOrder -> purchaseOrder.getTcOrderId())
+        );
+
+        Logger.info(String.format("无退款-list - size:[%d]", wtkMap.size()));
+
+
+        //TRADE_REFUNDING(退款中)
+        //退款中
+        List<PurchaseOrder> tkzList = taoBaoHttp.getFenxiaoOrders(
+                "TRADE_REFUNDING",
+                startTime,
+                endTime);
+
+
+        Map<Long, List<PurchaseOrder>> tkzMap = tkzList.parallelStream().collect(
+                Collectors.groupingBy(purchaseOrder -> purchaseOrder.getTcOrderId())
+        );
+        Logger.info(String.format("退款中-list - size:[%d]", tkzMap.size()));
+
+        //TRADE_CLOSED
+        //已退款
+        List<PurchaseOrder> ytkList = taoBaoHttp.getFenxiaoOrders(
+                "TRADE_CLOSED",
+                startTime,
+                endTime);
+
+        Map<Long, List<PurchaseOrder>> ytkMap = ytkList.parallelStream().collect(
+                Collectors.groupingBy(purchaseOrder -> purchaseOrder.getTcOrderId())
+        );
+
+        Logger.info(String.format("已退款-list - size:[%d]", ytkList.size()));
+
+
+
+
+
+
+        //3、进行中的订单分为供销平台订单和非供销平台订单
+        //进行中的供销订单
+        arcrList.parallelStream()
+                .filter(asRefundCheckResult ->
+                        "WAIT_BUYER_RETURN_GOODS".equals(asRefundCheckResult.getRefundStatus()) || "WAIT_SELLER_CONFIRM_GOODS".equals(asRefundCheckResult.getRefundStatus()))
+                .filter(asRefundCheckResult -> asRefundCheckResult.getIsDaixiao())
+                .forEach(asRefundCheckResult -> {
+
+
+                    //如果对应的第三步的状态为无退款则对账失败，提示供销平台未退款
+                    if(wtkMap.get(asRefundCheckResult.getTid())!=null){
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                        asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:供销平台未退款"));
+                    }
+                    //如果对应的第三步的状态为退款中则对账成功
+                    if(tkzMap.get(asRefundCheckResult.getTid())!=null){
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_SUCCESS);
+                    }
+                    //如果对应的第三步的状态为已退款则对账失败，提示供销平台已退款，未给买家退款
+                    if(ytkMap.get(asRefundCheckResult.getTid())!=null){
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                        asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:供销平台已退款，未给买家退款"));
+                    }
+                    if(asRefundCheckResult.getDzStatus() == null){
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                        asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:供销平台没有找到采购单"));
+                    }
+
+
+
+                });
+        //进行中的购销订单
+        arcrList.parallelStream()
+                .filter(asRefundCheckResult ->
+                        "WAIT_BUYER_RETURN_GOODS".equals(asRefundCheckResult.getRefundStatus()) || "WAIT_SELLER_CONFIRM_GOODS".equals(asRefundCheckResult.getRefundStatus()))
+                .filter(asRefundCheckResult -> !asRefundCheckResult.getIsDaixiao())
+                .forEach((AsRefundCheckResult asRefundCheckResult) -> {
+
+                    PageResult<TianmaOrder> prTmOrders = null;
+                    try {
+                        prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, asRefundCheckResult.getTid().toString(), null, 1, 10);
+                    } catch (Exception e) {
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                        asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:" + e.getMessage()));
+                    }
+                    if (prTmOrders != null) {
+
+                        //非供销平台订单状态为：待退货、已退货、已退款，则对账成功，否则对账失败（天马未申请退款）
+                        if (prTmOrders.getTotal() == 0) {
+                            asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                            asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:天马没有找到订单信息"));
+                        }
+                        for (TianmaOrder to : prTmOrders.getRows()) {
+                            if (to.getStatus() != TianmaOrderStatus.WAITING_RETURN && to.getStatus() != TianmaOrderStatus.FEEDBACK_FAILURE && to.getStatus() != TianmaOrderStatus.REFUNDED) {
+                                asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                                asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:天马订单状态为:[%s]", to.getStatus().getVal()));
+                            }
+                        }
+                    }
+
+
+                });
+
+
+        //退款成功的分销订单
+        arcrList.parallelStream()
+                .filter(asRefundCheckResult ->
+                        "SUCCESS".equals(asRefundCheckResult.getRefundStatus()))
+                .filter(asRefundCheckResult -> asRefundCheckResult.getIsDaixiao())
+                .forEach(asRefundCheckResult -> {
+
+                    //如果对应的第三步的状态为无退款则对账失败，提示供销平台未退款
+                    if(wtkMap.get(asRefundCheckResult.getTid())!=null){
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                        asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:供销平台未退款"));
+                    }
+                    //如果对应的第三步的状态为退款中则对账失败，提示供销平台退款中
+                    if(tkzMap.get(asRefundCheckResult.getTid())!=null){
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                        asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:提示供销平台退款中"));
+
+                    }
+                    //如如果对应的第三步的状态为已退款则对账成功
+                    if(ytkMap.get(asRefundCheckResult.getTid())!=null){
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_SUCCESS);
+                    }
+                    if(asRefundCheckResult.getDzStatus() == null){
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                        asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:供销平台没有找到采购单"));
+                    }
+
+                });
+        //退款成功的购销订单
+        arcrList.parallelStream()
+                .filter(asRefundCheckResult ->
+                        "SUCCESS".equals(asRefundCheckResult.getRefundStatus()))
+                .filter(asRefundCheckResult -> !asRefundCheckResult.getIsDaixiao())
+                .forEach(asRefundCheckResult -> {
+
+                    PageResult<TianmaOrder> prTmOrders = null;
+                    try {
+                        prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, asRefundCheckResult.getTid().toString(), null, 1, 10);
+                    } catch (Exception e) {
+                        asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                        asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:" + e.getMessage()));
+                    }
+                    if (prTmOrders != null) {
+
+                        //非供销平台订单状态为：已退货、已退款，则对账成功，否则对账失败（天马未退款）
+                        if (prTmOrders.getTotal() == 0) {
+                            asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                            asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:天马没有找到订单信息"));
+                        }
+                        for (TianmaOrder to : prTmOrders.getRows()) {
+                            if (to.getStatus() != TianmaOrderStatus.FEEDBACK_FAILURE && to.getStatus() != TianmaOrderStatus.REFUNDED) {
+                                asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
+                                asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:天马订单状态为:[%s]", to.getStatus().getVal()));
+                            }
+                        }
+                    }
+                });
+
+        //没有赋值的就是对账成功
+        arcrList.parallelStream()
+                .filter(asRefundCheckResult -> asRefundCheckResult.getDzStatus() == null)
+                .forEach(asRefundCheckResult -> asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_SUCCESS));
+
+
+        //持久化数据库
+
+        Logger.info(String.format("正在持久化数据库"));
+
+        //已经对过账的所有记录
+        ConcurrentMap<Long, OcAsRefundCheckResult> yetAsRefundCheckResultMap = ocAsRefundCheckResultManager.stream()
+                .collect(Collectors.toConcurrentMap(o -> o.getRefundId().getAsLong(), Function.identity()));
+        Logger.info(String.format("已经对过账的所有记录.size:[%d]", yetAsRefundCheckResultMap.size()));
+
+        arcrList.parallelStream()
+                .filter(asRefundCheckResult -> asRefundCheckResult.getDzStatus() != null)
+                .forEach(asRefundCheckResult -> {
+
+                    OcAsRefundCheckResult oArcr = yetAsRefundCheckResultMap.get(asRefundCheckResult.getRefundId());
+                    if (oArcr != null) {
+                        if (!"DZ_SUCCESS".equals(oArcr.getDzStatus())) {
+                            oArcr.setRefundId(asRefundCheckResult.getRefundId());
+                            oArcr.setAddTime(LocalDateTime.now());
+                            oArcr.setBuyerNick(asRefundCheckResult.getBuyerNick());
+                            oArcr.setDzStatus(asRefundCheckResult.getDzStatus().getValue());
+                            oArcr.setFailureReason(asRefundCheckResult.getFailureReason());
+                            oArcr.setIsDaixiao(asRefundCheckResult.getIsDaixiao() ? Short.valueOf("1") : Short.valueOf("0"));
+                            oArcr.setRefundFee(new BigDecimal(asRefundCheckResult.getRefundFee()));
+                            oArcr.setTotalFee(new BigDecimal(asRefundCheckResult.getTotalFee()));
+                            oArcr.setNum(asRefundCheckResult.getNum());
+                            oArcr.setRefundPhase(asRefundCheckResult.getRefundPhase());
+                            oArcr.setOrdersCount(asRefundCheckResult.getOrdersCount().longValue());
+                            oArcr.setTid(asRefundCheckResult.getTid());
+                            oArcr.setRefundStatus(asRefundCheckResult.getRefundStatus());
+                            ocAsRefundCheckResultManager.update(oArcr);
+                        }
+                    } else {
+                        OcAsRefundCheckResult ocAsRefundCheckResult = new OcAsRefundCheckResultImpl();
+                        ocAsRefundCheckResult.setRefundId(asRefundCheckResult.getRefundId());
+                        ocAsRefundCheckResult.setAddTime(LocalDateTime.now());
+                        ocAsRefundCheckResult.setBuyerNick(asRefundCheckResult.getBuyerNick());
+                        ocAsRefundCheckResult.setDzStatus(asRefundCheckResult.getDzStatus().getValue());
+                        ocAsRefundCheckResult.setFailureReason(asRefundCheckResult.getFailureReason());
+                        ocAsRefundCheckResult.setIsDaixiao(asRefundCheckResult.getIsDaixiao() ? Short.valueOf("1") : Short.valueOf("0"));
+                        ocAsRefundCheckResult.setRefundFee(new BigDecimal(asRefundCheckResult.getRefundFee()));
+                        ocAsRefundCheckResult.setTotalFee(new BigDecimal(asRefundCheckResult.getTotalFee()));
+                        ocAsRefundCheckResult.setNum(asRefundCheckResult.getNum());
+                        ocAsRefundCheckResult.setRefundPhase(asRefundCheckResult.getRefundPhase());
+                        ocAsRefundCheckResult.setOrdersCount(asRefundCheckResult.getOrdersCount().longValue());
+                        ocAsRefundCheckResult.setTid(asRefundCheckResult.getTid());
+                        ocAsRefundCheckResult.setRefundStatus(asRefundCheckResult.getRefundStatus());
+                        ocAsRefundCheckResultManager.persist(ocAsRefundCheckResult);
+
+                    }
+
+                });
+
+        Logger.info(String.format("持久化数据库-完成"));
+
+
     }
 
-    public void setOcSyncInventoryItemInfoManager(OcSyncInventoryItemInfoManager ocSyncInventoryItemInfoManager) {
-        this.ocSyncInventoryItemInfoManager = ocSyncInventoryItemInfoManager;
-    }
-
-    public void setOcFenxiaoCheckResultManager(OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager) {
-        this.ocFenxiaoCheckResultManager = ocFenxiaoCheckResultManager;
-    }
 
     public void setOcTmsportCheckResultManager(OcTmsportCheckResultManager ocTmsportCheckResultManager) {
         this.ocTmsportCheckResultManager = ocTmsportCheckResultManager;
+    }
+
+    public void setOcAsRefundCheckResultManager(OcAsRefundCheckResultManager ocAsRefundCheckResultManager) {
+        this.ocAsRefundCheckResultManager = ocAsRefundCheckResultManager;
     }
 }

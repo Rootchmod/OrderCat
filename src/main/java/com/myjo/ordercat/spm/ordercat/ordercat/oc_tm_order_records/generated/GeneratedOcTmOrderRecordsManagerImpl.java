@@ -41,6 +41,8 @@ implements GeneratedOcTmOrderRecordsManager {
             OcTmOrderRecords.TM_ORDER_ID,
             OcTmOrderRecords.GOODS_NO,
             OcTmOrderRecords.SIZE,
+            OcTmOrderRecords.TM_SIZE_INFO_STR,
+            OcTmOrderRecords.TM_SKU_ID,
             OcTmOrderRecords.FREIGHT_PRICE_STR,
             OcTmOrderRecords.WH_ID,
             OcTmOrderRecords.WH_NAME,

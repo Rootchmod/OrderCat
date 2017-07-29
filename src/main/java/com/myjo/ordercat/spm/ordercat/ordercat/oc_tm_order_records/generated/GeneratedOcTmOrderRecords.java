@@ -88,6 +88,28 @@ public interface GeneratedOcTmOrderRecords {
     );
     /**
      * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getTmSizeInfoStr()} method.
+     */
+    StringField<OcTmOrderRecords, String> TM_SIZE_INFO_STR = StringField.create(
+        Identifier.TM_SIZE_INFO_STR,
+        o -> OptionalUtil.unwrap(o.getTmSizeInfoStr()),
+        OcTmOrderRecords::setTmSizeInfoStr,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
+     * obtained using the {@link OcTmOrderRecords#getTmSkuId()} method.
+     */
+    StringField<OcTmOrderRecords, String> TM_SKU_ID = StringField.create(
+        Identifier.TM_SKU_ID,
+        o -> OptionalUtil.unwrap(o.getTmSkuId()),
+        OcTmOrderRecords::setTmSkuId,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcTmOrderRecords} field that can be
      * obtained using the {@link OcTmOrderRecords#getFreightPriceStr()} method.
      */
     StringField<OcTmOrderRecords, String> FREIGHT_PRICE_STR = StringField.create(
@@ -317,6 +339,24 @@ public interface GeneratedOcTmOrderRecords {
     Optional<String> getSize();
     
     /**
+     * Returns the tmSizeInfoStr of this OcTmOrderRecords. The tmSizeInfoStr
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.tm_size_info_str.
+     * 
+     * @return the tmSizeInfoStr of this OcTmOrderRecords
+     */
+    Optional<String> getTmSizeInfoStr();
+    
+    /**
+     * Returns the tmSkuId of this OcTmOrderRecords. The tmSkuId field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.tm_sku_id.
+     * 
+     * @return the tmSkuId of this OcTmOrderRecords
+     */
+    Optional<String> getTmSkuId();
+    
+    /**
      * Returns the freightPriceStr of this OcTmOrderRecords. The freightPriceStr
      * field corresponds to the database column
      * ordercat.ordercat.oc_tm_order_records.freight_price_str.
@@ -512,6 +552,25 @@ public interface GeneratedOcTmOrderRecords {
     OcTmOrderRecords setSize(String size);
     
     /**
+     * Sets the tmSizeInfoStr of this OcTmOrderRecords. The tmSizeInfoStr field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_tm_order_records.tm_size_info_str.
+     * 
+     * @param tmSizeInfoStr to set of this OcTmOrderRecords
+     * @return              this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setTmSizeInfoStr(String tmSizeInfoStr);
+    
+    /**
+     * Sets the tmSkuId of this OcTmOrderRecords. The tmSkuId field corresponds
+     * to the database column ordercat.ordercat.oc_tm_order_records.tm_sku_id.
+     * 
+     * @param tmSkuId to set of this OcTmOrderRecords
+     * @return        this OcTmOrderRecords instance
+     */
+    OcTmOrderRecords setTmSkuId(String tmSkuId);
+    
+    /**
      * Sets the freightPriceStr of this OcTmOrderRecords. The freightPriceStr
      * field corresponds to the database column
      * ordercat.ordercat.oc_tm_order_records.freight_price_str.
@@ -682,6 +741,8 @@ public interface GeneratedOcTmOrderRecords {
         TM_ORDER_ID        ("tm_order_id"),
         GOODS_NO           ("goodsNo"),
         SIZE               ("size"),
+        TM_SIZE_INFO_STR   ("tm_size_info_str"),
+        TM_SKU_ID          ("tm_sku_id"),
         FREIGHT_PRICE_STR  ("freight_price_str"),
         WH_ID              ("wh_id"),
         WH_NAME            ("wh_name"),

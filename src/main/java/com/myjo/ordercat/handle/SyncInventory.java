@@ -86,7 +86,7 @@ public class SyncInventory {
     /**
      * 数据采集,多个CSV合成一个
      */
-    public void dataGathering(String fileName) throws Exception {
+    public void dataGathering(String prefix,String fileName,Long execJobId) throws Exception {
         //删除历史库存CSV
 //        String dfileStr = OrderCatConfig.getOrderCatOutPutPath() + fileName;
 //        File dfile = new File(dfileStr);
@@ -96,14 +96,111 @@ public class SyncInventory {
         //下载合并CSV
         List<InventoryQueryCondition> list = OrderCatConfig.getInventoryQueryConditions();
         Logger.debug("dataGathering.InventoryQueryCondition.list" + list.size());
-        for (InventoryQueryCondition iqc : list) {
-            Logger.debug("dataGathering.InventoryQueryCondition.BrandName" + iqc.getBrandName());
-            Logger.debug("dataGathering.InventoryQueryCondition.Quarter" + iqc.getQuarter());
-            Logger.debug("dataGathering.InventoryQueryCondition.Sex" + iqc.getSex());
-            tianmaSportHttp.inventoryDownGroup(fileName, iqc.getBrandName(), iqc.getSex(), iqc.getQuarter());
+
+        String[] quarter = {
+                "17Q4","17Q3","17Q2","17Q1",
+                "16Q4","16Q3","16Q2","16Q1",
+                "15Q4","15Q3","15Q2","15Q1",
+                "14Q4","14Q3","14Q2","14Q1"
+        };
+
+        String[] sex = {
+                "男","女","中"
+        };
+
+        String[] division = {
+                "鞋","服","配"
+        };
+        //计算笛卡尔积
+        List<String> list1 = Arrays.asList(quarter);
+        List<String> list2 = Arrays.asList(sex);
+        List<String> list3 = Arrays.asList(division);
+        List<List<String>> lists = Arrays.asList(list1,list2,list3);
+        List<List<String>> resultLists = cartesianProduct(lists);
+
+        Logger.info("下载团购查询信息");
+        for(InventoryQueryCondition iqc :list){
+            Logger.info("dataGathering.InventoryQueryCondition.BrandName:" + iqc.getBrandName());
+            resultLists.parallelStream().forEach(strings -> {
+                String tempfName = String.format("%s_%s_%s_%s_%s_%d.csv",
+                        prefix,
+                        iqc.getBrandName(),
+                        strings.get(1),
+                        strings.get(0),
+                        strings.get(2),
+                        execJobId
+                        );
+                Logger.info("dataGathering.fileName:" + tempfName);
+                try {
+                    tianmaSportHttp.inventoryDownGroup(tempfName, iqc.getBrandName(), strings.get(1), strings.get(0),strings.get(2));
+                } catch (Exception e) {
+                    throw new OCException(e);
+                }
+            });
         }
+        Logger.info("合并团购下载文件");
+
+        String dfileStr = OrderCatConfig.getOrderCatTempPath() + fileName;
+        //IOUtils.toByteArray(inputStream);
+        File dfile = new File(dfileStr);
+        File tempCsv;
+        for(InventoryQueryCondition iqc :list){
+            Logger.info("dataGathering.InventoryQueryCondition.BrandName:" + iqc.getBrandName());
+            for(List<String> tempList:resultLists){
+                String tempfName = String.format("%s_%s_%s_%s_%s_%d.csv",
+                        prefix,
+                        iqc.getBrandName(),
+                        tempList.get(1),
+                        tempList.get(0),
+                        tempList.get(2),
+                        execJobId);
+
+                tempCsv = new File( OrderCatConfig.getOrderCatTempPath()+tempfName);
+                if(tempCsv.exists()){
+                    FileUtils.writeByteArrayToFile(dfile, FileUtils.readFileToByteArray(tempCsv), true);
+                    FileUtils.forceDelete(tempCsv);
+                }
+            }
+        }
+
+//        ArrayList
+//
+//
+//
+//
+//        for (InventoryQueryCondition iqc : list) {
+//            Logger.debug("dataGathering.InventoryQueryCondition.BrandName" + iqc.getBrandName());
+//            Logger.debug("dataGathering.InventoryQueryCondition.Quarter" + iqc.getQuarter());
+//            Logger.debug("dataGathering.InventoryQueryCondition.Sex" + iqc.getSex());
+//            tianmaSportHttp.inventoryDownGroup(fileName, iqc.getBrandName(), iqc.getSex(), iqc.getQuarter());
+//        }
         Logger.debug("SyncInventory.dataGathering.exec done.");
     }
+
+
+    private static <T>  List<List<T>> cartesianProduct(List<List<T>> lists) {
+        List<List<T>> resultLists = new ArrayList<List<T>>();
+        if (lists.size() == 0) {
+            resultLists.add(new ArrayList<T>());
+            return resultLists;
+        } else {
+            List<T> firstList = lists.get(0);
+            List<List<T>> remainingLists = cartesianProduct(lists.subList(1, lists.size()));
+            for (T condition : firstList) {
+                for (List<T> remainingList : remainingLists) {
+                    ArrayList<T> resultList = new ArrayList<T>();
+                    resultList.add(condition);
+                    resultList.addAll(remainingList);
+                    resultLists.add(resultList);
+                }
+            }
+        }
+        return resultLists;
+    }
+
+
+
+
 
     private List<InventoryInfo> getInventoryInfoInCsv(String fileName) throws Exception {
 
@@ -111,8 +208,6 @@ public class SyncInventory {
         String dfileStr = OrderCatConfig.getOrderCatTempPath() + fileName;
         ICsvListReader listReader = null;
         try {
-
-
             InputStreamReader freader = new InputStreamReader(new FileInputStream(
                     new File(dfileStr)), "GBK");
 
@@ -122,31 +217,33 @@ public class SyncInventory {
             List<String> customerList;
             InventoryInfo inventoryInfo = null;
             while ((customerList = listReader.read()) != null) {
-                inventoryInfo = new InventoryInfo();
+                if(customerList!=null&&customerList.size()==12){
+                    inventoryInfo = new InventoryInfo();
 //                Logger.debug(String.format("lineNo=%s, rowNo=%s, customerList=%s", listReader.getLineNumber(),
 //                        listReader.getRowNumber(), customerList));
-                inventoryInfo.setGoodsNo(customerList.get(0));
-                inventoryInfo.setWarehouseName(customerList.get(1));
-                inventoryInfo.setSize1(customerList.get(2));
-                inventoryInfo.setSize2(customerList.get(3));
+                    inventoryInfo.setGoodsNo(customerList.get(0));
+                    inventoryInfo.setWarehouseName(customerList.get(1));
+                    inventoryInfo.setSize1(customerList.get(2));
+                    inventoryInfo.setSize2(customerList.get(3));
 
-                inventoryInfo.setBrand(Brand.NIKE);
-                inventoryInfo.setMarketprice(customerList.get(5));
-                inventoryInfo.setNum2(customerList.get(6));
-                inventoryInfo.setDivision(customerList.get(7));
-                inventoryInfo.setCate(customerList.get(8));
-                if (customerList.get(9) == null) {
-                    inventoryInfo.setSex(null);
-                } else {
-                    if (customerList.get(9).equals("男")) {
-                        inventoryInfo.setSex(Sex.MALE);
+                    inventoryInfo.setBrand(Brand.NIKE);
+                    inventoryInfo.setMarketprice(customerList.get(5));
+                    inventoryInfo.setNum2(customerList.get(6));
+                    inventoryInfo.setDivision(customerList.get(7));
+                    inventoryInfo.setCate(customerList.get(8));
+                    if (customerList.get(9) == null) {
+                        inventoryInfo.setSex(null);
                     } else {
-                        inventoryInfo.setSex(Sex.FEMALE);
+                        if (customerList.get(9).equals("男")) {
+                            inventoryInfo.setSex(Sex.MALE);
+                        } else {
+                            inventoryInfo.setSex(Sex.FEMALE);
+                        }
                     }
+                    inventoryInfo.setQuarter(customerList.get(10));
+                    inventoryInfo.setDiscount(customerList.get(11));
+                    list.add(inventoryInfo);
                 }
-                inventoryInfo.setQuarter(customerList.get(10));
-                inventoryInfo.setDiscount(customerList.get(11));
-                list.add(inventoryInfo);
             }
 
         } finally {
@@ -180,7 +277,7 @@ public class SyncInventory {
         Logger.info("同步配货率信息,job-id:" + execJobId);
         //抓取天马库存信息数据
         Logger.info("抓取天马库存信息数据");
-        dataGathering(OrderCatConfig.getInventoryGroupWhfile());
+        dataGathering("swh",OrderCatConfig.getInventoryGroupWhfile(),execJobId);
         List<InventoryInfo> list = getInventoryInfoInCsv(OrderCatConfig.getInventoryGroupWhfile());
         Logger.info("InventoryInfoInCsv.origin.size:" + list.size());
 
@@ -496,7 +593,7 @@ public class SyncInventory {
         Logger.info("同步淘宝库存");
         //抓取天马库存信息数据
         Logger.info("抓取天马库存信息数据");
-        dataGathering(OrderCatConfig.getInventoryGroupIwhfile());
+        dataGathering("stbi",OrderCatConfig.getInventoryGroupIwhfile(),execJobId);
         List<InventoryInfo> list = getInventoryInfoInCsv(OrderCatConfig.getInventoryGroupIwhfile());
         if (list.size() == 0) {
             throw new OCException("天马库存信息为空,请检测天马数据获取接口!");
@@ -823,43 +920,6 @@ public class SyncInventory {
         } else {
             throw new OCException("csvListSukMap接口SKU映射为空!请检查!");
         }
-        //同步的宝贝入库
-//        Logger.info(String.format("记录同步过的宝贝[ 增量 ]"));
-//
-//        ocSyncInventoryItemInfoManager.stream()
-//                .map(OcSyncInventoryItemInfo.STATUS.setTo(SyncInventoryItemStatus.NOT_SYNCHRONIZED.getValue()))
-//                .forEach(ocSyncInventoryItemInfoManager.updater());
-//
-//        Map<String, OcSyncInventoryItemInfo> osiiMap = ocSyncInventoryItemInfoManager
-//                .stream()
-//                .collect(Collectors.toMap(o -> o.getNumIid().get(), Function.identity()));
-//        Logger.info(String.format("同步过的宝贝数量为-size:[%d]", osiiMap.size()));
-//
-//
-//        String itemId;
-//        OcSyncInventoryItemInfo ocSyncInventoryItemInfo;
-//        for (Map.Entry<Long, List<Sku>> entry : skuNumIidMap.entrySet()) {
-////            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-//            itemId = String.valueOf(entry.getKey().longValue());
-//            if (osiiMap.get(itemId) == null) {
-//                ocSyncInventoryItemInfo = new OcSyncInventoryItemInfoImpl();
-//                ocSyncInventoryItemInfo.setNumIid(itemId);
-//                ocSyncInventoryItemInfo.setStatus(SyncInventoryItemStatus.ARE_SYNCHRONIZED.getValue());
-//                ocSyncInventoryItemInfo.setAddTime(LocalDateTime.now());
-//                ocSyncInventoryItemInfoManager.persist(ocSyncInventoryItemInfo);
-//            } else {
-//                ocSyncInventoryItemInfoManager.stream()
-//                        .filter(OcSyncInventoryItemInfo.NUM_IID.equal(itemId))
-//                        .map(OcSyncInventoryItemInfo.STATUS.setTo(SyncInventoryItemStatus.ARE_SYNCHRONIZED.getValue()))
-//                        .forEach(ocSyncInventoryItemInfoManager.updater());
-//            }
-//        }
-//
-//        osiiMap = ocSyncInventoryItemInfoManager
-//                .stream()
-//                .collect(Collectors.toMap(o -> o.getNumIid().get(), Function.identity()));
-//        Logger.info(String.format("再次同步后的宝贝数量为-size:[%d]", osiiMap.size()));
-
         //删除
         delDataGatheringFile(OrderCatConfig.getInventoryGroupIwhfile());
         Logger.info(String.format("删除: [%s] 文件. ", OrderCatConfig.getInventoryGroupIwhfile()));

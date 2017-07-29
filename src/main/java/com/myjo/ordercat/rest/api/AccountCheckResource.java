@@ -56,7 +56,8 @@ public class AccountCheckResource {
             @ApiParam(name = "end_time", value = "结束时间") @QueryParam("end_time") String end_time,
             @ApiParam(name = "order_begin_time", value = "开始时间") @QueryParam("order_begin_time") String order_begin_time,
             @ApiParam(name = "order_end_time", value = "结束时间") @QueryParam("order_end_time") String order_end_time,
-            @ApiParam(name = "is_dz_success", value = "结束时间") @QueryParam("is_dz_success") String is_dz_success,
+            @ApiParam(name = "is_dz_success", value = "是否过滤对账成功") @QueryParam("is_dz_success") String is_dz_success,
+            @ApiParam(name = "labour_status", value = "人工对账状态") @QueryParam("labour_status") String labour_status,
             @ApiParam(required = true, name = "page_size", value = "分页大小") @QueryParam("page_size") int page_size,
             @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
@@ -76,6 +77,11 @@ public class AccountCheckResource {
 
         List<Predicate<OcTmsportCheckResult>> predicateList = new ArrayList<>();
 
+
+
+        if(labour_status!=null){
+            predicateList.add(OcTmsportCheckResultImpl.LABOUR_STATUS.equal(labour_status));
+        }
 
         if(is_dz_success!=null){
             predicateList.add(OcTmsportCheckResultImpl.DZ_STATUS.notEqual("DZ_SUCCESS"));
@@ -137,7 +143,7 @@ public class AccountCheckResource {
                     tianmaCheckResult.setTbTitle(o.getTbTitle().orElse(""));
                     tianmaCheckResult.setTbNickName(o.getTbNickname().orElse(""));
                     tianmaCheckResult.setLabourStatus(o.getLabourStatus().orElse(""));
-                    tianmaCheckResult.setTbNum(o.getTbNum().getAsLong());
+                    tianmaCheckResult.setTbNum(o.getTbNum().orElse(0));
                     tianmaCheckResult.setTbCreated(o.getTbCreated().isPresent()?OcDateTimeUtils.localDateTime2Date(o.getTbCreated().get()):null);
                     tianmaCheckResult.setTbPaytime(o.getTbPaytime().isPresent()?OcDateTimeUtils.localDateTime2Date(o.getTbPaytime().get()):null);
                     tianmaCheckResult.setTbPrice(o.getTbPrice().orElse(BigDecimal.ZERO));

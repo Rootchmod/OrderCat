@@ -6,8 +6,8 @@ package com.myjo.ordercat.domain;
 public class InventoryQueryCondition {
 
     private String brandName;
-    private String quarter;
-    private String sex;
+//    private String quarter;
+//    private String sex;
 
 
     public String getBrandName() {
@@ -18,19 +18,19 @@ public class InventoryQueryCondition {
         this.brandName = brandName;
     }
 
-    public String getQuarter() {
-        return quarter;
-    }
-
-    public void setQuarter(String quarter) {
-        this.quarter = quarter;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
+//    public String getQuarter() {
+//        return quarter;
+//    }
+//
+//    public void setQuarter(String quarter) {
+//        this.quarter = quarter;
+//    }
+//
+//    public String getSex() {
+//        return sex;
+//    }
+//
+//    public void setSex(String sex) {
+//        this.sex = sex;
+//    }
 }

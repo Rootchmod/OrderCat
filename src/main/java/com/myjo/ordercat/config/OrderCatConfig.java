@@ -8,6 +8,7 @@ import com.typesafe.config.ConfigObject;
 
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +80,28 @@ public class OrderCatConfig {
     public static Integer getTianmaOrderDateIntervalDay(){
         return config.getInt(String.format(ACCOUNT_CHECK, "tianma_order_date_interval_day"));
     }
+
+    public static Integer getRefundOrderDateIntervalDay(){
+        return config.getInt(String.format(ACCOUNT_CHECK, "refund_order_date_interval_day"));
+    }
+
+
+    public static BigDecimal getRefundOrderApTotalFee(){
+        return new BigDecimal(config.getString(String.format(ACCOUNT_CHECK, "refund_order_ap_totalFee")));
+    }
+
+
+    public static BigDecimal getRefundOrderApRefundFee(){
+        return new BigDecimal(config.getString(String.format(ACCOUNT_CHECK, "refund_order_ap_refundFee")));
+    }
+
+
+
+
+
+
+
+
 
     public static Long getTianmaPaytimeDifferDay(){
         return config.getLong(String.format(ACCOUNT_CHECK, "tianma_paytime_differ_day"));
@@ -191,7 +214,6 @@ public class OrderCatConfig {
     public static String getDBmsName(){
         return config.getString(String.format(DATABASE, "dbmsName"));
     }
-
     public static String getDBConnectionUrl(){
         return config.getString(String.format(DATABASE, "connectionUrl"));
     }
@@ -201,6 +223,20 @@ public class OrderCatConfig {
     public static String getDBPassword(){
         return config.getString(String.format(DATABASE, "password"));
     }
+
+
+
+    public static String getRedisHost(){
+        return config.getString(String.format(DATABASE, "redis_host"));
+    }
+    public static String getRedisPassword(){
+        return config.getString(String.format(DATABASE, "redis_password"));
+    }
+    public static String getRedisPort(){
+        return config.getString(String.format(DATABASE, "redis_port"));
+    }
+
+
 
 
     //平均价格+1%
@@ -414,6 +450,19 @@ public class OrderCatConfig {
         }
         return rtList;
     }
+
+    public static List<ShieldWhPolicy> getShieldWareHousePolicy(){
+        List<ShieldWhPolicy> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "shield_warehouse_policy"));
+        ShieldWhPolicy shieldWhPolicy;
+        for(ConfigObject cb :list){
+            shieldWhPolicy = ConfigBeanFactory.create(cb.toConfig(),ShieldWhPolicy.class);
+            rtList.add(shieldWhPolicy);
+        }
+        return rtList;
+    }
+
+
 
 
     public static List<CycleWhComp> getCycleWhComp(){

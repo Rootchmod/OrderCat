@@ -28,6 +28,8 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     private String tmOrderId;
     private String goodsNo;
     private String size;
+    private String tmSizeInfoStr;
+    private String tmSkuId;
     private String freightPriceStr;
     private Integer whId;
     private String whName;
@@ -73,6 +75,16 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     @Override
     public Optional<String> getSize() {
         return Optional.ofNullable(size);
+    }
+    
+    @Override
+    public Optional<String> getTmSizeInfoStr() {
+        return Optional.ofNullable(tmSizeInfoStr);
+    }
+    
+    @Override
+    public Optional<String> getTmSkuId() {
+        return Optional.ofNullable(tmSkuId);
     }
     
     @Override
@@ -191,6 +203,18 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
     }
     
     @Override
+    public OcTmOrderRecords setTmSizeInfoStr(String tmSizeInfoStr) {
+        this.tmSizeInfoStr = tmSizeInfoStr;
+        return this;
+    }
+    
+    @Override
+    public OcTmOrderRecords setTmSkuId(String tmSkuId) {
+        this.tmSkuId = tmSkuId;
+        return this;
+    }
+    
+    @Override
     public OcTmOrderRecords setFreightPriceStr(String freightPriceStr) {
         this.freightPriceStr = freightPriceStr;
         return this;
@@ -300,6 +324,8 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
         sj.add("tmOrderId = "        + Objects.toString(OptionalUtil.unwrap(getTmOrderId())));
         sj.add("goodsNo = "          + Objects.toString(OptionalUtil.unwrap(getGoodsNo())));
         sj.add("size = "             + Objects.toString(OptionalUtil.unwrap(getSize())));
+        sj.add("tmSizeInfoStr = "    + Objects.toString(OptionalUtil.unwrap(getTmSizeInfoStr())));
+        sj.add("tmSkuId = "          + Objects.toString(OptionalUtil.unwrap(getTmSkuId())));
         sj.add("freightPriceStr = "  + Objects.toString(OptionalUtil.unwrap(getFreightPriceStr())));
         sj.add("whId = "             + Objects.toString(OptionalUtil.unwrap(getWhId())));
         sj.add("whName = "           + Objects.toString(OptionalUtil.unwrap(getWhName())));
@@ -330,6 +356,8 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
         if (!Objects.equals(this.getTmOrderId(), thatOcTmOrderRecords.getTmOrderId())) {return false; }
         if (!Objects.equals(this.getGoodsNo(), thatOcTmOrderRecords.getGoodsNo())) {return false; }
         if (!Objects.equals(this.getSize(), thatOcTmOrderRecords.getSize())) {return false; }
+        if (!Objects.equals(this.getTmSizeInfoStr(), thatOcTmOrderRecords.getTmSizeInfoStr())) {return false; }
+        if (!Objects.equals(this.getTmSkuId(), thatOcTmOrderRecords.getTmSkuId())) {return false; }
         if (!Objects.equals(this.getFreightPriceStr(), thatOcTmOrderRecords.getFreightPriceStr())) {return false; }
         if (!Objects.equals(this.getWhId(), thatOcTmOrderRecords.getWhId())) {return false; }
         if (!Objects.equals(this.getWhName(), thatOcTmOrderRecords.getWhName())) {return false; }
@@ -358,6 +386,8 @@ public abstract class GeneratedOcTmOrderRecordsImpl implements OcTmOrderRecords 
         hash = 31 * hash + Objects.hashCode(getTmOrderId());
         hash = 31 * hash + Objects.hashCode(getGoodsNo());
         hash = 31 * hash + Objects.hashCode(getSize());
+        hash = 31 * hash + Objects.hashCode(getTmSizeInfoStr());
+        hash = 31 * hash + Objects.hashCode(getTmSkuId());
         hash = 31 * hash + Objects.hashCode(getFreightPriceStr());
         hash = 31 * hash + Objects.hashCode(getWhId());
         hash = 31 * hash + Objects.hashCode(getWhName());

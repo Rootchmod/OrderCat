@@ -1,6 +1,7 @@
 package com.myjo.ordercat
 
 import com.myjo.ordercat.domain.LogisticsCompany
+import com.myjo.ordercat.domain.TmArea
 import com.myjo.ordercat.http.TianmaSportHttp
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -99,6 +100,47 @@ class TianmaSportHttpSpec extends Specification {
 
         //def f = tianmaSportHttp.getSearchByArticleno("tianmaSportHttp")
         //System.out.println(postExample.login());
+        then:
+        logisticsCompany.get().code.get() == "YTO"
+        logisticsCompany1.get().code.get() == "YUNDA"
+
+    }
+
+
+   // 新疆维吾尔自治区 吐鲁番市 高昌区
+    private String getPidInAreas(List<TmArea> list, String name) {
+        String pid = null;
+        for (TmArea t : list) {
+            if (t.getName().equals(name)) {
+                pid = String.valueOf(t.getId());
+                break;
+            }
+        }
+        return pid;
+    }
+
+    def "getArea-test"(){
+
+        when:
+//        //tianmaSportHttp = new TianmaSportHttp(map);
+//        //String v = IOUtils.toString(System.in)
+//        for(int i=0;i<100000;i++){
+//            Optional<LogisticsCompany> logisticsCompany = tianmaSportHttp.ajaxGuessMailNoRequest("885214803258033378","23134990467245578");
+//            Optional<LogisticsCompany> logisticsCompany1 = tianmaSportHttp.ajaxGuessMailNoRequest("3921971273918","23134990467245578");
+//            Thread.sleep(10000)
+//        }
+//
+//        //def f = tianmaSportHttp.getSearchByArticleno("tianmaSportHttp")
+//        //System.out.println(postExample.login());
+
+        List<TmArea> list = tianmaSportHttp.getArea("0");
+        String province_id = getPidInAreas(list, "新疆维吾尔自治区");
+        list = tianmaSportHttp.getArea(province_id);
+        String city_id = getPidInAreas(list, "吐鲁番市");
+        list = tianmaSportHttp.getArea(city_id);
+        String area_id = getPidInAreas(list, "高昌区");
+        System.out.println(area_id)
+
         then:
         logisticsCompany.get().code.get() == "YTO"
         logisticsCompany1.get().code.get() == "YUNDA"

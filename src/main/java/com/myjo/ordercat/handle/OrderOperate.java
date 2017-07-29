@@ -7,6 +7,7 @@ import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
+import com.myjo.ordercat.redis.SetnxLock;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager;
@@ -15,9 +16,10 @@ import com.taobao.api.domain.Order;
 import com.taobao.api.domain.Trade;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import scala.Int;
 
 import javax.script.ScriptEngine;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -45,6 +47,21 @@ public class OrderOperate {
         this.scriptEngine = scriptEngine;
     }
 
+    private static boolean filterPickRate(com.alibaba.fastjson.JSONObject jsonObject, PickRateDelCondition pickRateDelCondition, String tmSkuId) {
+        boolean rt = true;
+        BigDecimal pickRate = OcLcUtils.getPickRate(jsonObject.getString("pickRate"));
+        BigDecimal llPickRate = new BigDecimal(pickRateDelCondition.getLlPickRate());
+        BigDecimal ulPickRate = new BigDecimal(pickRateDelCondition.getUlPickRate());
+        Integer quarter = jsonObject.getInteger(tmSkuId);
+        if (pickRate.compareTo(llPickRate) >= 0 && pickRate.compareTo(ulPickRate) <= 0) {
+            if (quarter.intValue() > pickRateDelCondition.getRepertory()) {//库存大于指定库存数在保留
+                rt = true;
+            } else {
+                rt = false;
+            }
+        }
+        return rt;
+    }
 
     private Map<String, String> tmsportOrderAndPay(
             long tid,
@@ -86,10 +103,23 @@ public class OrderOperate {
         requestMap.put("outer_tid", String.valueOf(tid));
         List<TmArea> list = tianmaSportHttp.getArea("0");
         String province_id = getPidInAreas(list, trade.getReceiverState());
+        if(province_id == null){
+            throw new OCException(String.format("[%s],在天马中没有找到匹配的-省份.请人工处理!",trade.getReceiverState()));
+        }
+
         list = tianmaSportHttp.getArea(province_id);
         String city_id = getPidInAreas(list, trade.getReceiverCity());
+        if(city_id == null){
+            throw new OCException(String.format("[%s],在天马中没有找到匹配的-市.请人工处理!",trade.getReceiverCity()));
+        }
+
         list = tianmaSportHttp.getArea(city_id);
         String area_id = getPidInAreas(list, trade.getReceiverDistrict());
+        if(area_id == null){
+            throw new OCException(String.format("[%s],在天马中没有找到匹配的-区县.请人工处理!",trade.getReceiverDistrict()));
+        }
+
+
         requestMap.put("province_id", province_id);
         requestMap.put("city_id", city_id);
         requestMap.put("area_id", area_id);
@@ -189,7 +219,6 @@ public class OrderOperate {
         return requestMap;
     }
 
-
     private void tianmaOrder(long tid, Map<String, Object> anrtMap, String wareHouseId, String payPwd1, OcTmOrderRecords ocTmOrderRecords) throws Exception {
 
         Optional<OcTmOrderRecords> obj = ocTmOrderRecordsManager.stream()
@@ -212,7 +241,6 @@ public class OrderOperate {
 //        ocTmOrderRecords.setOrderInfo(JSON.toJSONString(requestMap));
     }
 
-
     private Trade getTaoBaoTrade(long tid) throws Exception {
 
         Optional<OcTmOrderRecords> obj = ocTmOrderRecordsManager.stream()
@@ -233,7 +261,6 @@ public class OrderOperate {
 
         return trade;
     }
-
 
     /**
      * 手工下单
@@ -274,7 +301,7 @@ public class OrderOperate {
         return ocTmOrderRecords;
     }
 
-    private String getPidInAreas(List<TmArea> list, String name) {
+    public String getPidInAreas(List<TmArea> list, String name) {
         String pid = null;
         for (TmArea t : list) {
             if (t.getName().equals(name)) {
@@ -284,7 +311,6 @@ public class OrderOperate {
         }
         return pid;
     }
-
 
     private ComputeWarehouseResult giveWarehouseResult(JSONObject jsonObject, String tmSkuId) {
         ComputeWarehouseResult rt = new ComputeWarehouseResult();
@@ -296,24 +322,6 @@ public class OrderOperate {
         rt.setInventoryCount(jsonObject.getString(tmSkuId));
         return rt;
     }
-
-
-    private static boolean filterPickRate(com.alibaba.fastjson.JSONObject jsonObject, PickRateDelCondition pickRateDelCondition,String tmSkuId) {
-        boolean rt = true;
-        BigDecimal pickRate = OcLcUtils.getPickRate(jsonObject.getString("pickRate"));
-        BigDecimal llPickRate = new BigDecimal(pickRateDelCondition.getLlPickRate());
-        BigDecimal ulPickRate = new BigDecimal(pickRateDelCondition.getUlPickRate());
-        Integer quarter = jsonObject.getInteger(tmSkuId);
-        if (pickRate.compareTo(llPickRate)>=0 && pickRate.compareTo(ulPickRate)<=0) {
-            if (quarter.intValue() > pickRateDelCondition.getRepertory()) {//库存大于指定库存数在保留
-                rt = true;
-            } else {
-                rt = false;
-            }
-        }
-        return rt;
-    }
-
 
     public Optional<ComputeWarehouseResult> computeWarehouseId(
             List<com.alibaba.fastjson.JSONObject> jsonObjectList,
@@ -344,14 +352,25 @@ public class OrderOperate {
         Logger.info(String.format("过滤掉不存在的尺码的仓库信息.size[%d].", jsonObjectList.size()));
 
 
+        //屏蔽指定仓库
+        List<ShieldWhPolicy> shieldWareHousePolicylist = OrderCatConfig.getShieldWareHousePolicy();
+        for (ShieldWhPolicy shieldWhPolicy : shieldWareHousePolicylist) {
+            Logger.info(String.format("正在查看是否包含屏蔽的仓库-[%s-%s]", shieldWhPolicy.getWarehouseId(), shieldWhPolicy.getWarehouseName()));
+            jsonObjectList = jsonObjectList.parallelStream()
+                    .filter(jsonObject -> !jsonObject.getString("wareHouseID").equals(shieldWhPolicy.getWarehouseId()))
+                    .collect(Collectors.toList());
+        }
+        Logger.info(String.format("屏蔽指定仓库.size[%d].", jsonObjectList.size()));
+
+
         //删除配货率低于及基础线的直接删除掉  默认50
         BigDecimal opPrtdl = new BigDecimal(OrderCatConfig.getOpPickRateLessThanDelLimit());
         jsonObjectList = jsonObjectList.parallelStream().
-                filter(jsonObject -> OcLcUtils.getPickRate(jsonObject.getString("pickRate")).compareTo(opPrtdl)==1)
+                filter(jsonObject -> OcLcUtils.getPickRate(jsonObject.getString("pickRate")).compareTo(opPrtdl) == 1)
                 .collect(Collectors.toList());
 
 
-        Logger.info(String.format("配货率低于[%d]百分比,进行删除.size:%d", OrderCatConfig.getOpPickRateLessThanDelLimit(),jsonObjectList.size()));
+        Logger.info(String.format("配货率低于[%d]百分比,进行删除.size:%d", OrderCatConfig.getOpPickRateLessThanDelLimit(), jsonObjectList.size()));
 
 
         for (PickRateDelCondition pickRateDelCondition : OrderCatConfig.getOpPickRateDelConditions()) {
@@ -370,7 +389,6 @@ public class OrderOperate {
                     pickRateDelCondition.getRepertory(),
                     jsonObjectList.size()));
         }
-
 
 
         Logger.info(String.format("过滤不下单仓库--"));
@@ -553,6 +571,14 @@ public class OrderOperate {
      */
     public OcTmOrderRecords autoOrder(long tid, String machineCid) {
 
+
+        long lock = SetnxLock.opLock(tid, 0);
+
+        if (lock < 0) {
+            Logger.info(String.format("该订单[%d]已经被锁定,不能重复下单.",tid));
+            return null;
+        }
+
         Logger.info(String.format("开始自动下单-淘宝订单[%d],机器CID[%s]",
                 tid,
                 machineCid
@@ -601,6 +627,14 @@ public class OrderOperate {
 
             List<com.alibaba.fastjson.JSONObject> jsonObjectList = (List<com.alibaba.fastjson.JSONObject>) anrtMap.get("jsonObjectList");
 
+
+            //赋值尺码于SKU对应关系
+            List<TmSizeInfo> tmSizeInfoList = new ArrayList();
+            for (Map.Entry<String, TmSizeInfo> entry : tmSizeInfoMap.entrySet()) {
+                tmSizeInfoList.add(entry.getValue());
+            }
+            ocTmOrderRecords.setTmSizeInfoStr(JSON.toJSONString(tmSizeInfoList));
+
             TmSizeInfo TmSizeInfo;
             //获取TM-skuid
             TmSizeInfo = tmSizeInfoMap.get(size);
@@ -608,6 +642,8 @@ public class OrderOperate {
                 throw new OCException(String.format("淘宝订单[%d]的尺码[%s],在天马没有找对应信息.", tid, size));
             }
             String tmSkuId = TmSizeInfo.getTmSukId();
+            ocTmOrderRecords.setTmSkuId(tmSkuId);
+
             Logger.info(String.format("autoOrder-tmSkuId=[%s]", tmSkuId));
 
             BigDecimal payAmount = new BigDecimal(trade.getPayment());
@@ -626,7 +662,7 @@ public class OrderOperate {
                     LocalDateTime.now(),
                     OrderCatConfig.getCycleWhCompPolicy()
             );
-            
+
             if (!optWareHouse.isPresent()) {
                 throw new OCException(String.format("淘宝订单[%d],没有计算出仓库信息.请人工处理.", tid, size));
             }
@@ -641,13 +677,6 @@ public class OrderOperate {
             ocTmOrderRecords.setWhInventoryCount(Integer.valueOf(warehouseResult.getInventoryCount()));
             ocTmOrderRecords.setWhProxyPrice(warehouseResult.getProxyPrice());
             ocTmOrderRecords.setWhUpdateTime(OcDateTimeUtils.string2LocalDateTime(warehouseResult.getWhUpdateTime()));
-
-
-            //ocTmOrderRecords.setFreightPrice();
-
-
-            //todo 有一些仓库不下单 lee5hx
-
 
             //支付密码
             String payPwd1 = OcEncryptionUtils.base64Decoder(OrderCatConfig.getOrderOperateTmPayPwd(), 5);
@@ -669,14 +698,18 @@ public class OrderOperate {
             Logger.info(String.format("执行耗时(毫秒):%d", elapsed));
             ocTmOrderRecords.setElapsed(elapsed);
         } catch (Exception e) {
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
             ocTmOrderRecords.setStatus(TmOrderRecordStatus.FAILURE.getValue());
-            ocTmOrderRecords.setFailCause(e.getMessage());
+            ocTmOrderRecords.setFailCause(errors.toString());
             taoBaoHttp.addTradeMemo(tid, String.format("OC下单失败,失败原因:%s", e.getMessage()), 5l);
             long end = System.currentTimeMillis();
             elapsed = end - begin;
             ocTmOrderRecords.setElapsed(elapsed);
             Logger.info(String.format("执行耗时(毫秒):%d", elapsed));
             Logger.error(e);
+        } finally {
+            SetnxLock.unOpLock(tid, lock);
         }
         ocTmOrderRecords.setAddTime(LocalDateTime.now());
         ocTmOrderRecordsManager.persist(ocTmOrderRecords);

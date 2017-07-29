@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS oc_warehouse_info;
 CREATE TABLE `oc_warehouse_info` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -154,12 +155,10 @@ DROP TABLE IF EXISTS oc_tianma_check_result;
 DROP TABLE IF EXISTS oc_tmsport_check_result;
 CREATE TABLE `oc_tmsport_check_result` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `tm_order_ids` varchar(8000) NULL COMMENT '天马订单ID',
+  `tm_order_ids` varchar(255) NULL COMMENT '天马订单ID',
   `tm_outer_order_id` varchar(255) NULL COMMENT '天马外部订单编码',
   `tm_order_num` BIGINT COMMENT '天马订单数量',
   `tm_num` BIGINT COMMENT '天马购买数量',
-  `tb_title` varchar(8000) NULL COMMENT '淘宝宝贝标题',
-  `tb_nickname`  varchar(255) NULL COMMENT '淘宝买家ID',
   `tb_order_num` BIGINT COMMENT '淘宝订单数量',
   `tb_num` BIGINT COMMENT '淘宝购买数量',
   `tb_created` DATETIME DEFAULT NULL COMMENT '淘宝订单时间',
@@ -170,13 +169,11 @@ CREATE TABLE `oc_tmsport_check_result` (
   `tb_totalFee` decimal(25,10)  COMMENT '应付金额（商品价格 * 商品数量 + 手工调整金额 - 子订单级订单优惠金额）。精确到2位小数;单位:元。如:200.07，表示:200元7分',
   `dz_status` varchar(255)  COMMENT '对账状态',
   `dz_details_message` TEXT COMMENT '对账详细描述',
-  `labour_status` TEXT COMMENT '人工状态',
   `remarks` TEXT COMMENT '备注(json格式)',
   `add_time` timestamp NOT NULL COMMENT '添加日期',
   PRIMARY KEY (`id`),
   KEY `IDX_TM_OUTER_ORDER_ID` (`tm_outer_order_id`),
-  KEY `IDX_DZ_STATUS` (`dz_status`),
-  KEY `IDX_LABOUR_STATUS` (`labour_status`)
+  KEY `IDX_DZ_STATUS` (`dz_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天马体育对账结果表';
 
 
@@ -211,3 +208,36 @@ CREATE TABLE `oc_tm_order_records` (
   KEY `IDX_STATUS` (`status`),
   KEY `IDX_ADD_TIME` (`add_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='下单记录表';
+
+
+
+ALTER TABLE oc_tm_order_records ADD COLUMN `tm_sku_id` varchar(255) NULL COMMENT '天马SKU_ID' AFTER `size`;
+ALTER TABLE oc_tm_order_records ADD COLUMN `tm_size_info_str` varchar (3000) COMMENT '天马尺码于SKU对应关系' NULL AFTER `size`;
+
+
+
+DROP TABLE IF EXISTS oc_as_refund_check_result;
+CREATE TABLE `oc_as_refund_check_result` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `refund_id` BIGINT NULL COMMENT '退款单据号',
+  `tid` BIGINT NULL COMMENT '淘宝订单号',
+  `is_daixiao` SMALLINT NULL COMMENT '是否代销',
+  `buyer_nick` varchar(255) NULL COMMENT '买家昵称',
+  `orders_count` BIGINT COMMENT '订单数里',
+  `num` INT NULL COMMENT '购买数量',
+  `refund_status`  varchar(255) NULL COMMENT '退款状态',
+  `refund_fee` decimal(25,10) NULL COMMENT '退款金额',
+  `total_fee` decimal(25,10) NULL COMMENT '订单金额',
+  `refund_phase` varchar(255) DEFAULT NULL COMMENT '售中/售后',
+  `dz_status` varchar(255)  COMMENT '对账状态',
+  `failure_reason` TEXT COMMENT '失败原因',
+  `remarks` TEXT COMMENT '备注(json格式)',
+  `labour_status` VARCHAR(255) COMMENT '人工状态',
+  `add_time` timestamp NOT NULL COMMENT '添加日期',
+  PRIMARY KEY (`id`),
+  KEY `IDX_REFUND_ID` (`refund_id`),
+  KEY `IDX_IS_DAIXIAO` (`is_daixiao`),
+  KEY `IDX_DZ_STATUS` (`dz_status`),
+  KEY `IDX_REFUND_PHASE` (`refund_phase`),
+  KEY `IDX_LABOUR_STATUS` (`labour_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='售后对账表';
