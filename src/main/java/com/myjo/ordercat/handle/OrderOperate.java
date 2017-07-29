@@ -618,9 +618,12 @@ public class OrderOperate {
             String outerSkuid = order.getOuterSkuId();
             Logger.info(String.format("autoOrder-tborder-outerSkuid=[%s]", outerSkuid));
             String articleno = OcStringUtils.getGoodsNoByOuterId(outerSkuid);
+            ocTmOrderRecords.setGoodsNo(articleno);
             Logger.info(String.format("autoOrder-tborder-articleno=[%s]", articleno));
             String size = OcStringUtils.getGoodsNoBySize(outerSkuid);
+            ocTmOrderRecords.setSize(size);
             Logger.info(String.format("autoOrder-tborder-size=[%s]", size));
+
 
             Map<String, Object> anrtMap = tianmaSportHttp.getSearchByArticleno(articleno);
             Map<String, TmSizeInfo> tmSizeInfoMap = (Map<String, TmSizeInfo>) anrtMap.get("sizeInfo");
@@ -643,9 +646,7 @@ public class OrderOperate {
             }
             String tmSkuId = TmSizeInfo.getTmSukId();
             ocTmOrderRecords.setTmSkuId(tmSkuId);
-
             Logger.info(String.format("autoOrder-tmSkuId=[%s]", tmSkuId));
-
             BigDecimal payAmount = new BigDecimal(trade.getPayment());
             Logger.info(String.format("autoOrder-payAmount=[%s]", payAmount.toPlainString()));
             ocTmOrderRecords.setTbPayAmount(payAmount);
@@ -669,8 +670,7 @@ public class OrderOperate {
 
             ComputeWarehouseResult warehouseResult = optWareHouse.get();
 
-            ocTmOrderRecords.setSize(size);
-            ocTmOrderRecords.setGoodsNo(articleno);
+
             ocTmOrderRecords.setWhId(Integer.valueOf(warehouseResult.getWarehouseId()));
             ocTmOrderRecords.setWhName(warehouseResult.getWarehouseName());
             ocTmOrderRecords.setWhPickRate(Integer.valueOf(warehouseResult.getPickRate()));

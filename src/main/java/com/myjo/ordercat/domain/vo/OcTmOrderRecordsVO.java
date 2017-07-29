@@ -36,6 +36,10 @@ public class OcTmOrderRecordsVO {
     private Date addTime;//下单时间
 
 
+    private String tmSkuId;
+    private String tmSizeInfoStr;
+
+
     public long getId() {
         return id;
     }
@@ -210,5 +214,21 @@ public class OcTmOrderRecordsVO {
 
     public void setAddTime(Date addTime) {
         this.addTime = addTime;
+    }
+
+    public String getTmSkuId() {
+        return tmSkuId;
+    }
+
+    public void setTmSkuId(String tmSkuId) {
+        this.tmSkuId = tmSkuId;
+    }
+
+    public String getTmSizeInfoStr() {
+        return tmSizeInfoStr;
+    }
+
+    public void setTmSizeInfoStr(String tmSizeInfoStr) {
+        this.tmSizeInfoStr = tmSizeInfoStr;
     }
 }

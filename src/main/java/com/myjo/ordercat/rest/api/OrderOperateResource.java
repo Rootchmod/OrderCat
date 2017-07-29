@@ -88,50 +88,55 @@ public class OrderOperateResource {
         List<OcTmOrderRecordsVO> ocTmOrderRecordsVOS = list.parallelStream()
                 .map(o -> {
                     OcTmOrderRecordsVO ocTmOrderRecordsVO = new OcTmOrderRecordsVO();
-//                    private long id; //序号
+                    //序号
                     ocTmOrderRecordsVO.setId(o.getId());
-//                    private String tid; //'淘宝订单ID'
+                    //'淘宝订单ID'
                     ocTmOrderRecordsVO.setTid(o.getTid().orElse(""));
-//                    private String tmOrderId;//'天马订单ID'
+                    //'天马订单ID'
                     ocTmOrderRecordsVO.setTmOrderId(o.getTmOrderId().orElse(""));
-//                    private String goodsNo;//'商品货号'
+                    //'商品货号'
                     ocTmOrderRecordsVO.setGoodsNo(o.getGoodsNo().orElse(""));
-//                    private String size;//尺码
+                    //尺码
                     ocTmOrderRecordsVO.setSize(o.getSize().orElse(""));
-//                    private String freightPriceStr;//运费
+                    //运费
                     ocTmOrderRecordsVO.setFreightPriceStr(o.getFreightPriceStr().orElse(""));
-//                    private Integer whId;//下单仓库
+                    //下单仓库
                     ocTmOrderRecordsVO.setWhId(o.getWhId().orElse(0));
-//                    private String whName;//下单仓库名称
+                    //下单仓库名称
                     ocTmOrderRecordsVO.setWhName(o.getWhName().orElse(""));
-//                    private Integer whPickRate;//下单仓库配货率,单位:百分比
+                    //下单仓库配货率,单位:百分比
                     ocTmOrderRecordsVO.setWhPickRate(o.getWhPickRate().orElse(0));
-//                    private BigDecimal whProxyPrice;//下单仓库价格
+                    //下单仓库价格
                     ocTmOrderRecordsVO.setWhProxyPrice(o.getWhProxyPrice().orElse(BigDecimal.ZERO));
-//                    private Date whUpdateTime;//下单仓库库存更新时间
+                    //下单仓库库存更新时间
                     ocTmOrderRecordsVO.setWhUpdateTime(o.getWhUpdateTime().isPresent() ? OcDateTimeUtils.localDateTime2Date(o.getWhUpdateTime().get()) : null);
-//                    private Integer whInventoryCount;//下单仓库库存数
+                    //下单仓库库存数
                     ocTmOrderRecordsVO.setWhInventoryCount(o.getWhInventoryCount().orElse(0));
-//                    private String type;//下单类型：手工补单，自动下单
+                    //下单类型：手工补单，自动下单
                     ocTmOrderRecordsVO.setType(o.getType().orElse(""));
-//                    private BigDecimal tbPayAmount;//淘宝订单支付金额
+                    //淘宝订单支付金额
                     ocTmOrderRecordsVO.setTbPayAmount(o.getTbPayAmount().orElse(BigDecimal.ZERO));
-//                    private String status;//下单状态：成功或失败
+                    //下单状态：成功或失败
                     ocTmOrderRecordsVO.setStatus(o.getStatus().orElse(""));
-//                    private String orderInfo;//订单信息-json
+                    //订单信息-json
                     ocTmOrderRecordsVO.setOrderInfo(o.getOrderInfo().orElse(""));
-//                    private String failCause;//失败原因
+                    //失败原因
                     ocTmOrderRecordsVO.setFailCause(o.getFailCause().orElse(""));
-//                    private BigDecimal breakEvenPrice;//保本价(自动机器下单时，才会有数据)
+                    //保本价(自动机器下单时，才会有数据)
                     ocTmOrderRecordsVO.setBreakEvenPrice(o.getBreakEvenPrice().orElse(BigDecimal.ZERO));
-//                    private String whSnapshotData;//仓库快照数据
+                    //仓库快照数据
                     ocTmOrderRecordsVO.setWhSnapshotData(o.getWhSnapshotData().orElse(""));
-//                    private String machineCid;//下单机器CID
+                    //下单机器CID
                     ocTmOrderRecordsVO.setMachineCid(o.getMachineCid().orElse(""));
-//                    private long elapsed;//执行耗时,单位:毫秒
+                    //执行耗时,单位:毫秒
                     ocTmOrderRecordsVO.setElapsed(o.getElapsed().orElse(0));
-//                    private Date addTime;//下单时间
+                    //下单时间
                     ocTmOrderRecordsVO.setAddTime(OcDateTimeUtils.localDateTime2Date(o.getAddTime()));
+                    //天马尺码信息
+                    ocTmOrderRecordsVO.setTmSizeInfoStr(o.getTmSizeInfoStr().orElse(""));
+                    //天马SKUID
+                    ocTmOrderRecordsVO.setTmSkuId(o.getTmSkuId().orElse(""));
+                    
                     return ocTmOrderRecordsVO;
                 })
                 .collect(Collectors.toList());
