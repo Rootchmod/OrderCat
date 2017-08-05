@@ -14,7 +14,11 @@ public class OcStringUtils {
 //    private static double size12double(String size1){
 //        Double.valueOf(inventoryInfo.getSize1())
 //    }
-    private static final Pattern pattern = Pattern.compile("-?[0-9]+.?[0-9]+");
+
+
+    private static final Pattern pattern = Pattern.compile("[+-]?([0-9]*[.])?[0-9]+");
+
+
 
 
 

@@ -192,11 +192,12 @@ dependencies {
     compile 'biz.paluch.redis:lettuce:4.3.3.Final'
 
 
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
+
+
 
 
 
 }
-
-//apply from: "gradle/ide.gradle"
-//
 

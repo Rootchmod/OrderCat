@@ -1,6 +1,7 @@
 package com.myjo.ordercat.config;
 
 import com.myjo.ordercat.domain.*;
+import com.myjo.ordercat.rest.api.jwt.JwtUser;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
@@ -307,6 +308,21 @@ public class OrderCatConfig {
     public static boolean isProduction(){
         return config.getBoolean(String.format(ORDER_CAT, "is_production"));
     }
+
+
+    public static List<JwtUser> getOrderCatUsers(){
+        List<JwtUser> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_CAT, "users"));
+        JwtUser user;
+        for(ConfigObject cb :list){
+            user = ConfigBeanFactory.create(cb.toConfig(),JwtUser.class);
+            rtList.add(user);
+        }
+        return rtList;
+    }
+
+
+
 
 
     public static String getTianmaSportUserName() {

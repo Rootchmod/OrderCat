@@ -606,7 +606,8 @@ public class OrderOperate {
             }
 
             if (trade.getIsDaixiao()) {
-                throw new OCException(String.format("淘宝订单[%d].是代销订单,OC不能进行下单.", tid));
+                Logger.error(String.format("淘宝订单[%d].是代销订单,OC不能进行下单.", tid));
+                return ocTmOrderRecords;
             }
 
             if (trade.getNum() > 1) {

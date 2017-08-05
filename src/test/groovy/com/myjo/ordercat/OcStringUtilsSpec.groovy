@@ -36,4 +36,26 @@ class OcStringUtilsSpec extends Specification {
 
 
 
+
+
+    def "OcStringUtils.isNumeric"() {
+        when:
+
+        def dd = OcStringUtils.isNumeric("818098-601")
+        def dd1 = OcStringUtils.isNumeric("818098")
+        def f = OcStringUtils.isNumeric("443.2")
+        def f1 = OcStringUtils.isNumeric("12C")
+        def f2 = OcStringUtils.isNumeric("-44.2")
+
+
+        then:
+        dd == false
+        dd1 == true
+        f == true
+        f1 == false
+        f2 == true
+    }
+
+
+
 }

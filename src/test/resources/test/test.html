@@ -1,17 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"/>
+    <script src="jquery-3.2.1.js"></script>
 
-  
+
+
+
+    <script>
+
+        var url = "http://101.37.86.8";
+        //url = "http://localhost:8080";
+
+        function testToken() {
+
+
+
+            var request = $.ajax({
+                url : url+"/order_cat_api/auth/testToken",
+                type : "POST",
+                headers:{
+                    token: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsZWU1aHgiLCJhdWRpZW5jZSI6IndlYiIsImNyZWF0ZWQiOjE1MDE5NDYwMDU2MDUsImV4cCI6MTUwMTk0NjA2NX0.-glwve2bhXkadjuWFSPQ00jsNkNZ3NB-iAgfwhJidcAKjePs9z_6V9KSmLhpXXkzcWbp-nGnn1cUkD7y1Tt0LA"
+                },
+                data: { test: "111"}
+            });
+
+            request.done(function( msg ) {
+                console.log(msg);
+            });
+
+        }
+
+
+        function login() {
+
+            var request = $.ajax({
+                url : url+"/order_cat_api/auth/login",
+                type : "POST",
+                data: { userName: "lee5hx", passWord: "123456" }
+            });
+
+            request.done(function( msg ) {
+                console.log(msg);
+            });
+
+        }
+
+//        testToken();
+//
+//
+//        function test() {
+//            alert(111);
+//        }
+        //test();
+    </script>
 </head>
-<body >
-<script type="text/javascript">
-    function status_ping() {
-        console.log('1');
-    }
-    status_ping();
-</script>
+<body>
+
+
+
+
+<input type="button" onclick="login()" value="login" />
+
+<input type="button" onclick="testToken()" value="testToken" />
 
 </body>
 

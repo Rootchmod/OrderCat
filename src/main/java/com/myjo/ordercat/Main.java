@@ -50,7 +50,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 /**
  * Created by lee5hx on 17/4/19.
  */
-@Microserver(properties={"cors.simple","true"})
+@Microserver(properties={"cors.simple","false"})
 public class Main {
 
     private static final Logger Logger = LogManager.getLogger(Main.class);

@@ -22,6 +22,9 @@ import groovyx.net.http.RESTClient
 
 import spock.lang.Unroll
 
+import javax.script.ScriptEngine
+import javax.script.ScriptEngineManager
+
 /**
  * Created by lee5hx on 17/4/20.
  */
@@ -63,11 +66,13 @@ class RestApiSpec extends Specification {
 
 //
 
+        ScriptEngineManager m = new ScriptEngineManager();
+        ScriptEngine e = m.getEngineByName("nashorn");
+
         OrderCatContext.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
         OrderCatContext.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
 
-
-        orderOperate = new OrderOperate(tianmaSportHttp, taoBaoHttp);
+        orderOperate = new OrderOperate(tianmaSportHttp, taoBaoHttp,e);
         orderOperate.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
 
         OrderCatContext.setOrderOperate(orderOperate);

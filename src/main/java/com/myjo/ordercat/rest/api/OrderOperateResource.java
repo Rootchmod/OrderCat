@@ -136,7 +136,7 @@ public class OrderOperateResource {
                     ocTmOrderRecordsVO.setTmSizeInfoStr(o.getTmSizeInfoStr().orElse(""));
                     //天马SKUID
                     ocTmOrderRecordsVO.setTmSkuId(o.getTmSkuId().orElse(""));
-                    
+
                     return ocTmOrderRecordsVO;
                 })
                 .collect(Collectors.toList());
