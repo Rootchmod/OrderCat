@@ -21,6 +21,7 @@ import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager;
@@ -101,13 +102,14 @@ public class Main {
         OcFenxiaoCheckResultManager ocFenxiaoCheckResultManager = app.getOrThrow(OcFenxiaoCheckResultManager.class);
         OcTmsportCheckResultManager ocTmsportCheckResultManager = app.getOrThrow(OcTmsportCheckResultManager.class);
         OcTmOrderRecordsManager ocTmOrderRecordsManager = app.getOrThrow(OcTmOrderRecordsManager.class);
-
+        OcRefundOperateRecordManager ocRefundOperateRecordManager = app.getOrThrow(OcRefundOperateRecordManager.class);
 
         OrderCatContext.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
         OrderCatContext.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
         OrderCatContext.setOcJobExecInfoManager(ocJobExecInfoManager);
         OrderCatContext.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
         OrderCatContext.setOcWarehouseInfoManager(ocWarehouseInfoManager);
+        OrderCatContext.setOcRefundOperateRecordManager(ocRefundOperateRecordManager);
 
 
         Logger.info("初始化[speedment]-完成.");
@@ -149,6 +151,11 @@ public class Main {
         OrderOperate orderOperate = new OrderOperate(tianmaSportHttp,taoBaoHttp,e);
         orderOperate.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
         OrderCatContext.setOrderOperate(orderOperate);
+
+        RefundOperate refundOperate = new RefundOperate(tianmaSportHttp,taoBaoHttp,e);
+        refundOperate.setOcRefundOperateRecordManager(ocRefundOperateRecordManager);
+
+
 
         tianmaSportHttp.getVerifyCodeImage();
 
@@ -193,6 +200,14 @@ public class Main {
         eh5 = new TianMaAcHandle(ac);
         eh5.setJobName(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue());
         eh5.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
+        ExecuteHandle eh6;
+        eh6 = new RefundOperateHandle(refundOperate);
+        eh6.setJobName(JobName.AUTO_REFUND_JOB.getValue());
+        eh6.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
 
 
 
@@ -343,6 +358,8 @@ public class Main {
             map1.put("AutoSendHandle", eh4);
             map1.put("TianmaAcHandle", eh5);
             map1.put("TianmaSportHttp",tianmaSportHttp);
+            map1.put("RefundOperateHandle",eh6);
+
 
             JobDetail job = newJob(SyncWarehouseJob.class)
                     .usingJobData(map1)
@@ -431,6 +448,24 @@ public class Main {
                     .withSchedule(cronSchedule(OrderCatConfig.getTianmaAccountCheckJobTriggerCron()))
                     .build();
             sched.scheduleJob(job6, trigger6);
+
+
+            //AutoRefundOperateJob
+            JobDetail job7 = newJob(AutoRefundOperateJob.class)
+                    .usingJobData(map1)
+                    .withIdentity(JobName.AUTO_REFUND_JOB.getValue(), "myjo")
+                    .build();
+
+            CronTrigger trigger7 = newTrigger()
+                    .withIdentity(JobName.AUTO_REFUND_JOB.getValue() + "Trigger", "myjo")
+                    .withSchedule(cronSchedule(OrderCatConfig.getAutoRefundOperateJobTriggerCron()))
+                    .build();
+            sched.scheduleJob(job7, trigger7);
+
+
+
+
+
 
             sched.start();
 

@@ -6,16 +6,12 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.GetRequest;
-import com.mashape.unirest.request.HttpRequestWithBody;
-import com.mashape.unirest.request.body.MultipartBody;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
 import com.myjo.ordercat.exception.OCException;
-import com.myjo.ordercat.job.OcBaseJob;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
 import com.myjo.ordercat.utils.OcEncryptionUtils;
 import com.myjo.ordercat.utils.OcSizeUtils;
-import org.apache.commons.collections.FastHashMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -94,14 +90,13 @@ public class TianmaSportHttp {
         Logger.info("http tianmaSport login sessionId: " + sessionId);
 
 
-        String pwd = OcEncryptionUtils.base64Decoder(OrderCatConfig.getTianmaSportPassWord(),5);
+        String pwd = OcEncryptionUtils.base64Decoder(OrderCatConfig.getTianmaSportPassWord(), 5);
         String nickName = OrderCatConfig.getTianmaSportUserName();
 
         //Logger.info("http tianmaSport login pwd: " + pwd);
         Logger.info("http tianmaSport login pwd: *****");
 
         Logger.info("http tianmaSport login nickName: " + nickName);
-
 
 
         HttpResponse<JsonNode> jsonResponse = Unirest.post(OrderCatConfig.getTianmaSportLoginHttpUrl())
@@ -248,12 +243,12 @@ public class TianmaSportHttp {
             String path = rt.getString("path");
             Logger.info("inventoryDownGroup return path:" + path);
             dataDownLoad(path, fileName);
-        }else {
+        } else {
             String msg = rt.getString("msg");
-            if(msg.indexOf("没有可导出的信息")>-1){
-                Logger.error("msg:"+rt.getString("msg"));
-            }else {
-                throw new OCException("msg:"+msg);
+            if (msg.indexOf("没有可导出的信息") > -1) {
+                Logger.error("msg:" + rt.getString("msg"));
+            } else {
+                throw new OCException("msg:" + msg);
             }
         }
     }
@@ -286,29 +281,26 @@ public class TianmaSportHttp {
     }
 
 
+    public List<InventoryInfo> getTmSportWhInfo(String Articleno) throws Exception {
 
-
-
-    public List<InventoryInfo> getTmSportWhInfo(String Articleno) throws  Exception{
-
-        Map<String,Object> rtMap = null;
-        try{
+        Map<String, Object> rtMap = null;
+        try {
             rtMap = getSearchByArticleno(Articleno);
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.error(e);
         }
-        if(rtMap == null){
+        if (rtMap == null) {
             List<InventoryInfo> list = new ArrayList<>();
             return list;
-        }else {
-            return (List<InventoryInfo>)rtMap.get("whlist");
+        } else {
+            return (List<InventoryInfo>) rtMap.get("whlist");
         }
     }
 
-    public Map<String,Object> getSearchByArticleno(String Articleno) throws Exception {
+    public Map<String, Object> getSearchByArticleno(String Articleno) throws Exception {
 
 
-        Map<String,Object> rtMap = new HashMap<>();
+        Map<String, Object> rtMap = new HashMap<>();
 
         List<InventoryInfo> list = new ArrayList<>();
         List<com.alibaba.fastjson.JSONObject> jsonObjectList = new ArrayList<>();
@@ -337,7 +329,7 @@ public class TianmaSportHttp {
         if (code == 200) {
             String rt = response.getBody();
             if (rt.indexOf("没有类似货号的商品!") > -1) {
-                throw new OCException(String.format("没有类似货号的商品[%s]",Articleno));
+                throw new OCException(String.format("没有类似货号的商品[%s]", Articleno));
             }
             Document doc = Jsoup.parse(rt);
             Element script = doc.select("script").get(1);
@@ -375,15 +367,13 @@ public class TianmaSportHttp {
                 inventoryInfo.setArticlenoOld(jsonObject.getString("articleno_old"));
 
 
-
-
                 inventoryInfo.setUpdateTime(OcDateTimeUtils.string2LocalDateTime(jsonObject.getString("updateTime")));
                 list.add(inventoryInfo);
                 jsonObjectList.add(jsonObject);
 
             }
-            rtMap.put("whlist",list);
-            rtMap.put("jsonObjectList",jsonObjectList);
+            rtMap.put("whlist", list);
+            rtMap.put("jsonObjectList", jsonObjectList);
 
             //产品ID
             String productID;
@@ -393,11 +383,10 @@ public class TianmaSportHttp {
             String productIDStr = data.substring(bstr_index + bstr.length(), estr_index);
 
 
-            Logger.info(String.format("productID:%s",productIDStr));
+            Logger.info(String.format("productID:%s", productIDStr));
 
             productID = productIDStr;
-            rtMap.put("productID",productID);
-
+            rtMap.put("productID", productID);
 
 
 //            return '<a href="javascript:toOrder('
@@ -419,18 +408,18 @@ public class TianmaSportHttp {
             bstr_index = data.indexOf(bstr);
             estr_index = data.indexOf("r.discount", bstr_index);
             toOrderStr = data.substring(bstr_index + bstr.length(), estr_index);
-            Logger.info(String.format("toOrderStr:%s",toOrderStr));
-            toOrderStr = toOrderStr.replaceAll("\\'","").replaceAll("\\\\","");
-            Logger.info(String.format("toOrderStr:%s",toOrderStr));
+            Logger.info(String.format("toOrderStr:%s", toOrderStr));
+            toOrderStr = toOrderStr.replaceAll("\\'", "").replaceAll("\\\\", "");
+            Logger.info(String.format("toOrderStr:%s", toOrderStr));
             String weight = (toOrderStr.split(",")[3]);
-            Logger.info(String.format("weight:%s",weight));
+            Logger.info(String.format("weight:%s", weight));
 
             String dalei = (toOrderStr.split(",")[1]);
 
-            rtMap.put("weight",weight);
-            rtMap.put("dalei",dalei);
+            rtMap.put("weight", weight);
+            rtMap.put("dalei", dalei);
 
-            Logger.info(String.format("dalei:%s",dalei));
+            Logger.info(String.format("dalei:%s", dalei));
 
             //size_info
             bstr = "var size_info = '";
@@ -441,30 +430,29 @@ public class TianmaSportHttp {
             String[] sizeinfoStrArr = sizeinfoStr.split(",");
             String[] tmSizeArr;
 
-            Map<String,TmSizeInfo> tmSizeInfoMap = new HashMap<>();
+            Map<String, TmSizeInfo> tmSizeInfoMap = new HashMap<>();
             TmSizeInfo tmSizeInfo;
-            for(String sizeInfo :sizeinfoStrArr){
+            for (String sizeInfo : sizeinfoStrArr) {
                 tmSizeInfo = new TmSizeInfo();
-                tmSizeArr = sizeInfo.split("<>",-1);
+                tmSizeArr = sizeInfo.split("<>", -1);
 
-                if(dalei.equals("服")){
+                if (dalei.equals("服")) {
                     tmSizeInfo.setSize1(OcSizeUtils.getClothesConversionSize1(tmSizeArr[1]));
-                }else {
+                } else {
                     tmSizeInfo.setSize1(tmSizeArr[1]);
                 }
 
                 tmSizeInfo.setSize2(tmSizeArr[0]);
                 tmSizeInfo.setTmSukId(tmSizeArr[2]);
                 //Logger.info(String.format("size1[%s],size2[%s],tmskuid[%s]",tmSizeInfo.getSize1(),tmSizeInfo.getSize2(),tmSizeInfo.getTmSukId()));
-                tmSizeInfoMap.put(tmSizeInfo.getSize1(),tmSizeInfo);
+                tmSizeInfoMap.put(tmSizeInfo.getSize1(), tmSizeInfo);
             }
-            rtMap.put("sizeInfo",tmSizeInfoMap);
+            rtMap.put("sizeInfo", tmSizeInfoMap);
             Logger.info(sizeinfoStr);
 
 
-
             //Logger.info("JSON-String:" + jsonstr);
-        }else {
+        } else {
             String rt = response.getBody();
             throw new OCException(rt);
         }
@@ -478,7 +466,7 @@ public class TianmaSportHttp {
 
         PageResult<TianmaOrder> pageResult;
         do {
-            pageResult = tradeOrderDataList(startTime, endTime, orderStatus,null, sort, pageNo, pageSize);
+            pageResult = tradeOrderDataList(startTime, endTime, orderStatus, null, sort, pageNo, pageSize);
             rtlist.addAll(pageResult.getRows());
             Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
         } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
@@ -529,7 +517,7 @@ public class TianmaSportHttp {
                 .field("size", "")
                 .field("sort", sort == null ? "" : sort) //feed_back_time
                 .field("order", "desc")
-                .field("outer_tid", outerTid == null?"":outerTid)
+                .field("outer_tid", outerTid == null ? "" : outerTid)
                 .field("order_id", "")
                 .asJson();
         int code = response.getStatus();
@@ -618,14 +606,14 @@ public class TianmaSportHttp {
                 tmArea.setFlag(area.getInt("flag"));
                 tmArea.setLevel(area.getInt("level"));
                 tmArea.setName(area.getString("name"));
-                tmArea.setPpid(area.get("ppid").toString().equals("null")?0l:area.getLong("ppid"));
+                tmArea.setPpid(area.get("ppid").toString().equals("null") ? 0l : area.getLong("ppid"));
                 tmArea.setPid(area.getLong("pid"));
                 tmArea.setZipcode(area.getString("zipcode"));
                 tmArea.setPpname(area.get("ppname").toString());
 
                 list.add(tmArea);
             }
-            if(list.size() == 0){
+            if (list.size() == 0) {
                 throw new OCException("天马地址区域查询结果为0,pid:" + pid);
             }
 
@@ -637,8 +625,8 @@ public class TianmaSportHttp {
 
 
     public List<TmPostage> getPostage(String wareHouseName,
-                                   String province,
-                                   String weight) throws Exception {
+                                      String province,
+                                      String weight) throws Exception {
         Logger.info(String.format("http tm-sport getPostage:whname:%s,province:%s,weight:%s",
                 wareHouseName,
                 province,
@@ -655,9 +643,9 @@ public class TianmaSportHttp {
                 .header("Accept-Encoding", "gzip, deflate, sdch")
                 .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
                 .header("X-Requested-With", "XMLHttpRequest")
-                .field("wareHouseName",wareHouseName)
-                .field("province",province)
-                .field("weight",weight)
+                .field("wareHouseName", wareHouseName)
+                .field("province", province)
+                .field("weight", weight)
                 .asJson();
 
         int code = response.getStatus();
@@ -680,7 +668,7 @@ public class TianmaSportHttp {
                 tmPostage.setKdCost(new BigDecimal(kdCost));
                 list.add(tmPostage);
             }
-            if(list.size() == 0){
+            if (list.size() == 0) {
                 throw new OCException(String.format("天马快递公司查询结果为0!getPostage:whname:%s,province:%s,weight:%s",
                         wareHouseName,
                         province,
@@ -694,12 +682,10 @@ public class TianmaSportHttp {
     }
 
 
-
-
     public String orderBooking(Map<String, String> requestMap) throws Exception {
         Logger.info(String.format("http tm-sport orderBooking"));
-        requestMap.entrySet().stream().forEach(o->{
-            Logger.info(String.format("%s=%s",o.getKey(),o.getValue()));
+        requestMap.entrySet().stream().forEach(o -> {
+            Logger.info(String.format("%s=%s", o.getKey(), o.getValue()));
         });
         String rt;
         HttpResponse<JsonNode> response = Unirest.post(String.format(OrderCatConfig.getOrderBookingHttpUrl()))
@@ -731,14 +717,14 @@ public class TianmaSportHttp {
         int code = response.getStatus();
         if (code == 200) {
             JSONObject object = response.getBody().getObject();
-            if(object.getBoolean("success") == true){
+            if (object.getBoolean("success") == true) {
                 rt = object.getString("msg");
-                Logger.info("msg:"+rt);
-            }else {
+                Logger.info("msg:" + rt);
+            } else {
                 throw new OCException("orderBooking 查询失败:" + object.getString("msg"));
             }
         } else {
-            throw new OCException("orderBooking:" + code+",text:"+response.getStatusText());
+            throw new OCException("orderBooking:" + code + ",text:" + response.getStatusText());
         }
         return rt;
     }
@@ -749,12 +735,13 @@ public class TianmaSportHttp {
     /**
      * 付款
      * http://www.tianmasport.com/ms/tradeInfo/updataBalance.do
+     *
      * @param orderId
      * @param payPwd
      * @return
      * @throws Exception
      */
-    public String updataBalance(String orderId,String payPwd) throws Exception {
+    public String updataBalance(String orderId, String payPwd) throws Exception {
 
         Logger.info(String.format("http tm-sport updataBalance:orderId:%s,payPwd:********,",
                 orderId));
@@ -770,17 +757,17 @@ public class TianmaSportHttp {
                 .header("Accept-Encoding", "gzip, deflate, sdch")
                 .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
                 .header("X-Requested-With", "XMLHttpRequest")
-                .field("orderIDs",orderId)
-                .field("payPwd",payPwd)
+                .field("orderIDs", orderId)
+                .field("payPwd", payPwd)
                 .asJson();
 
         int code = response.getStatus();
         if (code == 200) {
             JSONObject object = response.getBody().getObject();
-            if(object.getBoolean("success") == true){
+            if (object.getBoolean("success") == true) {
                 rt = object.getString("msg");
                 Logger.info(rt);
-            }else {
+            } else {
                 throw new OCException("updataBalance 查询失败:" + object.getString("msg"));
             }
         } else {
@@ -790,11 +777,11 @@ public class TianmaSportHttp {
     }
 
 
-
     //http://www.tianmasport.com/ms/tradeInfo/mergePostage.do
 
     /**
      * 合并订单
+     *
      * @param orderId
      * @return
      * @throws Exception
@@ -815,27 +802,27 @@ public class TianmaSportHttp {
                 .header("Accept-Encoding", "gzip, deflate, sdch")
                 .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
                 .header("X-Requested-With", "XMLHttpRequest")
-                .field("orderIDs",orderId)
+                .field("orderIDs", orderId)
                 .asJson();
 
         int code = response.getStatus();
         if (code == 200) {
             JSONObject object = response.getBody().getObject();
-            if(object.getBoolean("success") == true){
+            if (object.getBoolean("success") == true) {
 
                 //{"easyuiUrl":"http://www.tianmasport.com/ms/js/jquery-easyui","balance":207754.211,"msUrl":"http://www.tianmasport.com/ms","weight":12,"success":true,"totalPrice":"398.850","postage":"12.000"}
 
 
-                Logger.info(String.format("balance=%s",object.getBigDecimal("balance").toPlainString()));
-                Logger.info(String.format("totalPrice=%s",object.getBigDecimal("totalPrice").toPlainString()));
-                Logger.info(String.format("postage=%s",object.getBigDecimal("postage").toPlainString()));
-                Logger.info(String.format("weight=%s",String.valueOf(object.getInt("weight"))));
+                Logger.info(String.format("balance=%s", object.getBigDecimal("balance").toPlainString()));
+                Logger.info(String.format("totalPrice=%s", object.getBigDecimal("totalPrice").toPlainString()));
+                Logger.info(String.format("postage=%s", object.getBigDecimal("postage").toPlainString()));
+                Logger.info(String.format("weight=%s", String.valueOf(object.getInt("weight"))));
 
 
                 rt = "success";
 
                 Logger.info(rt);
-            }else {
+            } else {
                 throw new OCException("mergePostage 查询失败:" + object.getString("msg"));
             }
         } else {
@@ -845,10 +832,9 @@ public class TianmaSportHttp {
     }
 
 
-
     public String getdefaultPostage(String wareHouseName,
-                                      String province,
-                                      String weight) throws Exception {
+                                    String province,
+                                    String weight) throws Exception {
         Logger.info(String.format("http tm-sport getPostage:whname:%s,province:%s,weight:%s",
                 wareHouseName,
                 province,
@@ -865,11 +851,10 @@ public class TianmaSportHttp {
                 .header("Accept-Encoding", "gzip, deflate, sdch")
                 .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
                 .header("X-Requested-With", "XMLHttpRequest")
-                .field("wareHouseName",wareHouseName)
-                .field("province",province)
-                .field("weight",weight)
+                .field("wareHouseName", wareHouseName)
+                .field("province", province)
+                .field("weight", weight)
                 .asJson();
-
 
 
         int code = response.getStatus();
@@ -877,9 +862,9 @@ public class TianmaSportHttp {
 
             JSONObject object = response.getBody().getObject();
 
-            if(object.getBoolean("success") == true){
+            if (object.getBoolean("success") == true) {
                 rt = object.getString("msg");
-            }else {
+            } else {
                 throw new OCException("getdefaultPostage 查询失败:" + object.getString("msg"));
             }
 
@@ -889,9 +874,6 @@ public class TianmaSportHttp {
         }
         return rt;
     }
-
-
-
 
 
     public Optional<LogisticsCompany> ajaxGuessMailNoRequest(String mailNo, String tradeId) throws Exception {
@@ -945,6 +927,25 @@ public class TianmaSportHttp {
         }
         Logger.debug("ajaxGuessMailNoRequest--response-str:" + response.getBody());
         return Optional.ofNullable(logisticsCompany);
+    }
+
+
+    public Optional<TianmaOrder> getTianmaOrder(long tid) {
+        TianmaOrder tianmaOrder = null;
+        //天马退款处理流程
+        PageResult<TianmaOrder> prTmOrders = null;
+        try {
+            prTmOrders = tradeOrderDataList(null, null, null, String.valueOf(tid), null, 1, 10);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        if (prTmOrders.getTotal() > 1 || prTmOrders.getRows().size() > 1) {
+//            throw new OCException(String.format("淘宝订单[%d],在天马中的订单大于1.", tid));
+//        }
+        if (prTmOrders.getRows().size() == 1) {
+            tianmaOrder = prTmOrders.getRows().get(0);
+        }
+        return Optional.ofNullable(tianmaOrder);
     }
 
 

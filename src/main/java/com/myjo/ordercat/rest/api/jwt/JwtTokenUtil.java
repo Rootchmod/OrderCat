@@ -24,8 +24,8 @@ public class JwtTokenUtil implements Serializable {
     private String secret = "order_cat_lee5hx";
 
 
-    //private Long expiration = Long.valueOf(60*60*24*7);   //7天
-    private Long expiration = Long.valueOf(60); //60秒
+    private Long expiration = Long.valueOf(60*60*24*7);   //7天
+    //private Long expiration = Long.valueOf(60); //60秒
 
 
     public String getUsernameFromToken(String token) {

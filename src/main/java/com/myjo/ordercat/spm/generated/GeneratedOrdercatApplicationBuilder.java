@@ -13,6 +13,8 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoMan
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoSqlAdapter;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordManagerImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManagerImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoSqlAdapter;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManagerImpl;
@@ -47,6 +49,7 @@ public abstract class GeneratedOrdercatApplicationBuilder extends AbstractApplic
         withManager(OcInventoryInfoManagerImpl.class);
         withManager(OcJobExecInfoManagerImpl.class);
         withManager(OcLogisticsCompaniesInfoManagerImpl.class);
+        withManager(OcRefundOperateRecordManagerImpl.class);
         withManager(OcSalesInfoManagerImpl.class);
         withManager(OcSyncInventoryItemInfoManagerImpl.class);
         withManager(OcTmsportCheckResultManagerImpl.class);
@@ -57,6 +60,7 @@ public abstract class GeneratedOrdercatApplicationBuilder extends AbstractApplic
         withComponent(OcInventoryInfoSqlAdapter.class);
         withComponent(OcJobExecInfoSqlAdapter.class);
         withComponent(OcLogisticsCompaniesInfoSqlAdapter.class);
+        withComponent(OcRefundOperateRecordSqlAdapter.class);
         withComponent(OcSalesInfoSqlAdapter.class);
         withComponent(OcSyncInventoryItemInfoSqlAdapter.class);
         withComponent(OcTmsportCheckResultSqlAdapter.class);

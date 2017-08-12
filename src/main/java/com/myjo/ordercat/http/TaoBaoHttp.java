@@ -465,7 +465,10 @@ public class TaoBaoHttp {
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         RefundsReceiveGetRequest req = new RefundsReceiveGetRequest();
         req.setFields("refund_id, tid,num,refund_phase,good_status title, numIid,buyer_nick, seller_nick, total_fee, status, created, refund_fee, oid, company_name, sid, payment, reason, desc, has_good_return, modified, order_status,refund_phase");
-        req.setStatus(status);
+
+        if(status!=null){
+            req.setStatus(status);
+        }
 //        req.setBuyerNick("hz0799");
 //        req.setType("fixed");
         req.setStartModified(begin);
@@ -503,14 +506,30 @@ public class TaoBaoHttp {
 
 
 
-    public List<PurchaseOrder> getFenxiaoOrders(String status,Date begin, Date end) throws Exception {
+    public Optional<PurchaseOrder> getPurchaseOrderByTcOrderId(Long tcOrderId) {
+        PurchaseOrder purchaseOrder = null;
+        //天马退款处理流程
+        List<PurchaseOrder> list = null;
+        try {
+            list = getFenxiaoOrders(tcOrderId,null,null,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(list!=null && list.size()==1){
+            purchaseOrder = list.get(0);
+        }
+        return Optional.ofNullable(purchaseOrder);
+    }
+
+
+    public List<PurchaseOrder> getFenxiaoOrders(Long tcOrderId,String status,Date begin, Date end) throws Exception {
         long pageNo = 1l;
         long pageSize = 49l;
         List<PurchaseOrder> rtlist = new ArrayList<>();
 
         PageResult<PurchaseOrder> pageResult;
         do {
-            pageResult = getFenxiaoOrders(status,begin, end, pageNo, pageSize);
+            pageResult = getFenxiaoOrders(tcOrderId,status,begin, end, pageNo, pageSize);
             if(pageResult.getRows()!=null){
                 rtlist.addAll(pageResult.getRows());
             }
@@ -528,17 +547,26 @@ public class TaoBaoHttp {
      * @return
      * @throws Exception
      */
-    public PageResult<PurchaseOrder> getFenxiaoOrders(String status,Date begin, Date end,Long pageNo, Long pageSize) {
+    public PageResult<PurchaseOrder> getFenxiaoOrders(Long tcOrderId,String status,Date begin, Date end,Long pageNo, Long pageSize) {
 
         PageResult<PurchaseOrder> pr = new PageResult();
         List<PurchaseOrder> list;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         FenxiaoOrdersGetRequest req = new FenxiaoOrdersGetRequest();
-        req.setStatus(status);
-        req.setStartCreated(begin);
-        req.setEndCreated(end);
+        if(status!=null){
+            req.setStatus(status);
+        }
+        if(begin!=null){
+            req.setStartCreated(begin);
+        }
+        if(end!=null){
+            req.setEndCreated(end);
+        }
         // req.setTimeType("trade_time_type");
         req.setPageNo(pageNo);
+        if(tcOrderId!=null){
+            req.setTcOrderId(tcOrderId);
+        }
         req.setPageSize(pageSize);
         //req.setPurchaseOrderId(120121243L);
         req.setFields("fenxiao_id,tc_order_id,status,sub_purchase_orders.tc_order_id,sub_purchase_orders.fenxiao_id,sub_purchase_orders.status");

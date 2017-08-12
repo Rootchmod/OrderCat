@@ -4,6 +4,7 @@ import com.myjo.ordercat.handle.OrderOperate;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
@@ -21,6 +22,7 @@ public class OrderCatContext {
     private static OrderOperate orderOperate;
     private static OcWarehouseInfoManager ocWarehouseInfoManager;
     private static OcJobExecInfoManager ocJobExecInfoManager;
+    private static OcRefundOperateRecordManager ocRefundOperateRecordManager;
 
     public static OcTmsportCheckResultManager getOcTmsportCheckResultManager() {
         return ocTmsportCheckResultManager;
@@ -68,5 +70,13 @@ public class OrderCatContext {
 
     public static void setOcJobExecInfoManager(OcJobExecInfoManager ocJobExecInfoManager) {
         OrderCatContext.ocJobExecInfoManager = ocJobExecInfoManager;
+    }
+
+    public static OcRefundOperateRecordManager getOcRefundOperateRecordManager() {
+        return ocRefundOperateRecordManager;
+    }
+
+    public static void setOcRefundOperateRecordManager(OcRefundOperateRecordManager ocRefundOperateRecordManager) {
+        OrderCatContext.ocRefundOperateRecordManager = ocRefundOperateRecordManager;
     }
 }

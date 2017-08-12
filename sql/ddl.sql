@@ -241,3 +241,22 @@ CREATE TABLE `oc_as_refund_check_result` (
   KEY `IDX_REFUND_PHASE` (`refund_phase`),
   KEY `IDX_LABOUR_STATUS` (`labour_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='售后对账表';
+
+
+
+DROP TABLE IF EXISTS oc_refund_operate_record;
+CREATE TABLE `oc_refund_operate_record` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `refund_id` BIGINT NULL COMMENT '退款单据号',
+  `tid` BIGINT NULL COMMENT '淘宝订单号',
+  `is_daixiao` SMALLINT NULL COMMENT '是否代销',
+  `status` VARCHAR(255) COMMENT '状态',
+  `reason` VARCHAR(255) COMMENT '原因',
+  `sid` VARCHAR(255) COMMENT '快递单号',
+  `company_name` VARCHAR(255) COMMENT '快递公司',
+  `operate_detail` VARCHAR(5000)  COMMENT '操作详情',
+  `add_time` timestamp NOT NULL COMMENT '添加日期',
+  PRIMARY KEY (`id`),
+  KEY `IDX_REFUND_ID` (`refund_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='自动退款操作记录';
+

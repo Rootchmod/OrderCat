@@ -31,6 +31,8 @@ public class OrderCatConfig {
     private static final String ACCOUNT_CHECK = "account-check.%s";
     private static final String AUTO_SEND_GOODS = "auto-send-goods.%s";
     private static final String ORDER_OPERATE = "order-operate.%s";
+    private static final String REFUND_OPERATE = "refund-operate.%s";
+
 
 
 
@@ -139,6 +141,11 @@ public class OrderCatConfig {
     public static String getTianmaAccountCheckJobTriggerCron(){
         return config.getString(String.format(SCHEDULER_CRON, "tianmaAccountCheckJob_trigger_cron"));
     }
+
+    public static String getAutoRefundOperateJobTriggerCron(){
+        return config.getString(String.format(SCHEDULER_CRON, "autoRefundOperateJob_trigger_cron"));
+    }
+
 
 
     public static String getAutoSendGoodsJobTriggerCron(){
@@ -526,6 +533,12 @@ public class OrderCatConfig {
             rtList.add(prdc);
         }
         return rtList;
+    }
+
+
+
+    public static Integer getRefundDateIntervalDay() {
+        return config.getInt(String.format(REFUND_OPERATE, "refund_date_interval_day"));
     }
 
 

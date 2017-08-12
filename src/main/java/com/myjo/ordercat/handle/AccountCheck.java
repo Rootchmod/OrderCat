@@ -494,7 +494,7 @@ public class AccountCheck {
         //TRADE_FINISHED(采购成功)
         //TRADE_FOR_PAY(已付款)
         //无退款
-        List<PurchaseOrder> wtkList = taoBaoHttp.getFenxiaoOrders(
+        List<PurchaseOrder> wtkList = taoBaoHttp.getFenxiaoOrders(null,
                 "WAIT_BUYER_CONFIRM_GOODS,TRADE_FINISHED,TRADE_FOR_PAY",
                 startTime,
                 endTime);
@@ -507,7 +507,7 @@ public class AccountCheck {
 
         //TRADE_REFUNDING(退款中)
         //退款中
-        List<PurchaseOrder> tkzList = taoBaoHttp.getFenxiaoOrders(
+        List<PurchaseOrder> tkzList = taoBaoHttp.getFenxiaoOrders(null,
                 "TRADE_REFUNDING",
                 startTime,
                 endTime);
@@ -520,7 +520,7 @@ public class AccountCheck {
 
         //TRADE_CLOSED
         //已退款
-        List<PurchaseOrder> ytkList = taoBaoHttp.getFenxiaoOrders(
+        List<PurchaseOrder> ytkList = taoBaoHttp.getFenxiaoOrders(null,
                 "TRADE_CLOSED",
                 startTime,
                 endTime);
