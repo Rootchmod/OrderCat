@@ -1,6 +1,6 @@
 package com.myjo.ordercat.utils;
 
-import com.myjo.ordercat.domain.JobStatus;
+import com.myjo.ordercat.domain.constant.JobStatus;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;

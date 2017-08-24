@@ -57,8 +57,14 @@ public abstract class GeneratedOcRefundOperateRecordSqlAdapter {
             entity.setReason(        resultSet.getString(6)                          );
             entity.setSid(           resultSet.getString(7)                          );
             entity.setCompanyName(   resultSet.getString(8)                          );
-            entity.setOperateDetail( resultSet.getString(9)                          );
-            entity.setAddTime(       addTimeHelper.apply(resultSet.getTimestamp(10)) );
+            entity.setRefundPhase(   resultSet.getString(9)                          );
+            entity.setRefundVersion( getLong(resultSet, 10)                          );
+            entity.setRefundAmount(  resultSet.getString(11)                         );
+            entity.setOperateType(   resultSet.getString(12)                         );
+            entity.setOperateDetail( resultSet.getString(13)                         );
+            entity.setOperateResult( resultSet.getString(14)                         );
+            entity.setIsLatest(      getShort(resultSet, 15)                         );
+            entity.setAddTime(       addTimeHelper.apply(resultSet.getTimestamp(16)) );
         } catch (final SQLException sqle) {
             throw new SpeedmentException(sqle);
         }

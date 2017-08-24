@@ -15,6 +15,11 @@ public class RefundOperateRecordVO {
     private String reason;
     private Short isDaixiao;
     private String operateDetail;
+
+    private String operateType;
+    private String operateResult;
+
+
     private String sid;
     private String companyName;
     private Date addTime;
@@ -98,5 +103,22 @@ public class RefundOperateRecordVO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    public String getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
+    }
+
+    public String getOperateResult() {
+        return operateResult;
+    }
+
+    public void setOperateResult(String operateResult) {
+        this.operateResult = operateResult;
     }
 }

@@ -1,4 +1,4 @@
-package com.myjo.ordercat.domain;
+package com.myjo.ordercat.domain.constant;
 
 public enum SyncInventoryItemStatus {
     ARE_SYNCHRONIZED("ARE_SYNCHRONIZED"),NOT_SYNCHRONIZED("NOT_SYNCHRONIZED");

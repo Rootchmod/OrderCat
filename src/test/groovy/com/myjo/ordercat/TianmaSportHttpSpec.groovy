@@ -3,6 +3,7 @@ package com.myjo.ordercat
 import com.myjo.ordercat.domain.LogisticsCompany
 import com.myjo.ordercat.domain.TmArea
 import com.myjo.ordercat.http.TianmaSportHttp
+import com.taobao.api.domain.PurchaseOrder
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -146,6 +147,101 @@ class TianmaSportHttpSpec extends Specification {
         logisticsCompany1.get().code.get() == "YUNDA"
 
     }
+
+
+    def "orderCancel"(){
+
+        when:
+//        //tianmaSportHttp = new TianmaSportHttp(map);
+//        //String v = IOUtils.toString(System.in)
+//        for(int i=0;i<100000;i++){
+//            Optional<LogisticsCompany> logisticsCompany = tianmaSportHttp.ajaxGuessMailNoRequest("885214803258033378","23134990467245578");
+//            Optional<LogisticsCompany> logisticsCompany1 = tianmaSportHttp.ajaxGuessMailNoRequest("3921971273918","23134990467245578");
+//            Thread.sleep(10000)
+//        }
+//
+//        //def f = tianmaSportHttp.getSearchByArticleno("tianmaSportHttp")
+//        //System.out.println(postExample.login());
+
+         def rt = tianmaSportHttp.orderCancel("23947062");
+         System.out.println(rt.getResult().get())
+
+        then:
+        "ok" == "ok"
+
+    }
+
+    def "backExpressNo"(){
+
+        when:
+//        //tianmaSportHttp = new TianmaSportHttp(map);
+//        //String v = IOUtils.toString(System.in)
+//        for(int i=0;i<100000;i++){
+//            Optional<LogisticsCompany> logisticsCompany = tianmaSportHttp.ajaxGuessMailNoRequest("885214803258033378","23134990467245578");
+//            Optional<LogisticsCompany> logisticsCompany1 = tianmaSportHttp.ajaxGuessMailNoRequest("3921971273918","23134990467245578");
+//            Thread.sleep(10000)
+//        }
+//
+//        //def f = tianmaSportHttp.getSearchByArticleno("tianmaSportHttp")
+//        //System.out.println(postExample.login());
+
+        def rt = tianmaSportHttp.backExpressNo("2390201412312312","88880000001111","oc-顺丰速递1");
+        System.out.println(rt.getResult().get())
+
+        then:
+        "ok" == "ok"
+
+    }
+
+    def "soldProblem"(){
+
+        when:
+        //    id:23783596
+//    problemType:无理由退货
+//    proxyId:147424
+//    wareHouseName:天马总仓1仓
+//    marketPrice:599
+//    discount:5.8
+//    problemContent:OC-售后
+//    delivery:顺丰标快
+//    mapPath:
+
+        def rt = tianmaSportHttp.soldProblem("23783596","599","天马总仓1仓","5.8","顺丰标快")
+        System.out.println(rt.getResult().get())
+
+        then:
+        "ok" == "ok"
+
+    }
+
+
+    def "getTianmaOrder"(){
+        when:
+        //    id:23783596
+//    problemType:无理由退货
+//    proxyId:147424
+//    wareHouseName:天马总仓1仓
+//    marketPrice:599
+//    discount:5.8
+//    problemContent:OC-售后
+//    delivery:顺丰标快
+//    mapPath:
+
+        def rt = tianmaSportHttp.getTianmaOrder(23899969)
+        System.out.println(rt)
+
+        then:
+        "ok" == "ok"
+
+    }
+
+
+
+
+
+
+
+
 
 
 //    def "proxyManageGetId"() {

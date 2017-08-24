@@ -1,7 +1,7 @@
 package com.myjo.ordercat.handle;
 
 import com.myjo.ordercat.config.OrderCatConfig;
-import com.myjo.ordercat.domain.TianmaOrderStatus;
+import com.myjo.ordercat.domain.constant.TianmaOrderStatus;
 import com.myjo.ordercat.domain.ReturnResult;
 import com.myjo.ordercat.domain.TianmaOrder;
 import com.myjo.ordercat.exception.OCException;

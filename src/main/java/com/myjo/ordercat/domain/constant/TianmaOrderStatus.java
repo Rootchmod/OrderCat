@@ -1,4 +1,4 @@
-package com.myjo.ordercat.domain;
+package com.myjo.ordercat.domain.constant;
 
 /**
  * Created by lee5hx on 17/4/26.
@@ -14,7 +14,7 @@ public enum TianmaOrderStatus {
     FEEDBACK_FAILURE("60"),//反馈失败
     WAITING_RETURN("70"),//待退货
     RETURNED("80"),//已退货
-    WAITING_REFUNDED("90"),//代退款
+    WAITING_REFUNDED("90"),//待退款
     REFUNDED("100");//已退款
 
     //已付款 配货中 反馈成功

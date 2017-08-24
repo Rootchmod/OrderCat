@@ -1,10 +1,13 @@
 package com.myjo.ordercat
 
 import com.myjo.ordercat.domain.ItemsOnSale
+import com.myjo.ordercat.domain.ReturnResult
 import com.myjo.ordercat.domain.TaoBaoGoodInfo
 import com.myjo.ordercat.http.TaoBaoHttp
 import com.taobao.api.DefaultTaobaoClient
 import com.taobao.api.TaobaoClient
+import com.taobao.api.domain.PurchaseOrder
+import com.taobao.api.domain.RefundMappingResult
 import com.taobao.api.internal.tmc.Message
 import com.taobao.api.internal.tmc.MessageHandler
 import com.taobao.api.internal.tmc.MessageStatus
@@ -132,6 +135,55 @@ class TaoBaoSpec extends Specification {
         "ok" == "ok"
     }
 
+
+    def "agreeTaobaoRpRefunds"(){
+        when:
+
+        def refund = taoBaoHttp.getRefundById(2462496238169517l)
+        ReturnResult<RefundMappingResult> rr =  taoBaoHttp.agreeTaobaoRpRefunds(refund.getRefundId(),refund.getRefundFee(),refund.getRefundVersion(),refund.getRefundPhase())
+
+        if(rr.isSuccess()){
+            System.out.println(rr.getResult().get().getMessage());
+        }else {
+            System.out.println(rr.getErrorCode()+":"+rr.getErrorMessages());
+        }
+        then:
+        "ok" == "ok"
+    }
+
+
+    def "GX_OP_SQTK"(){
+        when:
+        Optional<PurchaseOrder> opt = taoBaoHttp.getPurchaseOrderByTcOrderId(47249254050134861l);
+        PurchaseOrder po = opt.get()
+
+        Map<String,Boolean> map1 = new HashMap<>();
+        map1.put("WAIT_BUYER_PAY",false);
+        map1.put("WAIT_BUYER_CONFIRM_GOODS",true);
+        map1.put("TRADE_FOR_PAY",false);
+        map1.put("TRADE_REFUNDING",false);
+        map1.put("TRADE_FINISHED",true);
+        map1.put("TRADE_CLOSED",true);
+
+        if(!map1.containsKey(po.getStatus())){
+            System.out.println(String.format("[%s]状态没有找到对应的发货标识",po.getStatus()));
+        }
+
+        long subOrderId = po.getId()
+        boolean isReturnGoods = map1.get(po.getStatus());
+        long returnFee = Long.valueOf(po.getBuyerPayment().replaceAll("\\.",""));
+
+
+        System.out.println("11")
+
+
+        def rt = taoBaoHttp.createTaobaoFeixiaoRefund(subOrderId,isReturnGoods,returnFee);
+
+        System.out.println(rt);
+        then:
+        "ok" == "ok"
+
+    }
 
 
      // 消息环境地址：ws://mc.api.tbsandbox.com/

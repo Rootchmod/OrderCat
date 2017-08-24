@@ -1,5 +1,8 @@
 package com.myjo.ordercat.domain;
 
+import com.myjo.ordercat.domain.constant.Brand;
+import com.myjo.ordercat.domain.constant.PickDate;
+import com.myjo.ordercat.domain.constant.Sex;
 import com.taobao.api.domain.Sku;
 
 import java.math.BigDecimal;

@@ -1,4 +1,4 @@
-package com.myjo.ordercat.domain;
+package com.myjo.ordercat.domain.constant;
 
 public enum TianmaCheckStatus {
     ORDER_STATUS_DOES_NOT_MATCH("ORDER_STATUS_DOES_NOT_MATCH"), //订单状态不匹配

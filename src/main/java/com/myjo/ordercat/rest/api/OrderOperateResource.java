@@ -45,6 +45,9 @@ public class OrderOperateResource {
             @ApiParam(required = true, name = "page_size", value = "分页大小") @QueryParam("page_size") int page_size,
             @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
+
+
+        Long begin = System.currentTimeMillis();
         PageResult<OcTmOrderRecordsVO> pageResult = new PageResult<>();
         OcTmOrderRecordsManager ocTmOrderRecordsManager = OrderCatContext.getOcTmOrderRecordsManager();
         List<Predicate<OcTmOrderRecords>> predicateList = new ArrayList<>();
@@ -65,25 +68,49 @@ public class OrderOperateResource {
             predicateList.add(OcTmOrderRecordsImpl.STATUS.equal(status));
         }
 
-        Predicate<OcTmOrderRecords> p1 = ocTmOrderRecords -> true;
+        Predicate<OcTmOrderRecords> p1 = null;
 
-        for (Predicate<OcTmOrderRecords> p : predicateList) {
-            p1 = p1.and(p);
-        }
+
         //Stream<OcTmsportCheckResult> stream = ;
 
-        long count = ocTmOrderRecordsManager.stream()
-                .filter(p1)
-                .count();
+
+        Logger.info("p1:"+(System.currentTimeMillis() - begin));
+        long count;
+        List<OcTmOrderRecords> list;
+
+        if(predicateList.size()==0){
+            count = ocTmOrderRecordsManager.stream()
+                    .count();
+            list = ocTmOrderRecordsManager.stream()
+                    .sorted(OcTmOrderRecordsImpl.ID.comparator().reversed())
+                    .skip((page - 1) * page_size)
+                    .limit(page_size)
+                    .collect(Collectors.toList());
+        }else {
+            for (Predicate<OcTmOrderRecords> p : predicateList) {
+                if(p1 == null){
+                    p1 = p;
+                }else {
+                    p1 = p1.and(p);
+                }
+
+            }
+            count = ocTmOrderRecordsManager.stream()
+                    .filter(p1)
+                    .count();
+
+            list = ocTmOrderRecordsManager.stream()
+                    .filter(p1)
+                    .sorted(OcTmOrderRecordsImpl.ID.comparator().reversed())
+                    .skip((page - 1) * page_size)
+                    .limit(page_size)
+                    .collect(Collectors.toList());
+        }
+
+
         pageResult.setTotal(count);
+        Logger.info("p2:"+(System.currentTimeMillis() - begin));
 
-
-        List<OcTmOrderRecords> list = ocTmOrderRecordsManager.stream()
-                .filter(p1)
-                .sorted(OcTmOrderRecordsImpl.ADD_TIME.comparator().reversed())
-                .skip((page - 1) * page_size)
-                .limit(page_size)
-                .collect(Collectors.toList());
 
         List<OcTmOrderRecordsVO> ocTmOrderRecordsVOS = list.parallelStream()
                 .map(o -> {
@@ -141,6 +168,9 @@ public class OrderOperateResource {
                 })
                 .collect(Collectors.toList());
         pageResult.setRows(ocTmOrderRecordsVOS);
+
+        Logger.info("p3:"+(System.currentTimeMillis() - begin));
+
 
         return pageResult;
     }

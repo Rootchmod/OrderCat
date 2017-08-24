@@ -1,7 +1,7 @@
 package com.myjo.ordercat
 
 import com.myjo.ordercat.config.OrderCatConfig
-import com.myjo.ordercat.domain.JobName
+import com.myjo.ordercat.domain.constant.JobName
 import com.myjo.ordercat.handle.*
 import com.myjo.ordercat.http.TaoBaoHttp
 import com.myjo.ordercat.http.TianmaSportHttp
@@ -12,10 +12,8 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoMan
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager
-import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import org.json.JSONObject
 import spock.lang.Specification
 import spock.lang.Unroll
 

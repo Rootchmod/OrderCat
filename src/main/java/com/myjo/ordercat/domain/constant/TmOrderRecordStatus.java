@@ -1,4 +1,4 @@
-package com.myjo.ordercat.domain;
+package com.myjo.ordercat.domain.constant;
 
 /**
  * Created by lee5hx on 17/6/16.

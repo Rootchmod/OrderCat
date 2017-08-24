@@ -1,7 +1,8 @@
 package com.myjo.ordercat.domain;
 
+import com.myjo.ordercat.domain.constant.TianmaOrderStatus;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * Created by lee5hx on 17/5/10.
@@ -45,6 +46,10 @@ public class TianmaOrder {
 
     private String tid;
 
+
+
+    private String marketPrice;
+    private String discount;
 
     public String getOuterOrderId() {
         return outerOrderId;
@@ -181,6 +186,23 @@ public class TianmaOrder {
 
     public void setTid(String tid) {
         this.tid = tid;
+    }
+
+
+    public String getMarketPrice() {
+        return marketPrice;
+    }
+
+    public void setMarketPrice(String marketPrice) {
+        this.marketPrice = marketPrice;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
     }
 }
 

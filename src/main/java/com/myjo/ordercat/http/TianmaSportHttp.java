@@ -5,9 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
+import com.myjo.ordercat.domain.constant.PickDate;
+import com.myjo.ordercat.domain.constant.TianmaOrderStatus;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
 import com.myjo.ordercat.utils.OcEncryptionUtils;
@@ -27,6 +30,8 @@ import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -246,7 +251,7 @@ public class TianmaSportHttp {
         } else {
             String msg = rt.getString("msg");
             if (msg.indexOf("没有可导出的信息") > -1) {
-                Logger.error("msg:" + rt.getString("msg"));
+                Logger.info("msg:" + rt.getString("msg"));
             } else {
                 throw new OCException("msg:" + msg);
             }
@@ -466,7 +471,7 @@ public class TianmaSportHttp {
 
         PageResult<TianmaOrder> pageResult;
         do {
-            pageResult = tradeOrderDataList(startTime, endTime, orderStatus, null, sort, pageNo, pageSize);
+            pageResult = tradeOrderDataList(startTime, endTime, orderStatus, null, sort, pageNo, pageSize,null);
             rtlist.addAll(pageResult.getRows());
             Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
         } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
@@ -480,7 +485,8 @@ public class TianmaSportHttp {
                                                       String outerTid,
                                                       String sort,
                                                       Integer pageNo,
-                                                      Integer pageSize) throws Exception {
+                                                      Integer pageSize,
+                                                      String orderId) throws Exception {
         Logger.info("trade_orders_data_list_http_url: " + OrderCatConfig.getTradeOrdersDataListHttpUrl());
         Logger.info(String.format("startTime:%s endTime:%s order_status:%s",
                 startTime == null ? "" : startTime,
@@ -518,7 +524,7 @@ public class TianmaSportHttp {
                 .field("sort", sort == null ? "" : sort) //feed_back_time
                 .field("order", "desc")
                 .field("outer_tid", outerTid == null ? "" : outerTid)
-                .field("order_id", "")
+                .field("order_id", orderId == null ? "" : orderId)
                 .asJson();
         int code = response.getStatus();
 
@@ -551,8 +557,6 @@ public class TianmaSportHttp {
                 } else {
                     tianmaOrder.setSize1(OcSizeUtils.getClothesConversionSize1(tianmaOrder.getSize1()));
                 }
-
-
                 tianmaOrder.setSize2(order.get("size2").toString());
                 tianmaOrder.setPayPrice(order.getBigDecimal("pay_price"));
                 tianmaOrder.setPostFee(order.getBigDecimal("post_fee"));
@@ -560,10 +564,9 @@ public class TianmaSportHttp {
                 tianmaOrder.setWarehouseName(order.getString("m_warehouse_name"));
                 tianmaOrder.setStatus(TianmaOrderStatus.valueOf1(order.get("status").toString()));
                 tianmaOrder.setGoodsNo(order.get("goods_no").toString());
-
+                tianmaOrder.setMarketPrice(order.get("market_price").toString());
+                tianmaOrder.setDiscount(order.get("discount").toString());
                 tianmaOrder.setTid(String.valueOf(order.getInt("tid")));
-
-
                 orders.add(tianmaOrder);
 
             }
@@ -832,6 +835,208 @@ public class TianmaSportHttp {
     }
 
 
+    public ReturnResult<String> orderCancel(String tmOrderId) {
+        Logger.info(String.format("http tm-sport orderCancel:tmOrderId:%s",
+                tmOrderId));
+        ReturnResult rt = new ReturnResult();
+        HttpResponse<JsonNode> response;
+        try {
+            response = Unirest.post(OrderCatConfig.getOrderCancelHttpUrl())
+                    .header("Host", OrderCatConfig.getTianmaSportHost())
+                    .header("Connection", "keep-alive")
+                    .header("Upgrade-Insecure-Requests", "1")
+                    .header("User-Agent", USER_AGENT)
+                    .header("Accept", "application/json, text/javascript, */*; q=0.01")
+                    .header("Referer", "http://www.tianmasport.com/ms/tradeOrders/myorder_list.shtml")
+                    .header("Accept-Encoding", "gzip, deflate, sdch")
+                    .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .field("idd", tmOrderId)
+                    .asJson();
+
+            //int code = response.getStatus();
+
+            JSONObject object = response.getBody().getObject();
+            if (object.getBoolean("success") == true) {
+                rt.setSuccess(true);
+                rt.setResult(object.getString("msg"));
+            } else {
+                rt.setSuccess(false);
+                rt.setErrorCode(String.valueOf(response.getStatus()));
+                rt.setErrorMessages(object.getString("msg"));
+            }
+
+        } catch (Exception e) {
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            rt.setSuccess(false);
+            rt.setErrorCode("OC-90003");
+            rt.setErrorMessages(errors.toString());
+            e.printStackTrace();
+        }
+        return rt;
+    }
+
+
+    //http://www.tianmasport.com/ms/tradeOrders/soldProblem.do
+//    id:23783596
+//    problemType:无理由退货
+//    proxyId:147424
+//    wareHouseName:天马总仓1仓
+//    marketPrice:599
+//    discount:5.8
+//    problemContent:OC-售后
+//    delivery:顺丰标快
+//    mapPath:
+    public ReturnResult<String> soldProblem(String tmOrderId, String marketPrice, String wareHouseName, String discount, String delivery) {
+        Logger.info(String.format("http tm-sport soldProblem:tmOrderId:%s",
+                tmOrderId));
+        ReturnResult rt = new ReturnResult();
+        HttpResponse<JsonNode> response;
+        try {
+            response = Unirest.post(OrderCatConfig.getSoldProblemHttpUrl())
+                    .header("Host", OrderCatConfig.getTianmaSportHost())
+                    .header("Connection", "keep-alive")
+                    .header("Upgrade-Insecure-Requests", "1")
+                    .header("User-Agent", USER_AGENT)
+                    .header("Accept", "application/json, text/javascript, */*; q=0.01")
+                    .header("Referer", "http://www.tianmasport.com/ms/tradeOrders/myorder_list.shtml")
+                    .header("Accept-Encoding", "gzip, deflate, sdch")
+                    .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .field("id", tmOrderId)
+                    .field("problemType", "无理由退货")
+                    .field("proxyId", "147424")
+                    .field("wareHouseName", wareHouseName)
+                    .field("marketPrice", marketPrice)
+                    .field("discount", discount)
+                    .field("problemContent", "OC-售后")
+                    .field("delivery", delivery)
+                    .field("mapPath", "")
+                    .asJson();
+
+            //int code = response.getStatus();
+
+            JSONObject object = response.getBody().getObject();
+            if (object.getBoolean("success") == true) {
+                rt.setSuccess(true);
+                rt.setResult(object.getString("msg"));
+            } else {
+                rt.setSuccess(false);
+                rt.setErrorCode(String.valueOf(response.getStatus()));
+                rt.setErrorMessages(object.getString("msg"));
+            }
+
+        } catch (Exception e) {
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            rt.setSuccess(false);
+            rt.setErrorCode("OC-90006");
+            rt.setErrorMessages(errors.toString());
+            e.printStackTrace();
+        }
+        return rt;
+    }
+
+
+    public ReturnResult<String> appAlterOrder(String tmOrderId) {
+        Logger.info(String.format("http tm-sport appAlterOrder:tmOrderId:%s",
+                tmOrderId));
+        ReturnResult rt = new ReturnResult();
+        HttpResponse<JsonNode> response;
+        try {
+            response = Unirest.post(OrderCatConfig.getAppAlterOrderHttpUrl())
+                    .header("Host", OrderCatConfig.getTianmaSportHost())
+                    .header("Connection", "keep-alive")
+                    .header("Upgrade-Insecure-Requests", "1")
+                    .header("User-Agent", USER_AGENT)
+                    .header("Accept", "application/json, text/javascript, */*; q=0.01")
+                    .header("Referer", "http://www.tianmasport.com/ms/tradeOrders/myorder_list.shtml")
+                    .header("Accept-Encoding", "gzip, deflate, sdch")
+                    .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .field("orderId", tmOrderId)
+                    .field("type", "0")
+                    .field("orderStatus", "40")
+                    .field("description", "OC-取消")
+                    .asJson();
+
+            //int code = response.getStatus();
+
+            JSONObject object = response.getBody().getObject();
+            if (object.getBoolean("success") == true) {
+                rt.setSuccess(true);
+                rt.setResult(object.getString("msg"));
+            } else {
+                rt.setSuccess(false);
+                rt.setErrorCode(String.valueOf(response.getStatus()));
+                rt.setErrorMessages(object.getString("msg"));
+            }
+
+        } catch (Exception e) {
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            rt.setSuccess(false);
+            rt.setErrorCode("OC-90005");
+            rt.setErrorMessages(errors.toString());
+            e.printStackTrace();
+        }
+        return rt;
+    }
+
+
+    public ReturnResult<String> backExpressNo(String tmOrderId, String backExpressNo, String backDelivery) {
+        Logger.info(String.format("http tm-sport backExpressNo:tmOrderId:%s",
+                tmOrderId));
+        ReturnResult rt = new ReturnResult();
+        HttpResponse<JsonNode> response;
+        try {
+
+            String id;
+            Optional<SoldFront> opt = getSoldFront(tmOrderId);
+            if (opt.isPresent()) {
+                id = opt.get().getId();
+            } else {
+                throw new OCException(String.format("天马订单:[%s],售后列表查询失败!", tmOrderId));
+            }
+            response = Unirest.post(OrderCatConfig.getBackExpressnoHttpUrl())
+                    .header("Host", OrderCatConfig.getTianmaSportHost())
+                    .header("Connection", "keep-alive")
+                    .header("Upgrade-Insecure-Requests", "1")
+                    .header("User-Agent", USER_AGENT)
+                    .header("Accept", "application/json, text/javascript, */*; q=0.01")
+                    .header("Referer", "http://www.tianmasport.com/ms/soldFront/list.shtml")
+                    .header("Accept-Encoding", "gzip, deflate, sdch")
+                    .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .field("id", id)
+                    .field("orderId", tmOrderId)
+                    .field("backExpressNo", backExpressNo)
+                    .field("backDelivery", backDelivery)
+                    .asJson();
+
+            JSONObject object = response.getBody().getObject();
+            if (object.getBoolean("success") == true) {
+                rt.setSuccess(true);
+                rt.setResult(object.getString("msg"));
+            } else {
+                rt.setSuccess(false);
+                rt.setErrorCode(String.valueOf(response.getStatus()));
+                rt.setErrorMessages(object.getString("msg"));
+            }
+
+        } catch (Exception e) {
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            rt.setSuccess(false);
+            rt.setErrorCode("OC-90004");
+            rt.setErrorMessages(errors.toString());
+            e.printStackTrace();
+        }
+        return rt;
+    }
+
+
     public String getdefaultPostage(String wareHouseName,
                                     String province,
                                     String weight) throws Exception {
@@ -935,7 +1140,7 @@ public class TianmaSportHttp {
         //天马退款处理流程
         PageResult<TianmaOrder> prTmOrders = null;
         try {
-            prTmOrders = tradeOrderDataList(null, null, null, String.valueOf(tid), null, 1, 10);
+            prTmOrders = tradeOrderDataList(null, null, null, String.valueOf(tid), null, 1, 10,null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -946,6 +1151,96 @@ public class TianmaSportHttp {
             tianmaOrder = prTmOrders.getRows().get(0);
         }
         return Optional.ofNullable(tianmaOrder);
+    }
+
+    public PageResult<SoldFront> soldFrontDataList(String orderId,
+                                                   Integer pageNo,
+                                                   Integer pageSize) throws Exception {
+        Logger.info("sold_front_data_list_http_url: " + OrderCatConfig.getSoldFrontDataListHttpUrl());
+
+
+        PageResult<SoldFront> pr = new PageResult();
+
+
+        List<SoldFront> orders = new ArrayList<>();
+
+        String sessionId = map.get("seesion_id");
+        Logger.info("http tianmaSport login sessionId: " + sessionId);
+        HttpResponse<JsonNode> response = Unirest.post(OrderCatConfig.getSoldFrontDataListHttpUrl())
+                .header("Host", OrderCatConfig.getTianmaSportHost())
+                .header("Connection", "keep-alive")
+                .header("Accept", "*/*")
+                .header("Origin", "http://www.tianmasport.com")
+                .header("X-Requested-With", "XMLHttpRequest")
+                .header("User-Agent", USER_AGENT)
+                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                .header("Referer", "http://www.tianmasport.com/ms/soldFront/list.shtml")
+                .header("Accept-Encoding", "gzip, deflate")
+                .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+                //查询参数
+                .field("status", "")
+                .field("oldWareHouseId", "")
+                .field("proxyOrderID", "")
+                .field("articleno", "")
+                .field("size", "")
+                .field("addressee", "")
+                .field("backExpressNo", "")
+                .field("isBackExpressNoExist", "")
+                .field("problemType", "")
+                .field("pickingStartTime", "")
+                .field("pickingEndsTime", "")
+                .field("receiptStartTime", "")
+                .field("receiptEndsTime", "")
+                .field("addStartTime", "")
+                .field("addEndsTime", "")
+                .field("orderId", orderId)
+                .field("page", pageNo.intValue())
+                .field("rows", pageSize.intValue())
+
+                .asJson();
+        int code = response.getStatus();
+
+        Logger.info("http-status:" + code);
+        Logger.info("http-status-text:" + response.getStatusText());
+
+        JSONObject rt = response.getBody().getObject();
+        //Logger.info("inventoryDownGroup rt:" + rt);
+        if (code == 200) {
+            pr.setTotal(rt.getInt("total"));
+            org.json.JSONArray rows = rt.getJSONArray("rows");
+            JSONObject order;
+            SoldFront soldFront;
+            for (int i = 0; i < rows.length(); i++) {
+                soldFront = new SoldFront();
+                order = rows.getJSONObject(i);
+                soldFront.setOrderId(order.get("orderId").toString());
+                soldFront.setId(order.get("id").toString());
+                orders.add(soldFront);
+            }
+            pr.setRows(orders);
+        } else {
+            throw new OCException("获取天马售后管理查询失败:" + code);
+        }
+        return pr;
+    }
+
+
+    public Optional<SoldFront> getSoldFront(String orderId) {
+        SoldFront soldFront = null;
+        //天马退款处理流程
+        PageResult<SoldFront> soldFronts = null;
+        try {
+            soldFronts = soldFrontDataList(orderId, 1, 15);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        if (prTmOrders.getTotal() > 1 || prTmOrders.getRows().size() > 1) {
+//            throw new OCException(String.format("淘宝订单[%d],在天马中的订单大于1.", tid));
+//        }
+        if (soldFronts != null && soldFronts.getRows().size() == 1) {
+            soldFront = soldFronts.getRows().get(0);
+        }
+        return Optional.ofNullable(soldFront);
     }
 
 

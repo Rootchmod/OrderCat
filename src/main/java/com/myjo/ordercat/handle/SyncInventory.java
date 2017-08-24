@@ -2,6 +2,7 @@ package com.myjo.ordercat.handle;
 
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
+import com.myjo.ordercat.domain.constant.*;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
@@ -10,8 +11,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoMan
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfo;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoImpl;
@@ -82,103 +81,7 @@ public class SyncInventory {
         this.scriptEngine = scriptEngine;
     }
 
-
-    /**
-     * 数据采集,多个CSV合成一个
-     */
-    public void dataGathering(String prefix,String fileName,Long execJobId) throws Exception {
-        //删除历史库存CSV
-//        String dfileStr = OrderCatConfig.getOrderCatOutPutPath() + fileName;
-//        File dfile = new File(dfileStr);
-//        FileUtils.forceDeleteOnExit(dfile);
-//        Logger.debug("if exists:" + dfile.exists() + " onExit del:" + dfileStr);
-
-        //下载合并CSV
-        List<InventoryQueryCondition> list = OrderCatConfig.getInventoryQueryConditions();
-        Logger.debug("dataGathering.InventoryQueryCondition.list" + list.size());
-
-        String[] quarter = {
-                "17Q4","17Q3","17Q2","17Q1",
-                "16Q4","16Q3","16Q2","16Q1",
-                "15Q4","15Q3","15Q2","15Q1",
-                "14Q4","14Q3","14Q2","14Q1"
-        };
-
-        String[] sex = {
-                "男","女","中"
-        };
-
-        String[] division = {
-                "鞋","服","配"
-        };
-        //计算笛卡尔积
-        List<String> list1 = Arrays.asList(quarter);
-        List<String> list2 = Arrays.asList(sex);
-        List<String> list3 = Arrays.asList(division);
-        List<List<String>> lists = Arrays.asList(list1,list2,list3);
-        List<List<String>> resultLists = cartesianProduct(lists);
-
-        Logger.info("下载团购查询信息");
-        for(InventoryQueryCondition iqc :list){
-            Logger.info("dataGathering.InventoryQueryCondition.BrandName:" + iqc.getBrandName());
-            resultLists.parallelStream().forEach(strings -> {
-                String tempfName = String.format("%s_%s_%s_%s_%s_%d.csv",
-                        prefix,
-                        iqc.getBrandName(),
-                        strings.get(1),
-                        strings.get(0),
-                        strings.get(2),
-                        execJobId
-                        );
-                Logger.info("dataGathering.fileName:" + tempfName);
-                try {
-                    tianmaSportHttp.inventoryDownGroup(tempfName, iqc.getBrandName(), strings.get(1), strings.get(0),strings.get(2));
-                } catch (Exception e) {
-                    throw new OCException(e);
-                }
-            });
-        }
-        Logger.info("合并团购下载文件");
-
-        String dfileStr = OrderCatConfig.getOrderCatTempPath() + fileName;
-        //IOUtils.toByteArray(inputStream);
-        File dfile = new File(dfileStr);
-        File tempCsv;
-        for(InventoryQueryCondition iqc :list){
-            Logger.info("dataGathering.InventoryQueryCondition.BrandName:" + iqc.getBrandName());
-            for(List<String> tempList:resultLists){
-                String tempfName = String.format("%s_%s_%s_%s_%s_%d.csv",
-                        prefix,
-                        iqc.getBrandName(),
-                        tempList.get(1),
-                        tempList.get(0),
-                        tempList.get(2),
-                        execJobId);
-
-                tempCsv = new File( OrderCatConfig.getOrderCatTempPath()+tempfName);
-                if(tempCsv.exists()){
-                    FileUtils.writeByteArrayToFile(dfile, FileUtils.readFileToByteArray(tempCsv), true);
-                    FileUtils.forceDelete(tempCsv);
-                }
-            }
-        }
-
-//        ArrayList
-//
-//
-//
-//
-//        for (InventoryQueryCondition iqc : list) {
-//            Logger.debug("dataGathering.InventoryQueryCondition.BrandName" + iqc.getBrandName());
-//            Logger.debug("dataGathering.InventoryQueryCondition.Quarter" + iqc.getQuarter());
-//            Logger.debug("dataGathering.InventoryQueryCondition.Sex" + iqc.getSex());
-//            tianmaSportHttp.inventoryDownGroup(fileName, iqc.getBrandName(), iqc.getSex(), iqc.getQuarter());
-//        }
-        Logger.debug("SyncInventory.dataGathering.exec done.");
-    }
-
-
-    private static <T>  List<List<T>> cartesianProduct(List<List<T>> lists) {
+    private static <T> List<List<T>> cartesianProduct(List<List<T>> lists) {
         List<List<T>> resultLists = new ArrayList<List<T>>();
         if (lists.size() == 0) {
             resultLists.add(new ArrayList<T>());
@@ -198,9 +101,87 @@ public class SyncInventory {
         return resultLists;
     }
 
+    /**
+     * 数据采集,多个CSV合成一个
+     */
+    public void dataGathering(String prefix, String fileName, Long execJobId) throws Exception {
+        //删除历史库存CSV
+//        String dfileStr = OrderCatConfig.getOrderCatOutPutPath() + fileName;
+//        File dfile = new File(dfileStr);
+//        FileUtils.forceDeleteOnExit(dfile);
+//        Logger.debug("if exists:" + dfile.exists() + " onExit del:" + dfileStr);
 
+        //下载合并CSV
+        List<InventoryQueryCondition> list = OrderCatConfig.getInventoryQueryConditions();
+        Logger.debug("dataGathering.InventoryQueryCondition.list" + list.size());
 
+        String[] quarter = {
+                "17Q4", "17Q3", "17Q2", "17Q1",
+                "16Q4", "16Q3", "16Q2", "16Q1",
+                "15Q4", "15Q3", "15Q2", "15Q1",
+                "14Q4", "14Q3", "14Q2", "14Q1"
+        };
 
+        String[] sex = {
+                "男", "女", "中"
+        };
+
+        String[] division = {
+                "鞋", "服", "配"
+        };
+        //计算笛卡尔积
+        List<String> list1 = Arrays.asList(quarter);
+        List<String> list2 = Arrays.asList(sex);
+        List<String> list3 = Arrays.asList(division);
+        List<List<String>> lists = Arrays.asList(list1, list2, list3);
+        List<List<String>> resultLists = cartesianProduct(lists);
+
+        Logger.info("下载团购查询信息");
+        for (InventoryQueryCondition iqc : list) {
+            Logger.info("dataGathering.InventoryQueryCondition.BrandName:" + iqc.getBrandName());
+            resultLists.parallelStream().forEach(strings -> {
+                String tempfName = String.format("%s_%s_%s_%s_%s_%d.csv",
+                        prefix,
+                        iqc.getBrandName(),
+                        strings.get(1),
+                        strings.get(0),
+                        strings.get(2),
+                        execJobId
+                );
+                Logger.info("dataGathering.fileName:" + tempfName);
+                try {
+                    tianmaSportHttp.inventoryDownGroup(tempfName, iqc.getBrandName(), strings.get(1), strings.get(0), strings.get(2));
+                } catch (Exception e) {
+                    throw new OCException(e);
+                }
+            });
+        }
+        Logger.info("合并团购下载文件");
+
+        String dfileStr = OrderCatConfig.getOrderCatTempPath() + fileName;
+        //IOUtils.toByteArray(inputStream);
+        File dfile = new File(dfileStr);
+        File tempCsv;
+        for (InventoryQueryCondition iqc : list) {
+            Logger.info("dataGathering.InventoryQueryCondition.BrandName:" + iqc.getBrandName());
+            for (List<String> tempList : resultLists) {
+                String tempfName = String.format("%s_%s_%s_%s_%s_%d.csv",
+                        prefix,
+                        iqc.getBrandName(),
+                        tempList.get(1),
+                        tempList.get(0),
+                        tempList.get(2),
+                        execJobId);
+
+                tempCsv = new File(OrderCatConfig.getOrderCatTempPath() + tempfName);
+                if (tempCsv.exists()) {
+                    FileUtils.writeByteArrayToFile(dfile, FileUtils.readFileToByteArray(tempCsv), true);
+                    FileUtils.forceDelete(tempCsv);
+                }
+            }
+        }
+        Logger.debug("SyncInventory.dataGathering.exec done.");
+    }
 
     private List<InventoryInfo> getInventoryInfoInCsv(String fileName) throws Exception {
 
@@ -217,7 +198,7 @@ public class SyncInventory {
             List<String> customerList;
             InventoryInfo inventoryInfo = null;
             while ((customerList = listReader.read()) != null) {
-                if(customerList!=null&&customerList.size()==12){
+                if (customerList != null && customerList.size() == 12) {
                     inventoryInfo = new InventoryInfo();
 //                Logger.debug(String.format("lineNo=%s, rowNo=%s, customerList=%s", listReader.getLineNumber(),
 //                        listReader.getRowNumber(), customerList));
@@ -277,7 +258,7 @@ public class SyncInventory {
         Logger.info("同步配货率信息,job-id:" + execJobId);
         //抓取天马库存信息数据
         Logger.info("抓取天马库存信息数据");
-        dataGathering("swh",OrderCatConfig.getInventoryGroupWhfile(),execJobId);
+        dataGathering("swh", OrderCatConfig.getInventoryGroupWhfile(), execJobId);
         List<InventoryInfo> list = getInventoryInfoInCsv(OrderCatConfig.getInventoryGroupWhfile());
         Logger.info("InventoryInfoInCsv.origin.size:" + list.size());
 
@@ -593,7 +574,7 @@ public class SyncInventory {
         Logger.info("同步淘宝库存");
         //抓取天马库存信息数据
         Logger.info("抓取天马库存信息数据");
-        dataGathering("stbi",OrderCatConfig.getInventoryGroupIwhfile(),execJobId);
+        dataGathering("stbi", OrderCatConfig.getInventoryGroupIwhfile(), execJobId);
         List<InventoryInfo> list = getInventoryInfoInCsv(OrderCatConfig.getInventoryGroupIwhfile());
         if (list.size() == 0) {
             throw new OCException("天马库存信息为空,请检测天马数据获取接口!");
@@ -766,9 +747,6 @@ public class SyncInventory {
         Logger.info(String.format("根据配货率与库存过滤"));
         intersectionList = InventoryDataOperate.filterPickRateList(intersectionList, quarterMap);
         Logger.info(String.format("根据配货率与库存过滤-size:[%d]", intersectionList.size()));
-
-
-
 
 
         //商品-平均价格

@@ -2,7 +2,7 @@ package com.myjo.ordercat.rest.api;
 
 import com.aol.micro.server.auto.discovery.Rest;
 import com.myjo.ordercat.context.OrderCatContext;
-import com.myjo.ordercat.domain.JobName;
+import com.myjo.ordercat.domain.constant.JobName;
 import com.myjo.ordercat.domain.PageResult;
 import com.myjo.ordercat.domain.vo.WarehouseInfoVO;
 import com.myjo.ordercat.handle.OrderOperate;

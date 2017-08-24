@@ -1,4 +1,4 @@
-package com.myjo.ordercat.domain;
+package com.myjo.ordercat.domain.constant;
 
 public enum AsRefundCheckStatus {
     DZ_FAILURE("DZ_FAILURE"),//对账失败

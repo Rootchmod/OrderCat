@@ -1595,10 +1595,77 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"expanded\" : true,",
             "                    \"nullable\" : true,",
             "                    \"autoIncrement\" : false,",
+            "                    \"name\" : \"refund_phase\",",
+            "                    \"nullableImplementation\" : \"OPTIONAL\",",
+            "                    \"id\" : \"refund_phase\",",
+            "                    \"ordinalPosition\" : 9,",
+            "                    \"enabled\" : true",
+            "                  },",
+            "                  {",
+            "                    \"databaseType\" : \"java.lang.Long\",",
+            "                    \"expanded\" : true,",
+            "                    \"nullable\" : true,",
+            "                    \"autoIncrement\" : false,",
+            "                    \"name\" : \"refund_version\",",
+            "                    \"nullableImplementation\" : \"OPTIONAL\",",
+            "                    \"id\" : \"refund_version\",",
+            "                    \"ordinalPosition\" : 10,",
+            "                    \"enabled\" : true",
+            "                  },",
+            "                  {",
+            "                    \"databaseType\" : \"java.lang.String\",",
+            "                    \"expanded\" : true,",
+            "                    \"nullable\" : true,",
+            "                    \"autoIncrement\" : false,",
+            "                    \"name\" : \"refund_amount\",",
+            "                    \"nullableImplementation\" : \"OPTIONAL\",",
+            "                    \"id\" : \"refund_amount\",",
+            "                    \"ordinalPosition\" : 11,",
+            "                    \"enabled\" : true",
+            "                  },",
+            "                  {",
+            "                    \"databaseType\" : \"java.lang.String\",",
+            "                    \"expanded\" : true,",
+            "                    \"nullable\" : true,",
+            "                    \"name\" : \"operate_type\",",
+            "                    \"id\" : \"operate_type\",",
+            "                    \"ordinalPosition\" : 12,",
+            "                    \"enabled\" : true",
+            "                  },",
+            "                  {",
+            "                    \"databaseType\" : \"java.lang.String\",",
+            "                    \"expanded\" : true,",
+            "                    \"nullable\" : true,",
+            "                    \"autoIncrement\" : false,",
             "                    \"name\" : \"operate_detail\",",
             "                    \"nullableImplementation\" : \"OPTIONAL\",",
             "                    \"id\" : \"operate_detail\",",
-            "                    \"ordinalPosition\" : 9,",
+            "                    \"ordinalPosition\" : 13,",
+            "                    \"enabled\" : true",
+            "                  },",
+            "                  {"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart15(StringBuilder sb) {
+        Stream.of(
+            "                    \"databaseType\" : \"java.lang.String\",",
+            "                    \"expanded\" : true,",
+            "                    \"nullable\" : true,",
+            "                    \"name\" : \"operate_result\",",
+            "                    \"id\" : \"operate_result\",",
+            "                    \"ordinalPosition\" : 14,",
+            "                    \"enabled\" : true",
+            "                  },",
+            "                  {",
+            "                    \"databaseType\" : \"java.lang.Short\",",
+            "                    \"expanded\" : true,",
+            "                    \"nullable\" : true,",
+            "                    \"autoIncrement\" : false,",
+            "                    \"name\" : \"is_latest\",",
+            "                    \"nullableImplementation\" : \"OPTIONAL\",",
+            "                    \"id\" : \"is_latest\",",
+            "                    \"ordinalPosition\" : 15,",
             "                    \"enabled\" : true",
             "                  },",
             "                  {",
@@ -1610,7 +1677,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"name\" : \"add_time\",",
             "                    \"nullableImplementation\" : \"OPTIONAL\",",
             "                    \"id\" : \"add_time\",",
-            "                    \"ordinalPosition\" : 10,",
+            "                    \"ordinalPosition\" : 16,",
             "                    \"enabled\" : true",
             "                  }",
             "                ],",
@@ -1643,12 +1710,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                      }",
             "                    ],",
             "                    \"id\" : \"PRIMARY\",",
-            "                    \"enabled\" : true"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart15(StringBuilder sb) {
-        Stream.of(
+            "                    \"enabled\" : true",
             "                  },",
             "                  {",
             "                    \"expanded\" : false,",
@@ -1687,7 +1749,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                \"columns\" : [",
             "                  {",
             "                    \"databaseType\" : \"java.lang.Long\",",
-            "                    \"expanded\" : true,",
+            "                    \"expanded\" : true,"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart16(StringBuilder sb) {
+        Stream.of(
             "                    \"typeMapper\" : \"com.speedment.runtime.typemapper.primitive.PrimitiveTypeMapper\",",
             "                    \"nullable\" : false,",
             "                    \"autoIncrement\" : true,",
@@ -1749,12 +1816,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "              },",
             "              {",
             "                \"expanded\" : false,",
-            "                \"primaryKeyColumns\" : ["
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart16(StringBuilder sb) {
-        Stream.of(
+            "                \"primaryKeyColumns\" : [",
             "                  {",
             "                    \"expanded\" : true,",
             "                    \"name\" : \"id\",",
@@ -1793,7 +1855,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                      }",
             "                    ],",
             "                    \"id\" : \"IDX_NUMIID\",",
-            "                    \"enabled\" : true",
+            "                    \"enabled\" : true"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart17(StringBuilder sb) {
+        Stream.of(
             "                  }",
             "                ],",
             "                \"isView\" : false,",
@@ -1855,12 +1922,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                  {",
             "                    \"expanded\" : true,",
             "                    \"name\" : \"id\",",
-            "                    \"id\" : \"id\","
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart17(StringBuilder sb) {
-        Stream.of(
+            "                    \"id\" : \"id\",",
             "                    \"ordinalPosition\" : 1",
             "                  }",
             "                ],",
@@ -1899,7 +1961,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                  },",
             "                  {",
             "                    \"expanded\" : false,",
-            "                    \"unique\" : false,",
+            "                    \"unique\" : false,"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart18(StringBuilder sb) {
+        Stream.of(
             "                    \"name\" : \"IDX_LABOUR_STATUS\",",
             "                    \"indexColumns\" : [",
             "                      {",
@@ -1961,12 +2028,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"name\" : \"tm_outer_order_id\",",
             "                    \"nullableImplementation\" : \"OPTIONAL\",",
             "                    \"id\" : \"tm_outer_order_id\",",
-            "                    \"ordinalPosition\" : 3,"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart18(StringBuilder sb) {
-        Stream.of(
+            "                    \"ordinalPosition\" : 3,",
             "                    \"enabled\" : true",
             "                  },",
             "                  {",
@@ -2005,7 +2067,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"expanded\" : true,",
             "                    \"nullable\" : true,",
             "                    \"name\" : \"tb_nickname\",",
-            "                    \"id\" : \"tb_nickname\",",
+            "                    \"id\" : \"tb_nickname\","
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart19(StringBuilder sb) {
+        Stream.of(
             "                    \"ordinalPosition\" : 7,",
             "                    \"enabled\" : true",
             "                  },",
@@ -2067,12 +2134,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"enabled\" : true",
             "                  },",
             "                  {",
-            "                    \"databaseType\" : \"java.math.BigDecimal\","
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart19(StringBuilder sb) {
-        Stream.of(
+            "                    \"databaseType\" : \"java.math.BigDecimal\",",
             "                    \"expanded\" : true,",
             "                    \"nullable\" : true,",
             "                    \"autoIncrement\" : false,",
@@ -2111,7 +2173,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"autoIncrement\" : false,",
             "                    \"name\" : \"dz_status\",",
             "                    \"nullableImplementation\" : \"OPTIONAL\",",
-            "                    \"id\" : \"dz_status\",",
+            "                    \"id\" : \"dz_status\","
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart20(StringBuilder sb) {
+        Stream.of(
             "                    \"ordinalPosition\" : 16,",
             "                    \"enabled\" : true",
             "                  },",
@@ -2173,12 +2240,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"ordinalPosition\" : 1",
             "                  }",
             "                ],",
-            "                \"indexes\" : ["
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart20(StringBuilder sb) {
-        Stream.of(
+            "                \"indexes\" : [",
             "                  {",
             "                    \"expanded\" : false,",
             "                    \"unique\" : true,",
@@ -2217,7 +2279,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"name\" : \"IDX_STATUS\",",
             "                    \"indexColumns\" : [",
             "                      {",
-            "                        \"orderType\" : \"ASC\",",
+            "                        \"orderType\" : \"ASC\","
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart21(StringBuilder sb) {
+        Stream.of(
             "                        \"expanded\" : true,",
             "                        \"name\" : \"status\",",
             "                        \"id\" : \"status\",",
@@ -2279,12 +2346,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                \"isView\" : false,",
             "                \"columns\" : [",
             "                  {",
-            "                    \"databaseType\" : \"java.lang.Long\","
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart21(StringBuilder sb) {
-        Stream.of(
+            "                    \"databaseType\" : \"java.lang.Long\",",
             "                    \"expanded\" : true,",
             "                    \"typeMapper\" : \"com.speedment.runtime.typemapper.primitive.PrimitiveTypeMapper\",",
             "                    \"nullable\" : false,",
@@ -2323,7 +2385,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"name\" : \"goodsNo\",",
             "                    \"nullableImplementation\" : \"OPTIONAL\",",
             "                    \"id\" : \"goodsNo\",",
-            "                    \"ordinalPosition\" : 4,",
+            "                    \"ordinalPosition\" : 4,"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart22(StringBuilder sb) {
+        Stream.of(
             "                    \"enabled\" : true",
             "                  },",
             "                  {",
@@ -2385,12 +2452,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"name\" : \"wh_name\",",
             "                    \"nullableImplementation\" : \"OPTIONAL\",",
             "                    \"id\" : \"wh_name\",",
-            "                    \"ordinalPosition\" : 10,"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart22(StringBuilder sb) {
-        Stream.of(
+            "                    \"ordinalPosition\" : 10,",
             "                    \"enabled\" : true",
             "                  },",
             "                  {",
@@ -2429,7 +2491,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                  },",
             "                  {",
             "                    \"databaseType\" : \"java.lang.Integer\",",
-            "                    \"expanded\" : true,",
+            "                    \"expanded\" : true,"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart23(StringBuilder sb) {
+        Stream.of(
             "                    \"nullable\" : true,",
             "                    \"autoIncrement\" : false,",
             "                    \"name\" : \"wh_inventory_count\",",
@@ -2491,12 +2558,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"ordinalPosition\" : 19,",
             "                    \"enabled\" : true",
             "                  },",
-            "                  {"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart23(StringBuilder sb) {
-        Stream.of(
+            "                  {",
             "                    \"databaseType\" : \"java.math.BigDecimal\",",
             "                    \"expanded\" : true,",
             "                    \"nullable\" : true,",
@@ -2535,7 +2597,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"id\" : \"elapsed\",",
             "                    \"ordinalPosition\" : 23,",
             "                    \"enabled\" : true",
-            "                  },",
+            "                  },"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart24(StringBuilder sb) {
+        Stream.of(
             "                  {",
             "                    \"databaseType\" : \"java.sql.Timestamp\",",
             "                    \"expanded\" : true,",
@@ -2597,12 +2664,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"enabled\" : true",
             "                  },",
             "                  {",
-            "                    \"expanded\" : false,"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart24(StringBuilder sb) {
-        Stream.of(
+            "                    \"expanded\" : false,",
             "                    \"unique\" : false,",
             "                    \"name\" : \"IDX_WAREHOUSE_ID\",",
             "                    \"indexColumns\" : [",
@@ -2641,7 +2703,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"expanded\" : true,",
             "                    \"typeMapper\" : \"com.speedment.runtime.typemapper.primitive.PrimitiveTypeMapper\",",
             "                    \"nullable\" : false,",
-            "                    \"autoIncrement\" : true,",
+            "                    \"autoIncrement\" : true,"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart25(StringBuilder sb) {
+        Stream.of(
             "                    \"name\" : \"id\",",
             "                    \"id\" : \"id\",",
             "                    \"ordinalPosition\" : 1,",
@@ -2703,12 +2770,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                  {",
             "                    \"databaseType\" : \"java.lang.Integer\",",
             "                    \"expanded\" : true,",
-            "                    \"nullable\" : true,"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart25(StringBuilder sb) {
-        Stream.of(
+            "                    \"nullable\" : true,",
             "                    \"name\" : \"pick_date\",",
             "                    \"id\" : \"pick_date\",",
             "                    \"ordinalPosition\" : 7,",
@@ -2747,7 +2809,12 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "                    \"enabled\" : true",
             "                  },",
             "                  {",
-            "                    \"databaseType\" : \"java.lang.Integer\",",
+            "                    \"databaseType\" : \"java.lang.Integer\","
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart26(StringBuilder sb) {
+        Stream.of(
             "                    \"expanded\" : true,",
             "                    \"nullable\" : true,",
             "                    \"autoIncrement\" : false,",
@@ -2809,12 +2876,7 @@ public class GeneratedOrdercatMetadata extends AbstractApplicationMetadata {
             "      }",
             "    ],",
             "    \"enabled\" : true",
-            "  }"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart26(StringBuilder sb) {
-        Stream.of(
+            "  }",
             "}"
         ).forEachOrdered(sb::append);
     }

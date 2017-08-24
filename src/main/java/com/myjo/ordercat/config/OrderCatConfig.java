@@ -7,7 +7,6 @@ import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
 
-
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -34,10 +33,6 @@ public class OrderCatConfig {
     private static final String REFUND_OPERATE = "refund-operate.%s";
 
 
-
-
-
-
     private static Config config;
 
 
@@ -57,7 +52,7 @@ public class OrderCatConfig {
 
     }
 
-    public static void init(String cs) throws Exception{
+    public static void init(String cs) throws Exception {
         config = ConfigFactory.parseFile(new File(cs)).resolve();
 //        config.checkValid(ConfigFactory.defaultReference(),
 //                "tianma-sport",
@@ -70,110 +65,98 @@ public class OrderCatConfig {
     }
 
 
-    public static Integer getAsdOrderDateIntervalDay(){
+    public static Integer getAsdOrderDateIntervalDay() {
         return config.getInt(String.format(AUTO_SEND_GOODS, "order_date_interval_day"));
     }
 
 
-    public static Integer getFenxiaoOrderDateIntervalDay(){
+    public static Integer getFenxiaoOrderDateIntervalDay() {
         return config.getInt(String.format(ACCOUNT_CHECK, "fenxiao_order_date_interval_day"));
     }
 
 
-    public static Integer getTianmaOrderDateIntervalDay(){
+    public static Integer getTianmaOrderDateIntervalDay() {
         return config.getInt(String.format(ACCOUNT_CHECK, "tianma_order_date_interval_day"));
     }
 
-    public static Integer getRefundOrderDateIntervalDay(){
+    public static Integer getRefundOrderDateIntervalDay() {
         return config.getInt(String.format(ACCOUNT_CHECK, "refund_order_date_interval_day"));
     }
 
 
-    public static BigDecimal getRefundOrderApTotalFee(){
+    public static BigDecimal getRefundOrderApTotalFee() {
         return new BigDecimal(config.getString(String.format(ACCOUNT_CHECK, "refund_order_ap_totalFee")));
     }
 
 
-    public static BigDecimal getRefundOrderApRefundFee(){
+    public static BigDecimal getRefundOrderApRefundFee() {
         return new BigDecimal(config.getString(String.format(ACCOUNT_CHECK, "refund_order_ap_refundFee")));
     }
 
 
-
-
-
-
-
-
-
-    public static Long getTianmaPaytimeDifferDay(){
+    public static Long getTianmaPaytimeDifferDay() {
         return config.getLong(String.format(ACCOUNT_CHECK, "tianma_paytime_differ_day"));
     }
 
 
-
-
-
-
-    public static List<String> getFeixiaoNoCheckNumIidList(){
+    public static List<String> getFeixiaoNoCheckNumIidList() {
         return config.getStringList(String.format(ACCOUNT_CHECK, "fenxiao_no_check_numIid_list"));
     }
 
     //syncWarehouseJob_trigger_cron
-    public static String getSyncWarehouseJobTriggerCron(){
+    public static String getSyncWarehouseJobTriggerCron() {
         return config.getString(String.format(SCHEDULER_CRON, "syncWarehouseJob_trigger_cron"));
     }
 
     //syncTaoBaoInventoryJob_trigger_cron
-    public static String getSyncTaoBaoInventoryJobTriggerCron(){
+    public static String getSyncTaoBaoInventoryJobTriggerCron() {
         return config.getString(String.format(SCHEDULER_CRON, "syncTaoBaoInventoryJob_trigger_cron"));
     }
 
 
-    public static String getSyncSalesInfoJobTriggerCron(){
+    public static String getSyncSalesInfoJobTriggerCron() {
         return config.getString(String.format(SCHEDULER_CRON, "syncSalesInfoJob_trigger_cron"));
     }
 
 
-    public static String getFenxiaoAccountCheckJobTriggerCron(){
+    public static String getFenxiaoAccountCheckJobTriggerCron() {
         return config.getString(String.format(SCHEDULER_CRON, "fenxiaoAccountCheckJob_trigger_cron"));
     }
-    public static String getTianmaAccountCheckJobTriggerCron(){
+
+    public static String getTianmaAccountCheckJobTriggerCron() {
         return config.getString(String.format(SCHEDULER_CRON, "tianmaAccountCheckJob_trigger_cron"));
     }
 
-    public static String getAutoRefundOperateJobTriggerCron(){
+    public static String getAutoRefundOperateJobTriggerCron() {
         return config.getString(String.format(SCHEDULER_CRON, "autoRefundOperateJob_trigger_cron"));
     }
 
 
-
-    public static String getAutoSendGoodsJobTriggerCron(){
+    public static String getAutoSendGoodsJobTriggerCron() {
         return config.getString(String.format(SCHEDULER_CRON, "autoSendGoodsJob_trigger_cron"));
     }
 
 
-    public static String getGuessMailNoKeepJobTriggerCron(){
+    public static String getGuessMailNoKeepJobTriggerCron() {
         return config.getString(String.format(SCHEDULER_CRON, "guessMailNoKeepJob_trigger_cron"));
     }
 
 
-    public static String getSalesPriceEndReplace(){
+    public static String getSalesPriceEndReplace() {
         return config.getString(String.format(SYNC_INVENTORY, "sales_price_end_replace"));
     }
 
 
-    public static Map<Integer,FocusWHInfoReplace> getFocusWarehouseInfoReplaceMap(){
-        Map<Integer,FocusWHInfoReplace> rtMap = new HashMap<>();
+    public static Map<Integer, FocusWHInfoReplace> getFocusWarehouseInfoReplaceMap() {
+        Map<Integer, FocusWHInfoReplace> rtMap = new HashMap<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(SYNC_INVENTORY, "focus_warehouse_info_replaces"));
         FocusWHInfoReplace fwir;
-        for(ConfigObject cb :list){
-            fwir = ConfigBeanFactory.create(cb.toConfig(),FocusWHInfoReplace.class);
-            rtMap.put(fwir.getWarehouseId(),fwir);
+        for (ConfigObject cb : list) {
+            fwir = ConfigBeanFactory.create(cb.toConfig(), FocusWHInfoReplace.class);
+            rtMap.put(fwir.getWarehouseId(), fwir);
         }
         return rtMap;
     }
-
 
 
 //    public static SalesPriceCalculatePolicy getSalesPriceGtCalculate(){
@@ -184,152 +167,152 @@ public class OrderCatConfig {
 //    }
 
 
-    public static List<SalesPriceCalculatePolicy> getSalesPriceCalculatePolicys(){
+    public static List<SalesPriceCalculatePolicy> getSalesPriceCalculatePolicys() {
         List<SalesPriceCalculatePolicy> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(SYNC_INVENTORY, "sales_price_calculate_policy"));
         SalesPriceCalculatePolicy spcp;
-        for(ConfigObject cb :list){
-            spcp = ConfigBeanFactory.create(cb.toConfig(),SalesPriceCalculatePolicy.class);
+        for (ConfigObject cb : list) {
+            spcp = ConfigBeanFactory.create(cb.toConfig(), SalesPriceCalculatePolicy.class);
             rtList.add(spcp);
         }
         return rtList;
     }
 
 
-
-    public static String getTaobaoApiUrl(){
+    public static String getTaobaoApiUrl() {
 
         //System.out.println(config.getString(String.format(TAOBAO_API, "url")));
         return config.getString(String.format(TAOBAO_API, "url"));
     }
-    public static String getTaobaoApiAppKey(){
+
+    public static String getTaobaoApiAppKey() {
         //System.out.println(config.getString(String.format(TAOBAO_API, "app_key")));
 
         return config.getString(String.format(TAOBAO_API, "app_key"));
     }
-    public static String getTaobaoApiAppSecret(){
+
+    public static String getTaobaoApiAppSecret() {
         //System.out.println(config.getString(String.format(TAOBAO_API, "app_secret")));
         return config.getString(String.format(TAOBAO_API, "app_secret"));
     }
-    public static String getTaobaoApiSessionKey(){
+
+    public static String getTaobaoApiSessionKey() {
         //System.out.println(config.getString(String.format(TAOBAO_API, "session_key")));
         return config.getString(String.format(TAOBAO_API, "session_key"));
     }
 
 
-
-
-    public static String getDBmsName(){
+    public static String getDBmsName() {
         return config.getString(String.format(DATABASE, "dbmsName"));
     }
-    public static String getDBConnectionUrl(){
+
+    public static String getDBConnectionUrl() {
         return config.getString(String.format(DATABASE, "connectionUrl"));
     }
-    public static String getDBUsername(){
+
+    public static String getDBUsername() {
         return config.getString(String.format(DATABASE, "username"));
     }
-    public static String getDBPassword(){
+
+    public static String getDBPassword() {
         return config.getString(String.format(DATABASE, "password"));
     }
 
 
-
-    public static String getRedisHost(){
+    public static String getRedisHost() {
         return config.getString(String.format(DATABASE, "redis_host"));
     }
-    public static String getRedisPassword(){
+
+    public static String getRedisPassword() {
         return config.getString(String.format(DATABASE, "redis_password"));
     }
-    public static String getRedisPort(){
+
+    public static String getRedisPort() {
         return config.getString(String.format(DATABASE, "redis_port"));
     }
 
 
-
-
     //平均价格+1%
-    public static Integer getAvgPriceAboveRate(){
+    public static Integer getAvgPriceAboveRate() {
         return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "avg_price_above_rate")));
     }
+
     //销量大于等于20,或小于20
-    public static Integer getProductSalesLimitCount(){
+    public static Integer getProductSalesLimitCount() {
         return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "product_sales_limit_count")));
     }
+
     //SKU基础线百分比
-    public static Integer getSkuMultiplyRate(){
+    public static Integer getSkuMultiplyRate() {
         return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "sku_multiply_rate")));
     }
 
 
-    public static Integer getFailurePickRateCount(){
+    public static Integer getFailurePickRateCount() {
         return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "failure_pick_rate_count")));
     }
 
-    public static Integer getPickRateLessThanDelLimit(){
+    public static Integer getPickRateLessThanDelLimit() {
         return Integer.valueOf(config.getString(String.format(SYNC_INVENTORY, "pick_rate_less_than_del_limit")));
     }
 
-    public static List<PickRateDelCondition> getPickRateDelConditions(){
+    public static List<PickRateDelCondition> getPickRateDelConditions() {
         List<PickRateDelCondition> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(SYNC_INVENTORY, "pick_rate_less_than_del_conditions"));
         PickRateDelCondition prdc;
-        for(ConfigObject cb :list){
-            prdc = ConfigBeanFactory.create(cb.toConfig(),PickRateDelCondition.class);
+        for (ConfigObject cb : list) {
+            prdc = ConfigBeanFactory.create(cb.toConfig(), PickRateDelCondition.class);
             rtList.add(prdc);
         }
         return rtList;
     }
 
 
-    public static String getInventoryGroupWhfile(){
+    public static String getInventoryGroupWhfile() {
         return config.getString(String.format(DATA_GATHERING, "wh_file"));
     }
 
-    public static String getInventoryGroupIwhfile(){
+    public static String getInventoryGroupIwhfile() {
         return config.getString(String.format(DATA_GATHERING, "iwh_file"));
     }
 
 
-    public static List<InventoryQueryCondition> getInventoryQueryConditions(){
+    public static List<InventoryQueryCondition> getInventoryQueryConditions() {
         List<InventoryQueryCondition> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(DATA_GATHERING, "inventory_query_conditions"));
         InventoryQueryCondition iqc;
-        for(ConfigObject cb :list){
-            iqc = ConfigBeanFactory.create(cb.toConfig(),InventoryQueryCondition.class);
+        for (ConfigObject cb : list) {
+            iqc = ConfigBeanFactory.create(cb.toConfig(), InventoryQueryCondition.class);
             rtList.add(iqc);
         }
         return rtList;
     }
 
-    public static String getOrderCatOutPutPath(){
+    public static String getOrderCatOutPutPath() {
         return config.getString(String.format(ORDER_CAT, "output_path"));
     }
 
 
-    public static String getOrderCatTempPath(){
+    public static String getOrderCatTempPath() {
         return config.getString(String.format(ORDER_CAT, "temp_path"));
     }
 
 
-
-    public static boolean isProduction(){
+    public static boolean isProduction() {
         return config.getBoolean(String.format(ORDER_CAT, "is_production"));
     }
 
 
-    public static List<JwtUser> getOrderCatUsers(){
+    public static List<JwtUser> getOrderCatUsers() {
         List<JwtUser> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_CAT, "users"));
         JwtUser user;
-        for(ConfigObject cb :list){
-            user = ConfigBeanFactory.create(cb.toConfig(),JwtUser.class);
+        for (ConfigObject cb : list) {
+            user = ConfigBeanFactory.create(cb.toConfig(), JwtUser.class);
             rtList.add(user);
         }
         return rtList;
     }
-
-
-
 
 
     public static String getTianmaSportUserName() {
@@ -400,7 +383,6 @@ public class OrderCatConfig {
     }
 
 
-
     public static String getPostageHttpUrl() {
         return config.getString(String.format(TIANMA_SPORT, "get_postage_http_url"));
     }
@@ -409,19 +391,29 @@ public class OrderCatConfig {
         return config.getString(String.format(TIANMA_SPORT, "get_default_postage_http_url"));
     }
 
-
-
     public static String getOrderBookingHttpUrl() {
         return config.getString(String.format(TIANMA_SPORT, "order_booking_http_url"));
     }
+
     public static String getUpdateBalanceHttpUrl() {
         return config.getString(String.format(TIANMA_SPORT, "update_balance_http_url"));
     }
+    public static String getOrderCancelHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "order_cancel_http_url"));
+    }
+    public static String getBackExpressnoHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "back_expressno_http_url"));
+    }
+    public static String getSoldFrontDataListHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "sold_front_data_list_http_url"));
+    }
+    public static String getAppAlterOrderHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "app_alter_order_http_url"));
+    }
 
-
-
-
-
+    public static String getSoldProblemHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "sold_problem_http_url"));
+    }
 
 
 
@@ -443,74 +435,72 @@ public class OrderCatConfig {
     }
 
 
+    public static boolean isBuyerMessageCheck() {
+        return config.getBoolean(String.format(ORDER_OPERATE, "is_buyer_message_check"));
+    }
+
     public static String getBreakEvenPricePolicyEquation() {
         return config.getString(String.format(ORDER_OPERATE, "break_even_price_policy_equation"));
     }
 
 
-
-
-    public static List<PickWhcountCalculatePolicy> getPickWhcountCalculatePolicy(){
+    public static List<PickWhcountCalculatePolicy> getPickWhcountCalculatePolicy() {
         List<PickWhcountCalculatePolicy> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "pick_whcount_calculate_policy"));
         PickWhcountCalculatePolicy pickWhcountCalculatePolicy;
-        for(ConfigObject cb :list){
-            pickWhcountCalculatePolicy = ConfigBeanFactory.create(cb.toConfig(),PickWhcountCalculatePolicy.class);
+        for (ConfigObject cb : list) {
+            pickWhcountCalculatePolicy = ConfigBeanFactory.create(cb.toConfig(), PickWhcountCalculatePolicy.class);
             rtList.add(pickWhcountCalculatePolicy);
         }
         return rtList;
     }
 
 
-
-    public static List<NotOrderWareHousePolicy> getNotOrderWareHousePolicy(){
+    public static List<NotOrderWareHousePolicy> getNotOrderWareHousePolicy() {
         List<NotOrderWareHousePolicy> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "not_order_warehouse_policy"));
         NotOrderWareHousePolicy notOrderWareHouse;
-        for(ConfigObject cb :list){
-            notOrderWareHouse = ConfigBeanFactory.create(cb.toConfig(),NotOrderWareHousePolicy.class);
+        for (ConfigObject cb : list) {
+            notOrderWareHouse = ConfigBeanFactory.create(cb.toConfig(), NotOrderWareHousePolicy.class);
             rtList.add(notOrderWareHouse);
         }
         return rtList;
     }
 
-    public static List<ShieldWhPolicy> getShieldWareHousePolicy(){
+    public static List<ShieldWhPolicy> getShieldWareHousePolicy() {
         List<ShieldWhPolicy> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "shield_warehouse_policy"));
         ShieldWhPolicy shieldWhPolicy;
-        for(ConfigObject cb :list){
-            shieldWhPolicy = ConfigBeanFactory.create(cb.toConfig(),ShieldWhPolicy.class);
+        for (ConfigObject cb : list) {
+            shieldWhPolicy = ConfigBeanFactory.create(cb.toConfig(), ShieldWhPolicy.class);
             rtList.add(shieldWhPolicy);
         }
         return rtList;
     }
 
 
-
-
-    public static List<CycleWhComp> getCycleWhComp(){
+    public static List<CycleWhComp> getCycleWhComp() {
         List<CycleWhComp> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "cycle_wh_comp"));
         CycleWhComp cycleWhComp;
-        for(ConfigObject cb :list){
-            cycleWhComp = ConfigBeanFactory.create(cb.toConfig(),CycleWhComp.class);
+        for (ConfigObject cb : list) {
+            cycleWhComp = ConfigBeanFactory.create(cb.toConfig(), CycleWhComp.class);
             rtList.add(cycleWhComp);
         }
         return rtList;
     }
 
 
-    public static List<PriorityOrderWhPolicy> getPriorityOrderWhPolicy(){
+    public static List<PriorityOrderWhPolicy> getPriorityOrderWhPolicy() {
         List<PriorityOrderWhPolicy> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "priority_order_warehouse_policy"));
         PriorityOrderWhPolicy priorityOrderWhPolicy;
-        for(ConfigObject cb :list){
-            priorityOrderWhPolicy = ConfigBeanFactory.create(cb.toConfig(),PriorityOrderWhPolicy.class);
+        for (ConfigObject cb : list) {
+            priorityOrderWhPolicy = ConfigBeanFactory.create(cb.toConfig(), PriorityOrderWhPolicy.class);
             rtList.add(priorityOrderWhPolicy);
         }
         return rtList;
     }
-
 
 
     public static String getCycleWhCompPolicy() {
@@ -518,34 +508,32 @@ public class OrderCatConfig {
     }
 
 
-
-    public static Integer getOpPickRateLessThanDelLimit(){
+    public static Integer getOpPickRateLessThanDelLimit() {
         return Integer.valueOf(config.getString(String.format(ORDER_OPERATE, "pick_rate_less_than_del_limit")));
     }
 
 
-    public static List<PickRateDelCondition> getOpPickRateDelConditions(){
+    public static List<PickRateDelCondition> getOpPickRateDelConditions() {
         List<PickRateDelCondition> rtList = new ArrayList<>();
         List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_OPERATE, "pick_rate_less_than_del_conditions"));
         PickRateDelCondition prdc;
-        for(ConfigObject cb :list){
-            prdc = ConfigBeanFactory.create(cb.toConfig(),PickRateDelCondition.class);
+        for (ConfigObject cb : list) {
+            prdc = ConfigBeanFactory.create(cb.toConfig(), PickRateDelCondition.class);
             rtList.add(prdc);
         }
         return rtList;
     }
 
-
-
     public static Integer getRefundDateIntervalDay() {
         return config.getInt(String.format(REFUND_OPERATE, "refund_date_interval_day"));
     }
 
-
-
-
-
-
+    public static List<String> getRefundRetainStatuses() {
+        return config.getStringList(String.format(REFUND_OPERATE, "retain_statuses"));
+    }
+    public static List<String> getRefundRetainReasons() {
+        return config.getStringList(String.format(REFUND_OPERATE, "retain_reasons"));
+    }
 
 
 }

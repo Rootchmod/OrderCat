@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
+import com.myjo.ordercat.domain.constant.TmOrderRecordStatus;
+import com.myjo.ordercat.domain.constant.TmOrderRecordType;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
@@ -202,7 +204,7 @@ public class OrderOperate {
         String rt = tianmaSportHttp.orderBooking(requestMap);
         Logger.info(String.format("orderBooking下单-rt[%s}", rt));
 
-        PageResult<TianmaOrder> prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, String.valueOf(tid), null, 1, 10);
+        PageResult<TianmaOrder> prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, String.valueOf(tid), null, 1, 10,null);
 
         if (prTmOrders.getTotal() > 1 || prTmOrders.getRows().size() > 1) {
             throw new OCException(String.format("淘宝订单[%d],在天马中的订单大于1.", tid));
@@ -601,9 +603,7 @@ public class OrderOperate {
 
             Logger.info("trade.getBuyerMessage():" + trade.getBuyerMessage());
 
-            if (trade.getBuyerMessage() != null) {
-                throw new OCException(String.format("淘宝订单[%d],存在买家留言[%s],不能自动下单.", tid, trade.getBuyerMessage()));
-            }
+
 
             if (trade.getIsDaixiao()) {
                 Logger.error(String.format("淘宝订单[%d].是代销订单,OC不能进行下单.", tid));
@@ -624,6 +624,15 @@ public class OrderOperate {
             String size = OcStringUtils.getGoodsNoBySize(outerSkuid);
             ocTmOrderRecords.setSize(size);
             Logger.info(String.format("autoOrder-tborder-size=[%s]", size));
+
+
+            if(size.indexOf("麦巨")>-1){
+                throw new OCException(String.format("淘宝订单[%d],货号中存在[麦巨].", tid));
+            }
+
+            if (OrderCatConfig.isBuyerMessageCheck() && trade.getBuyerMessage() != null) {
+                throw new OCException(String.format("淘宝订单[%d],存在买家留言[%s],不能自动下单.", tid, trade.getBuyerMessage()));
+            }
 
 
             Map<String, Object> anrtMap = tianmaSportHttp.getSearchByArticleno(articleno);

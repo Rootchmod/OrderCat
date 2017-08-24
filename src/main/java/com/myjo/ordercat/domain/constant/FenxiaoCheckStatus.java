@@ -1,4 +1,4 @@
-package com.myjo.ordercat.domain;
+package com.myjo.ordercat.domain.constant;
 
 public enum FenxiaoCheckStatus {
     NOT_FENXIAO_REFUND("NOT_FENXIAO_REFUND"),

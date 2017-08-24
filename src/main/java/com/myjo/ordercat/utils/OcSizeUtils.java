@@ -1,7 +1,7 @@
 package com.myjo.ordercat.utils;
 
-import com.myjo.ordercat.domain.Brand;
-import com.myjo.ordercat.domain.Sex;
+import com.myjo.ordercat.domain.constant.Brand;
+import com.myjo.ordercat.domain.constant.Sex;
 import com.myjo.ordercat.domain.Size;
 
 import java.util.ArrayList;

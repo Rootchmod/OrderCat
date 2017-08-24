@@ -111,26 +111,41 @@ public class AccountCheckResource {
             predicateList.add(OcTmsportCheckResultImpl.DZ_STATUS.equal(dz_status));
         }
 
-        Predicate<OcTmsportCheckResult> p1 = ocTmsportCheckResult -> true;
+        Predicate<OcTmsportCheckResult> p1 = null;
+        long count;
+        List<OcTmsportCheckResult> list;
+        if(predicateList.size() == 0){
+            count = ocTmsportCheckResultManager.stream()
+                    .count();
+            list = ocTmsportCheckResultManager.stream()
+                    .sorted(OcTmsportCheckResultImpl.ADD_TIME.comparator())
+                    .skip((page - 1) * page_size)
+                    .limit(page_size)
+                    .collect(Collectors.toList());
+        }else {
+            for (Predicate<OcTmsportCheckResult> p : predicateList) {
+                if(p1 ==null){
+                    p1 = p;
+                }else {
+                    p1 = p1.and(p);
+                }
+            }
+            count = ocTmsportCheckResultManager.stream()
+                    .filter(p1)
+                    .count();
+            list = ocTmsportCheckResultManager.stream()
+                    .filter(p1)
+                    .sorted(OcTmsportCheckResultImpl.ADD_TIME.comparator())
+                    .skip((page - 1) * page_size)
+                    .limit(page_size)
+                    .collect(Collectors.toList());
+        }
+
 
         for (Predicate<OcTmsportCheckResult> p : predicateList) {
             p1 = p1.and(p);
         }
-        //Stream<OcTmsportCheckResult> stream = ;
-
-        long count = ocTmsportCheckResultManager.stream()
-                .filter(p1)
-                .count();
         pageResult.setTotal(count);
-
-
-        List<OcTmsportCheckResult> list = ocTmsportCheckResultManager.stream()
-                .filter(p1)
-                .sorted(OcTmsportCheckResultImpl.ADD_TIME.comparator())
-                .skip((page - 1) * page_size)
-                .limit(page_size)
-                .collect(Collectors.toList());
-
         List<OcTmsportCheckResultVO> tianmaCheckResultList = list.parallelStream()
                 .map(o -> {
                     OcTmsportCheckResultVO tianmaCheckResult = new OcTmsportCheckResultVO();

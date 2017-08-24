@@ -2,6 +2,9 @@ package com.myjo.ordercat.handle;
 
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
+import com.myjo.ordercat.domain.constant.AsRefundCheckStatus;
+import com.myjo.ordercat.domain.constant.TianmaCheckStatus;
+import com.myjo.ordercat.domain.constant.TianmaOrderStatus;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_as_refund_check_result.OcAsRefundCheckResult;
@@ -31,7 +34,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summingLong;
 
 /**
  * 对账相关
@@ -576,7 +578,7 @@ public class AccountCheck {
 
                     PageResult<TianmaOrder> prTmOrders = null;
                     try {
-                        prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, asRefundCheckResult.getTid().toString(), null, 1, 10);
+                        prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, asRefundCheckResult.getTid().toString(), null, 1, 10,null);
                     } catch (Exception e) {
                         asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
                         asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:" + e.getMessage()));
@@ -637,7 +639,7 @@ public class AccountCheck {
 
                     PageResult<TianmaOrder> prTmOrders = null;
                     try {
-                        prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, asRefundCheckResult.getTid().toString(), null, 1, 10);
+                        prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, asRefundCheckResult.getTid().toString(), null, 1, 10,null);
                     } catch (Exception e) {
                         asRefundCheckResult.setDzStatus(AsRefundCheckStatus.DZ_FAILURE);
                         asRefundCheckResult.setFailureReason(String.format("对账失败,失败原因:" + e.getMessage()));

@@ -1,7 +1,7 @@
 package com.myjo.ordercat
 
 import com.myjo.ordercat.config.OrderCatConfig
-import com.myjo.ordercat.domain.JobName
+import com.myjo.ordercat.domain.constant.JobName
 import com.myjo.ordercat.handle.ExecuteHandle
 import com.myjo.ordercat.handle.SyncInventory
 import com.myjo.ordercat.handle.SyncSalesInfoHandle
@@ -11,7 +11,6 @@ import com.myjo.ordercat.http.TaoBaoHttp
 import com.myjo.ordercat.http.TianmaSportHttp
 import com.myjo.ordercat.spm.OrdercatApplication
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_inventory_info.OcInventoryInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager

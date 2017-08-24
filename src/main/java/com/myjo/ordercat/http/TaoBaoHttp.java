@@ -2,9 +2,11 @@ package com.myjo.ordercat.http;
 
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
+import com.myjo.ordercat.domain.constant.TradeStatus;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
 import com.myjo.ordercat.utils.OcListUtils;
+import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.*;
@@ -15,6 +17,8 @@ import com.taobao.api.response.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -427,15 +431,17 @@ public class TaoBaoHttp {
      * @return
      * @throws Exception
      */
-    public List<Refund> getReceiveRefunds(String status,Date begin, Date end) throws Exception {
+    public List<Refund> getReceiveRefunds(String status, Date begin, Date end) throws Exception {
         long pageNo = 1l;
         long pageSize = 100l;
         List<Refund> rtlist = new ArrayList<>();
 
         PageResult<Refund> pageResult;
         do {
-            pageResult = getReceiveRefunds(status,begin, end, pageNo, pageSize);
-            rtlist.addAll(pageResult.getRows());
+            pageResult = getReceiveRefunds(status, begin, end, pageNo, pageSize);
+            if(pageResult.getRows()!=null){
+                rtlist.addAll(pageResult.getRows());
+            }
             Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
             //++pageNo;
         } while (Math.ceil((double) pageResult.getTotal() / pageSize) >= (++pageNo));
@@ -460,13 +466,13 @@ public class TaoBaoHttp {
      * @return
      * @throws Exception
      */
-    public PageResult<Refund> getReceiveRefunds(String status,Date begin, Date end, Long pageNo, Long pageSize) throws Exception {
+    public PageResult<Refund> getReceiveRefunds(String status, Date begin, Date end, Long pageNo, Long pageSize) throws Exception {
         PageResult<Refund> pr = new PageResult();
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         RefundsReceiveGetRequest req = new RefundsReceiveGetRequest();
-        req.setFields("refund_id, tid,num,refund_phase,good_status title, numIid,buyer_nick, seller_nick, total_fee, status, created, refund_fee, oid, company_name, sid, payment, reason, desc, has_good_return, modified, order_status,refund_phase");
+        req.setFields("refund_id,tid,num,refund_phase,good_status title, numIid,buyer_nick, seller_nick, total_fee, status, created, refund_fee, oid, company_name, sid, payment, reason, desc, has_good_return, modified, order_status");
 
-        if(status!=null){
+        if (status != null) {
             req.setStatus(status);
         }
 //        req.setBuyerNick("hz0799");
@@ -495,7 +501,7 @@ public class TaoBaoHttp {
         Refund refund = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         RefundGetRequest req = new RefundGetRequest();
-        req.setFields("title,address,num_iid,outer_id,order_status,good_return_time,created");
+        req.setFields("refund_phase,refund_version,refund_id,refund_fee");
         req.setRefundId(refundId);
         RefundGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
         if (rsp.isSuccess()) {
@@ -505,32 +511,31 @@ public class TaoBaoHttp {
     }
 
 
-
     public Optional<PurchaseOrder> getPurchaseOrderByTcOrderId(Long tcOrderId) {
         PurchaseOrder purchaseOrder = null;
         //天马退款处理流程
         List<PurchaseOrder> list = null;
         try {
-            list = getFenxiaoOrders(tcOrderId,null,null,null);
+            list = getFenxiaoOrders(tcOrderId, null, null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(list!=null && list.size()==1){
+        if (list != null && list.size() == 1) {
             purchaseOrder = list.get(0);
         }
         return Optional.ofNullable(purchaseOrder);
     }
 
 
-    public List<PurchaseOrder> getFenxiaoOrders(Long tcOrderId,String status,Date begin, Date end) throws Exception {
+    public List<PurchaseOrder> getFenxiaoOrders(Long tcOrderId, String status, Date begin, Date end) throws Exception {
         long pageNo = 1l;
         long pageSize = 49l;
         List<PurchaseOrder> rtlist = new ArrayList<>();
 
         PageResult<PurchaseOrder> pageResult;
         do {
-            pageResult = getFenxiaoOrders(tcOrderId,status,begin, end, pageNo, pageSize);
-            if(pageResult.getRows()!=null){
+            pageResult = getFenxiaoOrders(tcOrderId, status, begin, end, pageNo, pageSize);
+            if (pageResult.getRows() != null) {
                 rtlist.addAll(pageResult.getRows());
             }
             Logger.debug("Math.ceil((double)pageResult.getTotal() / pageSize):" + Math.ceil((double) pageResult.getTotal() / pageSize));
@@ -547,29 +552,29 @@ public class TaoBaoHttp {
      * @return
      * @throws Exception
      */
-    public PageResult<PurchaseOrder> getFenxiaoOrders(Long tcOrderId,String status,Date begin, Date end,Long pageNo, Long pageSize) {
+    public PageResult<PurchaseOrder> getFenxiaoOrders(Long tcOrderId, String status, Date begin, Date end, Long pageNo, Long pageSize) {
 
         PageResult<PurchaseOrder> pr = new PageResult();
         List<PurchaseOrder> list;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         FenxiaoOrdersGetRequest req = new FenxiaoOrdersGetRequest();
-        if(status!=null){
+        if (status != null) {
             req.setStatus(status);
         }
-        if(begin!=null){
+        if (begin != null) {
             req.setStartCreated(begin);
         }
-        if(end!=null){
+        if (end != null) {
             req.setEndCreated(end);
         }
         // req.setTimeType("trade_time_type");
         req.setPageNo(pageNo);
-        if(tcOrderId!=null){
+        if (tcOrderId != null) {
             req.setTcOrderId(tcOrderId);
         }
         req.setPageSize(pageSize);
         //req.setPurchaseOrderId(120121243L);
-        req.setFields("fenxiao_id,tc_order_id,status,sub_purchase_orders.tc_order_id,sub_purchase_orders.fenxiao_id,sub_purchase_orders.status");
+        req.setFields("id,status,buyer_payment,fenxiao_id,tc_order_id,status,sub_purchase_orders.tc_order_id,sub_purchase_orders.fenxiao_id,sub_purchase_orders.status");
         //req.setTcOrderId(tcOrderId);
         try {
             FenxiaoOrdersGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
@@ -759,7 +764,7 @@ public class TaoBaoHttp {
         return Optional.ofNullable(trade);
     }
 
-    public void addTradeMemo(long tid,String memo,long flag){
+    public void addTradeMemo(long tid, String memo, long flag) {
 
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradeMemoAddRequest req = new TradeMemoAddRequest();
@@ -768,7 +773,7 @@ public class TaoBaoHttp {
         req.setFlag(flag);
 
         try {
-            TradeMemoAddResponse rsp = client.execute(req,  OrderCatConfig.getTaobaoApiSessionKey());
+            TradeMemoAddResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
             if (rsp.isSuccess()) {
                 Logger.info(rsp.getBody());
             }
@@ -777,7 +782,93 @@ public class TaoBaoHttp {
         }
     }
 
+    /**
+     * taobao.rp.refunds.agree (同意退款)
+     * 退款信息，格式：refund_id|amount|version|phase，
+     * 其中refund_id为退款编号，amount为退款金额（以分为单位），
+     * version为退款最后更新时间（时间戳格式），
+     * phase为退款阶段（可选值为：onsale, aftersale，天猫退款必值，淘宝退款不需要传），
+     * 多个退款以半角逗号分隔。
+     *
+     * @param refundId
+     * @param amount
+     * @param version
+     * @param phase
+     */
+    public ReturnResult<RefundMappingResult> agreeTaobaoRpRefunds(long refundId, String amount, long version, String phase) {
+        ReturnResult<RefundMappingResult> rr = new ReturnResult<>();
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        RpRefundsAgreeRequest req = new RpRefundsAgreeRequest();
+        //req.setCode("839212");
+        String refundInfos = String.format("%d|%s|%d|%s",
+                refundId,
+                amount,
+                version,
+                phase
+        );
+        Logger.info(String.format("refundInfos[%s]", refundInfos));
+        req.setRefundInfos(refundInfos);
+        RpRefundsAgreeResponse rsp;
+        try {
+            rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+            if (rsp.isSuccess()) {
+                rr.setSuccess(rsp.getSucc());
+                rr.setResult(rsp.getResults().get(0));
+            } else {
+                rr.setErrorCode(rsp.getErrorCode());
+                rr.setErrorMessages(String.format("[msg:%s]-[subCode:%s]-[subMsg:%s]",rsp.getMsg(),rsp.getSubCode(),rsp.getSubMsg()));
+                rr.setSuccess(false);
+            }
+        } catch (ApiException e) {
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            rr.setSuccess(false);
+            rr.setErrorCode("OC-90001");
+            rr.setErrorMessages(errors.toString());
+            e.printStackTrace();
+        }
+        return rr;
+    }
 
+
+    /**
+     * taobao.fenxiao.refund.create (创建退款)
+     *
+     * @return
+     */
+    public ReturnResult<String> createTaobaoFeixiaoRefund(long subOrderId,boolean isReturnGoods,long returnFee) {
+
+        ReturnResult<String> rr = new ReturnResult<>();
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        FenxiaoRefundCreateRequest req = new FenxiaoRefundCreateRequest();
+        req.setSubOrderId(subOrderId);
+        req.setIsReturnGoods(isReturnGoods);
+        req.setIsReturnPostFee(true);
+        req.setReturnFee(returnFee);
+        req.setRefundReasonId(4L);
+        req.setRefundDesc("OC-自动创建退款");
+        FenxiaoRefundCreateResponse rsp;
+        try {
+            rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+            if (rsp.isSuccess()) {
+                rr.setSuccess(true);
+                rr.setResult("供销退款申请成功");
+            } else {
+                rr.setErrorCode(rsp.getErrorCode());
+                rr.setErrorMessages("退款申请失败!");
+                rr.setSuccess(false);
+            }
+        } catch (Exception e) {
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            rr.setSuccess(false);
+            rr.setErrorCode("OC-90002");
+            rr.setErrorMessages(errors.toString());
+            e.printStackTrace();
+        }
+        return rr;
+
+    }
 
 
 }

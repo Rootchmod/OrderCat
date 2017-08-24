@@ -254,9 +254,31 @@ CREATE TABLE `oc_refund_operate_record` (
   `reason` VARCHAR(255) COMMENT '原因',
   `sid` VARCHAR(255) COMMENT '快递单号',
   `company_name` VARCHAR(255) COMMENT '快递公司',
+  `operate_type` VARCHAR(255)  COMMENT '操作类型',
   `operate_detail` VARCHAR(5000)  COMMENT '操作详情',
+  `operate_result` TEXT COMMENT '操作结果',
   `add_time` timestamp NOT NULL COMMENT '添加日期',
   PRIMARY KEY (`id`),
   KEY `IDX_REFUND_ID` (`refund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='自动退款操作记录';
+
+
+ALTER TABLE oc_refund_operate_record ADD COLUMN `refund_amount` varchar(255) NULL COMMENT '退款金额' AFTER `company_name`;
+ALTER TABLE oc_refund_operate_record ADD COLUMN `refund_version` BIGINT NUll COMMENT '退款最后更新时间(时间戳格式)' NULL AFTER `company_name`;
+ALTER TABLE oc_refund_operate_record ADD COLUMN `refund_phase` varchar(255) NULL COMMENT '退款阶段(可选值为：onsale, aftersale，天猫退款必值，淘宝退款不需要传)' AFTER `company_name`;
+ALTER TABLE oc_refund_operate_record ADD COLUMN `is_latest` SMALLINT NULL COMMENT '是否为最新,1=最新，0=不是最新' AFTER `operate_result`;
+
+
+
+DROP TABLE IF EXISTS oc_params;
+CREATE TABLE `oc_params` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `key` VARCHAR(255) NOT NULL COMMENT '键',
+  `value` VARCHAR(255) NOT NULL COMMENT '值',
+  `add_time` timestamp NOT NULL COMMENT '添加日期',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIK_KEY` (`key`),
+  KEY `IDX_KEY` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='参数表';
+
 

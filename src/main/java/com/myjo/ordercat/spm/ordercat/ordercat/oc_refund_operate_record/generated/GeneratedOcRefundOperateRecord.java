@@ -124,6 +124,54 @@ public interface GeneratedOcRefundOperateRecord {
     );
     /**
      * This Field corresponds to the {@link OcRefundOperateRecord} field that
+     * can be obtained using the {@link OcRefundOperateRecord#getRefundPhase()}
+     * method.
+     */
+    StringField<OcRefundOperateRecord, String> REFUND_PHASE = StringField.create(
+        Identifier.REFUND_PHASE,
+        o -> OptionalUtil.unwrap(o.getRefundPhase()),
+        OcRefundOperateRecord::setRefundPhase,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcRefundOperateRecord} field that
+     * can be obtained using the {@link
+     * OcRefundOperateRecord#getRefundVersion()} method.
+     */
+    ComparableField<OcRefundOperateRecord, Long, Long> REFUND_VERSION = ComparableField.create(
+        Identifier.REFUND_VERSION,
+        o -> OptionalUtil.unwrap(o.getRefundVersion()),
+        OcRefundOperateRecord::setRefundVersion,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcRefundOperateRecord} field that
+     * can be obtained using the {@link OcRefundOperateRecord#getRefundAmount()}
+     * method.
+     */
+    StringField<OcRefundOperateRecord, String> REFUND_AMOUNT = StringField.create(
+        Identifier.REFUND_AMOUNT,
+        o -> OptionalUtil.unwrap(o.getRefundAmount()),
+        OcRefundOperateRecord::setRefundAmount,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcRefundOperateRecord} field that
+     * can be obtained using the {@link OcRefundOperateRecord#getOperateType()}
+     * method.
+     */
+    StringField<OcRefundOperateRecord, String> OPERATE_TYPE = StringField.create(
+        Identifier.OPERATE_TYPE,
+        o -> OptionalUtil.unwrap(o.getOperateType()),
+        OcRefundOperateRecord::setOperateType,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcRefundOperateRecord} field that
      * can be obtained using the {@link
      * OcRefundOperateRecord#getOperateDetail()} method.
      */
@@ -131,6 +179,30 @@ public interface GeneratedOcRefundOperateRecord {
         Identifier.OPERATE_DETAIL,
         o -> OptionalUtil.unwrap(o.getOperateDetail()),
         OcRefundOperateRecord::setOperateDetail,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcRefundOperateRecord} field that
+     * can be obtained using the {@link
+     * OcRefundOperateRecord#getOperateResult()} method.
+     */
+    StringField<OcRefundOperateRecord, String> OPERATE_RESULT = StringField.create(
+        Identifier.OPERATE_RESULT,
+        o -> OptionalUtil.unwrap(o.getOperateResult()),
+        OcRefundOperateRecord::setOperateResult,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcRefundOperateRecord} field that
+     * can be obtained using the {@link OcRefundOperateRecord#getIsLatest()}
+     * method.
+     */
+    ComparableField<OcRefundOperateRecord, Short, Short> IS_LATEST = ComparableField.create(
+        Identifier.IS_LATEST,
+        o -> OptionalUtil.unwrap(o.getIsLatest()),
+        OcRefundOperateRecord::setIsLatest,
         TypeMapper.identity(), 
         false
     );
@@ -217,6 +289,42 @@ public interface GeneratedOcRefundOperateRecord {
     Optional<String> getCompanyName();
     
     /**
+     * Returns the refundPhase of this OcRefundOperateRecord. The refundPhase
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.refund_phase.
+     * 
+     * @return the refundPhase of this OcRefundOperateRecord
+     */
+    Optional<String> getRefundPhase();
+    
+    /**
+     * Returns the refundVersion of this OcRefundOperateRecord. The
+     * refundVersion field corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.refund_version.
+     * 
+     * @return the refundVersion of this OcRefundOperateRecord
+     */
+    OptionalLong getRefundVersion();
+    
+    /**
+     * Returns the refundAmount of this OcRefundOperateRecord. The refundAmount
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.refund_amount.
+     * 
+     * @return the refundAmount of this OcRefundOperateRecord
+     */
+    Optional<String> getRefundAmount();
+    
+    /**
+     * Returns the operateType of this OcRefundOperateRecord. The operateType
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.operate_type.
+     * 
+     * @return the operateType of this OcRefundOperateRecord
+     */
+    Optional<String> getOperateType();
+    
+    /**
      * Returns the operateDetail of this OcRefundOperateRecord. The
      * operateDetail field corresponds to the database column
      * ordercat.ordercat.oc_refund_operate_record.operate_detail.
@@ -224,6 +332,24 @@ public interface GeneratedOcRefundOperateRecord {
      * @return the operateDetail of this OcRefundOperateRecord
      */
     Optional<String> getOperateDetail();
+    
+    /**
+     * Returns the operateResult of this OcRefundOperateRecord. The
+     * operateResult field corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.operate_result.
+     * 
+     * @return the operateResult of this OcRefundOperateRecord
+     */
+    Optional<String> getOperateResult();
+    
+    /**
+     * Returns the isLatest of this OcRefundOperateRecord. The isLatest field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.is_latest.
+     * 
+     * @return the isLatest of this OcRefundOperateRecord
+     */
+    Optional<Short> getIsLatest();
     
     /**
      * Returns the addTime of this OcRefundOperateRecord. The addTime field
@@ -312,6 +438,46 @@ public interface GeneratedOcRefundOperateRecord {
     OcRefundOperateRecord setCompanyName(String companyName);
     
     /**
+     * Sets the refundPhase of this OcRefundOperateRecord. The refundPhase field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.refund_phase.
+     * 
+     * @param refundPhase to set of this OcRefundOperateRecord
+     * @return            this OcRefundOperateRecord instance
+     */
+    OcRefundOperateRecord setRefundPhase(String refundPhase);
+    
+    /**
+     * Sets the refundVersion of this OcRefundOperateRecord. The refundVersion
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.refund_version.
+     * 
+     * @param refundVersion to set of this OcRefundOperateRecord
+     * @return              this OcRefundOperateRecord instance
+     */
+    OcRefundOperateRecord setRefundVersion(Long refundVersion);
+    
+    /**
+     * Sets the refundAmount of this OcRefundOperateRecord. The refundAmount
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.refund_amount.
+     * 
+     * @param refundAmount to set of this OcRefundOperateRecord
+     * @return             this OcRefundOperateRecord instance
+     */
+    OcRefundOperateRecord setRefundAmount(String refundAmount);
+    
+    /**
+     * Sets the operateType of this OcRefundOperateRecord. The operateType field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.operate_type.
+     * 
+     * @param operateType to set of this OcRefundOperateRecord
+     * @return            this OcRefundOperateRecord instance
+     */
+    OcRefundOperateRecord setOperateType(String operateType);
+    
+    /**
      * Sets the operateDetail of this OcRefundOperateRecord. The operateDetail
      * field corresponds to the database column
      * ordercat.ordercat.oc_refund_operate_record.operate_detail.
@@ -320,6 +486,26 @@ public interface GeneratedOcRefundOperateRecord {
      * @return              this OcRefundOperateRecord instance
      */
     OcRefundOperateRecord setOperateDetail(String operateDetail);
+    
+    /**
+     * Sets the operateResult of this OcRefundOperateRecord. The operateResult
+     * field corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.operate_result.
+     * 
+     * @param operateResult to set of this OcRefundOperateRecord
+     * @return              this OcRefundOperateRecord instance
+     */
+    OcRefundOperateRecord setOperateResult(String operateResult);
+    
+    /**
+     * Sets the isLatest of this OcRefundOperateRecord. The isLatest field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.is_latest.
+     * 
+     * @param isLatest to set of this OcRefundOperateRecord
+     * @return         this OcRefundOperateRecord instance
+     */
+    OcRefundOperateRecord setIsLatest(Short isLatest);
     
     /**
      * Sets the addTime of this OcRefundOperateRecord. The addTime field
@@ -341,7 +527,13 @@ public interface GeneratedOcRefundOperateRecord {
         REASON         ("reason"),
         SID            ("sid"),
         COMPANY_NAME   ("company_name"),
+        REFUND_PHASE   ("refund_phase"),
+        REFUND_VERSION ("refund_version"),
+        REFUND_AMOUNT  ("refund_amount"),
+        OPERATE_TYPE   ("operate_type"),
         OPERATE_DETAIL ("operate_detail"),
+        OPERATE_RESULT ("operate_result"),
+        IS_LATEST      ("is_latest"),
         ADD_TIME       ("add_time");
         
         private final String columnName;

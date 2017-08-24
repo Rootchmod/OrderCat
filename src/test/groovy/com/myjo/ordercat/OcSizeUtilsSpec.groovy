@@ -1,7 +1,7 @@
 package com.myjo.ordercat
 
-import com.myjo.ordercat.domain.Brand
-import com.myjo.ordercat.domain.Sex
+import com.myjo.ordercat.domain.constant.Brand
+import com.myjo.ordercat.domain.constant.Sex
 import com.myjo.ordercat.utils.OcSizeUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger

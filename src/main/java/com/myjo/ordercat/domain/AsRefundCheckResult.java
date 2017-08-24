@@ -1,5 +1,7 @@
 package com.myjo.ordercat.domain;
 
+import com.myjo.ordercat.domain.constant.AsRefundCheckStatus;
+
 /**
  * Created by lee5hx on 17/5/22.
  */

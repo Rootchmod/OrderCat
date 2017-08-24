@@ -1,5 +1,6 @@
 package com.myjo.ordercat.domain;
 
+import com.myjo.ordercat.domain.constant.TianmaCheckStatus;
 import com.taobao.api.domain.Order;
 import com.taobao.api.domain.Trade;
 

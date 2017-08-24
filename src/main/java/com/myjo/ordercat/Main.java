@@ -10,7 +10,8 @@ import com.beust.jcommander.Parameter;
 import com.mashape.unirest.http.Unirest;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.context.OrderCatContext;
-import com.myjo.ordercat.domain.JobName;
+import com.myjo.ordercat.domain.ReturnResult;
+import com.myjo.ordercat.domain.constant.JobName;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.handle.*;
 import com.myjo.ordercat.http.TaoBaoHttp;
@@ -28,6 +29,9 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderReco
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import com.myjo.ordercat.utils.OcEncryptionUtils;
+import com.speedment.runtime.core.ApplicationBuilder;
+import com.taobao.api.domain.Refund;
+import com.taobao.api.domain.RefundMappingResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -51,7 +55,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 /**
  * Created by lee5hx on 17/4/19.
  */
-@Microserver(properties={"cors.simple","false"})
+@Microserver(properties = {"cors.simple", "false"})
 public class Main {
 
     private static final Logger Logger = LogManager.getLogger(Main.class);
@@ -80,12 +84,13 @@ public class Main {
         OrdercatApplication app = new OrdercatApplicationBuilder()
                 .withConnectionUrl(OrderCatConfig.getDBmsName(), OrderCatConfig.getDBConnectionUrl())
                 .withUsername(OrderCatConfig.getDBUsername())
-                .withPassword(OcEncryptionUtils.base64Decoder(OrderCatConfig.getDBPassword(),5))
+                .withPassword(OcEncryptionUtils.base64Decoder(OrderCatConfig.getDBPassword(), 5))
+                .withLogging(ApplicationBuilder.LogType.STREAM)
+                //.withLogging(ApplicationBuilder.LogType.STREAM_OPTIMIZER)
                 //.withLogging(ApplicationBuilder.LogType.CONNECTION)
                 //.withParam("connectionpool.maxAge", "8000")
                 //.withParam("connectionpool.maxRetainSize", "20")
                 .build();
-
 
 
         //设置超时时间
@@ -148,13 +153,12 @@ public class Main {
         ac.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
 
 
-        OrderOperate orderOperate = new OrderOperate(tianmaSportHttp,taoBaoHttp,e);
+        OrderOperate orderOperate = new OrderOperate(tianmaSportHttp, taoBaoHttp, e);
         orderOperate.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
         OrderCatContext.setOrderOperate(orderOperate);
 
-        RefundOperate refundOperate = new RefundOperate(tianmaSportHttp,taoBaoHttp,e);
+        RefundOperate refundOperate = new RefundOperate(tianmaSportHttp, taoBaoHttp, e);
         refundOperate.setOcRefundOperateRecordManager(ocRefundOperateRecordManager);
-
 
 
         tianmaSportHttp.getVerifyCodeImage();
@@ -208,9 +212,6 @@ public class Main {
         eh6.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
-
-
-
         if (action.equals(JobName.SYNC_SALES_INFO_JOB.getValue())) {
             eh2.exec();
         } else if (action.equals(JobName.SYNC_WAREHOUSE_JOB.getValue())) {
@@ -221,47 +222,11 @@ public class Main {
             eh1.exec();
         } else if (action.equals(JobName.AUTO_SEND_GOODS_JOB.getValue())) {
             eh4.exec();
-        }else if (action.equals(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue())) {
+        } else if (action.equals(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue())) {
             eh5.exec();
-        }
-        else if(action.equals("morder")){
-//            OrderOperate orderOperate = new OrderOperate(tianmaSportHttp,taoBaoHttp);
-//            orderOperate.manualOrder(28219168266790387l,"182",null,null);
-        }
-        else if (action.equals("order_robot")) {
-//            TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
-//            JushitaJmsUserAddRequest req = new JushitaJmsUserAddRequest();
-//            req.setTopicNames("taobao_trade_TradeBuyerPay");
-//            JushitaJmsUserAddResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
-//            Logger.info(rsp.getBody());
-//            Properties properties = new Properties();
-//            properties.put(PropertyKeyConst.ConsumerId, consumerId);
-//            properties.put(PropertyKeyConst.AccessKey,  OrderCatConfig.getTaobaoApiAppKey());
-//            properties.put(PropertyKeyConst.SecretKey,  OrderCatConfig.getTaobaoApiAppSecret());
-//            Consumer consumer = ONSFactory.createConsumer(properties);
-//            consumer.subscribe("rmq_sys_jst_23279400", "*", (Message message, ConsumeContext context) -> {
-//                Logger.info("Receive: " + message);
-//
-//
-//                String msg_body=null;
-//                try {
-//                    msg_body = new String(message.getBody(),"UTF-8");
-//                } catch (UnsupportedEncodingException e1) {
-//                    e1.printStackTrace();
-//                }
-//                com.alibaba.fastjson.JSONObject object = JSON.parseObject(msg_body);
-//
-//                long tid = object.getLongValue("tid");
-//
-//
-//                Logger.info("tid: " + tid);
-//
-//                return Action.CommitMessage;
-//            });
-//            consumer.start();
-
-
-
+        } else if (action.equals(JobName.AUTO_REFUND_JOB.getValue())) {
+            eh6.exec();
+        } else if (action.equals("order_robot")) {
             Properties properties = new Properties();
             properties.put(PropertyKeyConst.ConsumerId, "CID_MJ_MT1");
             properties.put(PropertyKeyConst.AccessKey, OrderCatConfig.getTaobaoApiAppKey());
@@ -271,7 +236,7 @@ public class Main {
                 public Action consume(Message message, ConsumeContext context) {
                     System.out.println("Receive: " + message);
 
-                    String msg_body=null;
+                    String msg_body = null;
                     try {
                         msg_body = new String(message.getBody(), "UTF-8");
                     } catch (UnsupportedEncodingException e1) {
@@ -283,18 +248,17 @@ public class Main {
 
                     long tid = contentObject.getLongValue("tid");
 
-                    orderOperate.autoOrder(tid,"CID_MJ_MT1");
+                    orderOperate.autoOrder(tid, "CID_MJ_MT1");
 
-                    Logger.info(String.format("Order TID:%d",tid));
+                    Logger.info(String.format("Order TID:%d", tid));
                     return Action.CommitMessage;
                 }
             });
             consumer.start();
             System.out.println("Consumer Started");
 
-            Logger.info(String.format("Consumer-[%s] Started",consumerId));
-        }
-        else if (action.equals("order_robot_clean")) {
+            Logger.info(String.format("Consumer-[%s] Started", consumerId));
+        } else if (action.equals("order_robot_clean")) {
             Properties properties = new Properties();
             properties.put(PropertyKeyConst.ConsumerId, "CID_MJ_MT1");
             properties.put(PropertyKeyConst.AccessKey, OrderCatConfig.getTaobaoApiAppKey());
@@ -304,7 +268,7 @@ public class Main {
                 public Action consume(Message message, ConsumeContext context) {
                     System.out.println("Receive: " + message);
 
-                    String msg_body=null;
+                    String msg_body = null;
                     try {
                         msg_body = new String(message.getBody(), "UTF-8");
                     } catch (UnsupportedEncodingException e1) {
@@ -317,26 +281,30 @@ public class Main {
                     long tid = contentObject.getLongValue("tid");
 
 
-
-                    Logger.info(String.format("Order TID:%d",tid));
+                    Logger.info(String.format("Order TID:%d", tid));
                     return Action.CommitMessage;
                 }
             });
             consumer.start();
             System.out.println("Consumer Started");
 
-            Logger.info(String.format("Consumer-[%s] Started",consumerId));
-        }
+            Logger.info(String.format("Consumer-[%s] Started", consumerId));
+        } else if (action.equals("test111")) {
+            Refund refund = taoBaoHttp.getRefundById(2462496238169517l);
+            ReturnResult<RefundMappingResult> rr = taoBaoHttp.agreeTaobaoRpRefunds(refund.getRefundId(), refund.getRefundFee(), refund.getRefundVersion(), refund.getRefundPhase());
 
+            if (rr.isSuccess()) {
+                System.out.println(rr.getResult().get().getMessage());
+            } else {
+                System.out.println(rr.getErrorCode() + ":" + rr.getErrorMessages());
+            }
 
-
-
-        else if (action.equals("start")) {
+        } else if (action.equals("start")) {
 
 
             //new MicroserverApp(()->"order_cat_api").start();
 
-            MicroserverApp server = new MicroserverApp(this.getClass(),new Module() {
+            MicroserverApp server = new MicroserverApp(this.getClass(), new Module() {
                 @Override
                 public String getContext() {
                     return "order_cat_api";
@@ -357,8 +325,8 @@ public class Main {
             map1.put("FenXiaoAcHandle", eh3);
             map1.put("AutoSendHandle", eh4);
             map1.put("TianmaAcHandle", eh5);
-            map1.put("TianmaSportHttp",tianmaSportHttp);
-            map1.put("RefundOperateHandle",eh6);
+            map1.put("TianmaSportHttp", tianmaSportHttp);
+            map1.put("RefundOperateHandle", eh6);
 
 
             JobDetail job = newJob(SyncWarehouseJob.class)
@@ -421,8 +389,6 @@ public class Main {
             sched.scheduleJob(job4, trigger4);
 
 
-
-
             //GuessMailNoKeepJob
             JobDetail job5 = newJob(GuessMailNoKeepJob.class)
                     .usingJobData(map1)
@@ -434,7 +400,6 @@ public class Main {
                     .withSchedule(cronSchedule(OrderCatConfig.getGuessMailNoKeepJobTriggerCron()))
                     .build();
             sched.scheduleJob(job5, trigger5);
-
 
 
             //TianmaAccountCheckJob
@@ -463,14 +428,10 @@ public class Main {
             sched.scheduleJob(job7, trigger7);
 
 
-
-
-
-
             sched.start();
 
 
-            Logger.info(String.format("启动-MicroserverApp[%s].","order_cat_api"));
+            Logger.info(String.format("启动-MicroserverApp[%s].", "order_cat_api"));
 
         }
 

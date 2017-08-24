@@ -1,4 +1,4 @@
-package com.myjo.ordercat.domain;
+package com.myjo.ordercat.domain.constant;
 
 public enum JobName {
     SYNC_WAREHOUSE_JOB("SyncWarehouseJob"),
