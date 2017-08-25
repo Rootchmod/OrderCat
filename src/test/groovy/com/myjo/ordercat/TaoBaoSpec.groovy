@@ -139,8 +139,21 @@ class TaoBaoSpec extends Specification {
     def "agreeTaobaoRpRefunds"(){
         when:
 
-        def refund = taoBaoHttp.getRefundById(2462496238169517l)
-        ReturnResult<RefundMappingResult> rr =  taoBaoHttp.agreeTaobaoRpRefunds(refund.getRefundId(),refund.getRefundFee(),refund.getRefundVersion(),refund.getRefundPhase())
+        def sessionKey = "6202414bb1a378e511ef85ZZ2e63d0bab5222183461a3b61943914886";
+        def refund = taoBaoHttp.getRefundById(2857828327578887l)
+
+
+        long returnFee =  Long.valueOf(refund.getRefundFee().replaceAll("\\.",""));
+
+
+
+        ReturnResult<RefundMappingResult> rr =  taoBaoHttp.agreeTaobaoRpRefunds(
+                refund.getRefundId(),
+                returnFee,
+                refund.getRefundVersion(),
+                refund.getRefundPhase(),
+                sessionKey
+        )
 
         if(rr.isSuccess()){
             System.out.println(rr.getResult().get().getMessage());

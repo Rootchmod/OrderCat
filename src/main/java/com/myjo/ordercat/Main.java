@@ -297,14 +297,14 @@ public class Main {
 
             Logger.info(String.format("Consumer-[%s] Started", consumerId));
         } else if (action.equals("test111")) {
-            Refund refund = taoBaoHttp.getRefundById(2462496238169517l);
-            ReturnResult<RefundMappingResult> rr = taoBaoHttp.agreeTaobaoRpRefunds(refund.getRefundId(), refund.getRefundFee(), refund.getRefundVersion(), refund.getRefundPhase());
-
-            if (rr.isSuccess()) {
-                System.out.println(rr.getResult().get().getMessage());
-            } else {
-                System.out.println(rr.getErrorCode() + ":" + rr.getErrorMessages());
-            }
+//            Refund refund = taoBaoHttp.getRefundById(2857828327578887l);
+//            ReturnResult<RefundMappingResult> rr = taoBaoHttp.agreeTaobaoRpRefunds(refund.getRefundId(), refund.getRefundFee(), refund.getRefundVersion(), refund.getRefundPhase(),"6202414bb1a378e511ef85ZZ2e63d0bab5222183461a3b61943914886");
+//
+//            if (rr.isSuccess()) {
+//                System.out.println(rr.getResult().get().getMessage());
+//            } else {
+//                System.out.println(rr.getErrorCode() + ":" + rr.getErrorMessages());
+//            }
 
         } else if (action.equals("start")) {
 

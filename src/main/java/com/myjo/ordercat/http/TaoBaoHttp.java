@@ -795,12 +795,12 @@ public class TaoBaoHttp {
      * @param version
      * @param phase
      */
-    public ReturnResult<RefundMappingResult> agreeTaobaoRpRefunds(long refundId, String amount, long version, String phase) {
+    public ReturnResult<RefundMappingResult> agreeTaobaoRpRefunds(long refundId, long amount, long version, String phase,String sessionKey) {
         ReturnResult<RefundMappingResult> rr = new ReturnResult<>();
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         RpRefundsAgreeRequest req = new RpRefundsAgreeRequest();
         //req.setCode("839212");
-        String refundInfos = String.format("%d|%s|%d|%s",
+        String refundInfos = String.format("%d|%d|%d|%s",
                 refundId,
                 amount,
                 version,
@@ -808,9 +808,11 @@ public class TaoBaoHttp {
         );
         Logger.info(String.format("refundInfos[%s]", refundInfos));
         req.setRefundInfos(refundInfos);
+        req.setCode("257623");
+
         RpRefundsAgreeResponse rsp;
         try {
-            rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
+            rsp = client.execute(req, sessionKey);
             if (rsp.isSuccess()) {
                 rr.setSuccess(rsp.getSucc());
                 rr.setResult(rsp.getResults().get(0));

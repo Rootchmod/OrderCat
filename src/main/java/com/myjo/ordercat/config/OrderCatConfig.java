@@ -528,6 +528,11 @@ public class OrderCatConfig {
         return config.getInt(String.format(REFUND_OPERATE, "refund_date_interval_day"));
     }
 
+
+    public static String getRefundSubUserParamsKey() {
+        return config.getString(String.format(REFUND_OPERATE, "sub_user_params_key"));
+    }
+
     public static List<String> getRefundRetainStatuses() {
         return config.getStringList(String.format(REFUND_OPERATE, "retain_statuses"));
     }

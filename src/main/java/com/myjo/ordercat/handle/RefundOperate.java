@@ -8,14 +8,13 @@ import com.myjo.ordercat.domain.constant.RefundOperateType;
 import com.myjo.ordercat.domain.constant.TianmaOrderStatus;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParams;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParamsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecord;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordManager;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
-import com.taobao.api.domain.PurchaseOrder;
-import com.taobao.api.domain.Refund;
-import com.taobao.api.domain.SubPurchaseOrder;
-import com.taobao.api.domain.Trade;
+import com.taobao.api.domain.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +43,8 @@ public class RefundOperate {
 
 
     private OcRefundOperateRecordManager ocRefundOperateRecordManager;
+
+    private OcParamsManager ocParamsManager ;
 
 
     public RefundOperate(TianmaSportHttp tianmaSportHttp, TaoBaoHttp taoBaoHttp, ScriptEngine scriptEngine) {
@@ -123,17 +124,26 @@ public class RefundOperate {
                 case TB_OP_TYTK://同意退款
                     refundOperateRecord.setOperateType(refundOperateType);
                     refundOperateRecord.setOperateResult("暂无操作!");
-//                    ReturnResult<RefundMappingResult> rt = taoBaoHttp.agreeTaobaoRpRefunds(
+
+//                    Optional<OcParams> optOcParams = ocParamsManager.stream()
+//                            .filter(OcParams.PKEY.equal(OrderCatConfig.getRefundSubUserParamsKey())).findFirst();
+//                    String subUserSessionKey =optOcParams.get().getPvalue();
+//
+//                    long returnFee1 =  Long.valueOf(refundOperateRecord.getRefundAmount().replaceAll("\\.",""));
+//
+//
+//                    ReturnResult<RefundMappingResult> rt11 = taoBaoHttp.agreeTaobaoRpRefunds(
 //                            refundOperateRecord.getRefundId(),
-//                            refundOperateRecord.getRefundAmount(),
+//                            returnFee1,
 //                            refundOperateRecord.getRefundVersion(),
-//                            refundOperateRecord.getRefundPhase()
+//                            refundOperateRecord.getRefundPhase(),
+//                            subUserSessionKey
 //                    );
 //
-//                    if(rt.isSuccess()){
-//                        refundOperateRecord.setOperateResult(rt.getResult().get().getMessage());
+//                    if(rt11.isSuccess()){
+//                        refundOperateRecord.setOperateResult(rt11.getResult().get().getMessage());
 //                    }else {
-//                        refundOperateRecord.setOperateResult(rt.getErrorCode()+":"+rt.getErrorMessages());
+//                        refundOperateRecord.setOperateResult(rt11.getErrorCode()+":"+rt11.getErrorMessages());
 //                    }
                     break;
                 case GX_OP_SQTK://申请退款
@@ -406,5 +416,9 @@ public class RefundOperate {
 
     public void setOcRefundOperateRecordManager(OcRefundOperateRecordManager ocRefundOperateRecordManager) {
         this.ocRefundOperateRecordManager = ocRefundOperateRecordManager;
+    }
+
+    public void setOcParamsManager(OcParamsManager ocParamsManager) {
+        this.ocParamsManager = ocParamsManager;
     }
 }
