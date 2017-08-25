@@ -28,7 +28,7 @@ class OcEncryptionUtilsSpec extends Specification {
             String d1 = OcEncryptionUtils.base64Encoder("123456",5)
             System.out.println(d1);
             String d2 = OcEncryptionUtils.base64Decoder("VmtaYVUxTnRWbkpPVlZaWFZrVnJPUT09",5)
-
+        System.out.println(d2);
             String d3 = OcEncryptionUtils.base64Encoder("wy789789",5)
             System.out.println(d3);
 

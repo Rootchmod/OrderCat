@@ -1,9 +1,7 @@
 package com.myjo.ordercat.utils;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 
 /**
  * Created by lee5hx on 17/6/19.
@@ -28,7 +26,7 @@ public class OcEncryptionUtils {
             e.printStackTrace();
         }
         if (b != null) {
-            s = new BASE64Encoder().encode(b);
+            s = Base64.getEncoder().encodeToString(b);
         }
         return s;
     }
@@ -48,14 +46,17 @@ public class OcEncryptionUtils {
         byte[] b = null;
         String result = null;
         if (s != null) {
-            BASE64Decoder decoder = new BASE64Decoder();
+            //BASE64Decoder decoder = new BASE64Decoder();
             try {
-                b = decoder.decodeBuffer(s);
+                b = Base64.getDecoder().decode(s);
                 result = new String(b, "utf-8");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+
+
         return result;
     }
 
