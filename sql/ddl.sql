@@ -273,8 +273,8 @@ ALTER TABLE oc_refund_operate_record ADD COLUMN `is_latest` SMALLINT NULL COMMEN
 DROP TABLE IF EXISTS oc_params;
 CREATE TABLE `oc_params` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` VARCHAR(255) NOT NULL COMMENT '键',
-  `value` VARCHAR(255) NOT NULL COMMENT '值',
+  `pkey` VARCHAR(255) NOT NULL COMMENT '键',
+  `pvalue` VARCHAR(255) NOT NULL COMMENT '值',
   `add_time` timestamp NOT NULL COMMENT '添加日期',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIK_KEY` (`key`),

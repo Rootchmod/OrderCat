@@ -22,6 +22,8 @@ import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParams;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParamsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
@@ -108,6 +110,10 @@ public class Main {
         OcTmsportCheckResultManager ocTmsportCheckResultManager = app.getOrThrow(OcTmsportCheckResultManager.class);
         OcTmOrderRecordsManager ocTmOrderRecordsManager = app.getOrThrow(OcTmOrderRecordsManager.class);
         OcRefundOperateRecordManager ocRefundOperateRecordManager = app.getOrThrow(OcRefundOperateRecordManager.class);
+        OcParamsManager ocParamsManager = app.getOrThrow(OcParamsManager.class);
+
+
+
 
         OrderCatContext.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
         OrderCatContext.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
@@ -115,6 +121,7 @@ public class Main {
         OrderCatContext.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
         OrderCatContext.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         OrderCatContext.setOcRefundOperateRecordManager(ocRefundOperateRecordManager);
+        OrderCatContext.setOcParamsManager(ocParamsManager);
 
 
         Logger.info("初始化[speedment]-完成.");
