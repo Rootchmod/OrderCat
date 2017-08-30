@@ -14,6 +14,7 @@ public class SetnxLock {
     private static final Logger Logger = LogManager.getLogger(SetnxLock.class);
     private static final int OP_LOCK_TIME_OUT = 1000 * 60 * 5; //自动下单锁超时时间-5分钟
 
+    private static final int OP_LOCK_EXPIRE_TIME_OUT = 60 * 5; //锁过期时间
 
 
 
@@ -39,6 +40,7 @@ public class SetnxLock {
                 lock = syncCommands.setnx(lockKey, String.valueOf(timeout));
 
                 if (lock || ((now > getLockTimeOut(syncCommands, lockKey) && now > getSet(syncCommands, lockKey, timeout)))) {
+                    syncCommands.expire(lockKey,OP_LOCK_EXPIRE_TIME_OUT);
                     break;
                 } else {
                     timeout = -1;

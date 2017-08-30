@@ -61,6 +61,9 @@ public class AccountCheckResource {
             @ApiParam(required = true, name = "page_size", value = "分页大小") @QueryParam("page_size") int page_size,
             @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
+        if (page_size > 200) {
+            page_size = 200;
+        }
 
         Logger.info(String.format("tm_outer_order_id:%s,dz_status:%s,begin_time:%s,end_time:%s,page_size:%d,page:%d",
                 tm_outer_order_id,

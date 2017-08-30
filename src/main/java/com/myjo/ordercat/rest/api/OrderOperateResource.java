@@ -37,7 +37,7 @@ public class OrderOperateResource {
     @Produces("application/json;charset=utf-8")
     @Path("/orderRecords")
     @ApiOperation(value = "下单记录", response = PageResult.class)
-    public PageResult<OcTmOrderRecordsVO> tmsportCheckList(
+    public PageResult<OcTmOrderRecordsVO> orderRecords(
             @ApiParam(name = "tid", value = "淘宝订单ID") @QueryParam("tid") String tid,
             @ApiParam(name = "status", value = "下单状态") @QueryParam("status") String status,
             @ApiParam(name = "order_begin_time", value = "下单开始时间") @QueryParam("order_begin_time") String order_begin_time,
@@ -46,6 +46,10 @@ public class OrderOperateResource {
             @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
 
+
+        if (page_size > 200) {
+            page_size = 200;
+        }
 
         Long begin = System.currentTimeMillis();
         PageResult<OcTmOrderRecordsVO> pageResult = new PageResult<>();
@@ -74,11 +78,11 @@ public class OrderOperateResource {
         //Stream<OcTmsportCheckResult> stream = ;
 
 
-        Logger.info("p1:"+(System.currentTimeMillis() - begin));
+        Logger.info("p1:" + (System.currentTimeMillis() - begin));
         long count;
         List<OcTmOrderRecords> list;
 
-        if(predicateList.size()==0){
+        if (predicateList.size() == 0) {
             count = ocTmOrderRecordsManager.stream()
                     .count();
             list = ocTmOrderRecordsManager.stream()
@@ -86,11 +90,11 @@ public class OrderOperateResource {
                     .skip((page - 1) * page_size)
                     .limit(page_size)
                     .collect(Collectors.toList());
-        }else {
+        } else {
             for (Predicate<OcTmOrderRecords> p : predicateList) {
-                if(p1 == null){
+                if (p1 == null) {
                     p1 = p;
-                }else {
+                } else {
                     p1 = p1.and(p);
                 }
 
@@ -109,7 +113,7 @@ public class OrderOperateResource {
 
 
         pageResult.setTotal(count);
-        Logger.info("p2:"+(System.currentTimeMillis() - begin));
+        Logger.info("p2:" + (System.currentTimeMillis() - begin));
 
 
         List<OcTmOrderRecordsVO> ocTmOrderRecordsVOS = list.parallelStream()
@@ -169,7 +173,7 @@ public class OrderOperateResource {
                 .collect(Collectors.toList());
         pageResult.setRows(ocTmOrderRecordsVOS);
 
-        Logger.info("p3:"+(System.currentTimeMillis() - begin));
+        Logger.info("p3:" + (System.currentTimeMillis() - begin));
 
 
         return pageResult;

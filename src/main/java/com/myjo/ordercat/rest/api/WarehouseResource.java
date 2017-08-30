@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Rest
 @Path("/warehouse")
-@Api(value = "/warehouse", description = "对账信息接口")
+@Api(value = "/warehouse", description = "仓库信息")
 public class WarehouseResource {
 
     private static final Logger Logger = LogManager.getLogger(OrderOperate.class);

@@ -10,7 +10,6 @@ import com.beust.jcommander.Parameter;
 import com.mashape.unirest.http.Unirest;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.context.OrderCatContext;
-import com.myjo.ordercat.domain.ReturnResult;
 import com.myjo.ordercat.domain.constant.JobName;
 import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.handle.*;
@@ -22,7 +21,6 @@ import com.myjo.ordercat.spm.OrdercatApplicationBuilder;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_logistics_companies_info.OcLogisticsCompaniesInfoManager;
-import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParams;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParamsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
@@ -32,8 +30,6 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsport
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import com.myjo.ordercat.utils.OcEncryptionUtils;
 import com.speedment.runtime.core.ApplicationBuilder;
-import com.taobao.api.domain.Refund;
-import com.taobao.api.domain.RefundMappingResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -113,8 +109,6 @@ public class Main {
         OcParamsManager ocParamsManager = app.getOrThrow(OcParamsManager.class);
 
 
-
-
         OrderCatContext.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
         OrderCatContext.setOcTmsportCheckResultManager(ocTmsportCheckResultManager);
         OrderCatContext.setOcJobExecInfoManager(ocJobExecInfoManager);
@@ -162,6 +156,7 @@ public class Main {
 
         OrderOperate orderOperate = new OrderOperate(tianmaSportHttp, taoBaoHttp, e);
         orderOperate.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
+        orderOperate.setOcParamsManager(ocParamsManager);
         OrderCatContext.setOrderOperate(orderOperate);
 
         RefundOperate refundOperate = new RefundOperate(tianmaSportHttp, taoBaoHttp, e);

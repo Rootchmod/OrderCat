@@ -91,12 +91,13 @@ public class OcBigDecimalUtils {
         return breakEvenPrice;
     }
 
-    public static boolean pickWhcountCalculatePolicyJudge(ScriptEngine e, String x,String y, String judge) {
+    public static boolean pickWhcountCalculatePolicyJudge(ScriptEngine e, String x,String y,String z, String judge) {
         boolean rt = false;
         try {
             String ps = "("+judge+")";
             String evalStr = ps.replaceAll("x",String.valueOf(x));
             evalStr = evalStr.replaceAll("y",String.valueOf(y));
+            evalStr = evalStr.replaceAll("z",String.valueOf(z));
             rt = ((Boolean) e.eval(evalStr)).booleanValue();
         } catch (final ScriptException se) {
             se.printStackTrace();

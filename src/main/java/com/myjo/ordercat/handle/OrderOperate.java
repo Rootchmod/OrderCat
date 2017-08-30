@@ -10,6 +10,8 @@ import com.myjo.ordercat.exception.OCException;
 import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.http.TianmaSportHttp;
 import com.myjo.ordercat.redis.SetnxLock;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParams;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParamsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager;
@@ -41,6 +43,8 @@ public class OrderOperate {
 
     private OcTmOrderRecordsManager ocTmOrderRecordsManager;
 
+    private OcParamsManager ocParamsManager;
+
     private ScriptEngine scriptEngine;
 
     public OrderOperate(TianmaSportHttp tianmaSportHttp, TaoBaoHttp taoBaoHttp, ScriptEngine scriptEngine) {
@@ -63,6 +67,18 @@ public class OrderOperate {
             }
         }
         return rt;
+    }
+
+    private String conversionAreaName(String name){
+        String name2 = name;
+        String key = String.format("order.operate.conversion.name.%s",name);
+        Optional<OcParams> opt = ocParamsManager.stream()
+                .filter(OcParams.PKEY.equal(key))
+                .findFirst();
+        if(opt.isPresent()){
+            name2 = opt.get().getPvalue();
+        }
+        return name2;
     }
 
     private Map<String, String> tmsportOrderAndPay(
@@ -104,19 +120,23 @@ public class OrderOperate {
         requestMap.put("area", trade.getReceiverDistrict());
         requestMap.put("outer_tid", String.valueOf(tid));
         List<TmArea> list = tianmaSportHttp.getArea("0");
-        String province_id = getPidInAreas(list, trade.getReceiverState());
+        String province_id = getPidInAreas(list, conversionAreaName(trade.getReceiverState()));
         if(province_id == null){
             throw new OCException(String.format("[%s],在天马中没有找到匹配的-省份.请人工处理!",trade.getReceiverState()));
         }
 
         list = tianmaSportHttp.getArea(province_id);
-        String city_id = getPidInAreas(list, trade.getReceiverCity());
+        String city_id = getPidInAreas(list, conversionAreaName(trade.getReceiverCity()));
         if(city_id == null){
             throw new OCException(String.format("[%s],在天马中没有找到匹配的-市.请人工处理!",trade.getReceiverCity()));
         }
 
         list = tianmaSportHttp.getArea(city_id);
-        String area_id = getPidInAreas(list, trade.getReceiverDistrict());
+        String area_id = "0";
+        if (list.size() > 0) {
+            area_id = getPidInAreas(list, conversionAreaName(trade.getReceiverDistrict()));
+        }
+
         if(area_id == null){
             throw new OCException(String.format("[%s],在天马中没有找到匹配的-区县.请人工处理!",trade.getReceiverDistrict()));
         }
@@ -420,6 +440,8 @@ public class OrderOperate {
             }
         }
 
+
+        //Integer.valueOf(jsonObject.getString("wareHouseID")
         List<PickWhcountCalculatePolicy> list = OrderCatConfig.getPickWhcountCalculatePolicy();
         for (PickWhcountCalculatePolicy p : list) {
             jsonObjectList = jsonObjectList.parallelStream()
@@ -427,7 +449,8 @@ public class OrderOperate {
                         //String dd1 = StringUtils.substringBeforeLast(jsonObject.getString("pickRate"), "%");
                         String x = OcLcUtils.getPickRate(jsonObject.getString("pickRate")).toPlainString();
                         String y = jsonObject.getInteger(tmSkuId).toString();
-                        return !OcBigDecimalUtils.pickWhcountCalculatePolicyJudge(scriptEngine, x, y, p.getEquation());
+                        String z = jsonObject.getString("wareHouseID");
+                        return !OcBigDecimalUtils.pickWhcountCalculatePolicyJudge(scriptEngine, x, y,z, p.getEquation());
                     }).collect(Collectors.toList());
             Logger.info(String.format("----Equation:[%s]-size[%d].", p.getEquation(), jsonObjectList.size()));
         }
@@ -577,7 +600,7 @@ public class OrderOperate {
         long lock = SetnxLock.opLock(tid, 0);
 
         if (lock < 0) {
-            Logger.info(String.format("该订单[%d]已经被锁定,不能重复下单.",tid));
+            Logger.error(String.format("该订单[%d]已经被锁定,不能重复下单.",tid));
             return null;
         }
 
@@ -719,7 +742,7 @@ public class OrderOperate {
             Logger.info(String.format("执行耗时(毫秒):%d", elapsed));
             Logger.error(e);
         } finally {
-            SetnxLock.unOpLock(tid, lock);
+           //SetnxLock.unOpLock(tid, lock);
         }
         ocTmOrderRecords.setAddTime(LocalDateTime.now());
         ocTmOrderRecordsManager.persist(ocTmOrderRecords);
@@ -728,5 +751,9 @@ public class OrderOperate {
 
     public void setOcTmOrderRecordsManager(OcTmOrderRecordsManager ocTmOrderRecordsManager) {
         this.ocTmOrderRecordsManager = ocTmOrderRecordsManager;
+    }
+
+    public void setOcParamsManager(OcParamsManager ocParamsManager) {
+        this.ocParamsManager = ocParamsManager;
     }
 }

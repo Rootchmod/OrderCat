@@ -616,9 +616,7 @@ public class TianmaSportHttp {
 
                 list.add(tmArea);
             }
-            if (list.size() == 0) {
-                throw new OCException("天马地址区域查询结果为0,pid:" + pid);
-            }
+            
 
         } else {
             throw new OCException("天马地址区域查询失败:" + code);
