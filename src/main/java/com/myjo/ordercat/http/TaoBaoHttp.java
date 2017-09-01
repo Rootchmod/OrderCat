@@ -751,7 +751,7 @@ public class TaoBaoHttp {
         Trade trade = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
-        req.setFields("tid,type,status,num,payment,orders,receiver_name,receiver_state,receiver_address,receiver_zip,receiver_mobile,receiver_phone,received_payment,receiver_city,receiver_district,buyer_message,is_daixiao");
+        req.setFields("tid,type,status,num,payment,orders,receiver_name,receiver_state,receiver_address,receiver_zip,receiver_mobile,receiver_phone,received_payment,receiver_city,receiver_district,buyer_message,is_daixiao,orders.refund_id");
         req.setTid(tid);
         try {
             TradeFullinfoGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());

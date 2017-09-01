@@ -241,27 +241,7 @@ public class OrderOperate {
         return requestMap;
     }
 
-    private void tianmaOrder(long tid, Map<String, Object> anrtMap, String wareHouseId, String payPwd1, OcTmOrderRecords ocTmOrderRecords) throws Exception {
 
-        Optional<OcTmOrderRecords> obj = ocTmOrderRecordsManager.stream()
-                .filter(OcTmOrderRecords.TID.equal(String.valueOf(tid)).and(OcTmOrderRecords.STATUS.equal(TmOrderRecordStatus.SUCCESS.getValue())))
-                .findAny();
-        if (obj.isPresent()) {
-            throw new OCException(String.format("淘宝订单[%d],已经下过订单.禁止重复下单", tid));
-        }
-
-        Optional<Trade> optionalTrade = taoBaoHttp.getTaobaoTradeFullInfo(tid);
-        if (!optionalTrade.isPresent()) {
-            throw new OCException(String.format("淘宝订单[%d],没有找到对应的订单信息.", tid));
-        }
-        Trade trade = optionalTrade.get();
-        if (trade.getOrders().size() > 1) {
-            throw new OCException(String.format("淘宝订单[%d],子单数量大于1,不能进行下单.", tid));
-        }
-        //天马下单+付款
-//        Map<String, String> requestMap = tmsportOrderAndPay(tid, trade, anrtMap, wareHouseId, payPwd1);
-//        ocTmOrderRecords.setOrderInfo(JSON.toJSONString(requestMap));
-    }
 
     private Trade getTaoBaoTrade(long tid) throws Exception {
 
@@ -284,44 +264,7 @@ public class OrderOperate {
         return trade;
     }
 
-    /**
-     * 手工下单
-     *
-     * @param tid
-     */
-    public OcTmOrderRecords manualOrder(
-            long tid,
-            String wareHouseId,
-            String payPwd1) throws Exception {
-        Logger.info(String.format("开始执行手工下单-淘宝订单[%d],仓库ID[%s]",
-                tid,
-                wareHouseId
-        ));
 
-        OcTmOrderRecords ocTmOrderRecords = new OcTmOrderRecordsImpl();
-        ocTmOrderRecords.setTid(String.valueOf(tid));
-        ocTmOrderRecords.setType(TmOrderRecordType.MANUAL.getValue());
-
-        try {
-            Trade trade = getTaoBaoTrade(tid);
-            Order order = trade.getOrders().get(0);
-            String outerSkuid = order.getOuterSkuId();
-            String articleno = OcStringUtils.getGoodsNoByOuterId(outerSkuid);
-            Map<String, Object> anrtMap = tianmaSportHttp.getSearchByArticleno(articleno);
-            Map<String, String> requestMap = tmsportOrderAndPay(tid, trade, anrtMap, wareHouseId, payPwd1, ocTmOrderRecords);
-            ocTmOrderRecords.setStatus(TmOrderRecordStatus.SUCCESS.getValue());
-            ocTmOrderRecords.setOrderInfo(JSON.toJSONString(requestMap));
-
-        } catch (Exception e) {
-            ocTmOrderRecords.setStatus(TmOrderRecordStatus.FAILURE.getValue());
-            ocTmOrderRecords.setFailCause(e.getMessage());
-            Logger.error(e);
-        }
-
-        ocTmOrderRecords.setAddTime(LocalDateTime.now());
-        ocTmOrderRecordsManager.persist(ocTmOrderRecords);
-        return ocTmOrderRecords;
-    }
 
     public String getPidInAreas(List<TmArea> list, String name) {
         String pid = null;
@@ -635,6 +578,11 @@ public class OrderOperate {
 
             if (trade.getNum() > 1) {
                 throw new OCException(String.format("淘宝订单[%d].数量大于[1]不能进行下单.", tid));
+            }
+            
+            Long refundId =  trade.getOrders().get(0).getRefundId();
+            if(refundId!=null){
+                throw new OCException(String.format("淘宝订单[%d].已经存在退款单[%d]不能进行下单.", tid,refundId));
             }
 
 
