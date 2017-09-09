@@ -3,6 +3,9 @@ package com.myjo.ordercat.utils;
 import com.myjo.ordercat.domain.InventoryInfo;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,5 +65,24 @@ public class OcStringUtils {
         return StringUtils.substringAfterLast(skuOuterId, "-");
     }
 
+
+
+    public static boolean judgeFilterOuterId(ScriptEngine e, String outerId) {
+
+        Boolean rt = null;
+        try {
+            Invocable invocable = (Invocable) e;
+
+            Object result = invocable.invokeFunction("judgeFilterOuterId", outerId);
+            rt = (Boolean) result;
+
+
+        } catch (NoSuchMethodException e1) {
+            e1.printStackTrace();
+        } catch (ScriptException e1) {
+            e1.printStackTrace();
+        }
+        return rt;
+    }
 
 }

@@ -292,6 +292,13 @@ public class OrderCatConfig {
         return config.getString(String.format(ORDER_CAT, "output_path"));
     }
 
+    public static String getOrderCatScriptFilePath() {
+        return config.getString(String.format(ORDER_CAT, "script_file_path"));
+    }
+
+
+
+
 
     public static String getOrderCatTempPath() {
         return config.getString(String.format(ORDER_CAT, "temp_path"));

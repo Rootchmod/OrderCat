@@ -1,6 +1,7 @@
 package com.myjo.ordercat.context;
 
 import com.myjo.ordercat.handle.OrderOperate;
+import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_fenxiao_check_result.OcFenxiaoCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager;
@@ -25,6 +26,8 @@ public class OrderCatContext {
     private static OcJobExecInfoManager ocJobExecInfoManager;
     private static OcRefundOperateRecordManager ocRefundOperateRecordManager;
     private static OcParamsManager ocParamsManager;
+
+    private static TaoBaoHttp taoBaoHttp;
 
     public static OcTmsportCheckResultManager getOcTmsportCheckResultManager() {
         return ocTmsportCheckResultManager;
@@ -88,5 +91,13 @@ public class OrderCatContext {
 
     public static void setOcParamsManager(OcParamsManager ocParamsManager) {
         OrderCatContext.ocParamsManager = ocParamsManager;
+    }
+
+    public static TaoBaoHttp getTaoBaoHttp() {
+        return taoBaoHttp;
+    }
+
+    public static void setTaoBaoHttp(TaoBaoHttp taoBaoHttp) {
+        OrderCatContext.taoBaoHttp = taoBaoHttp;
     }
 }

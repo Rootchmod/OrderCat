@@ -29,12 +29,14 @@ public abstract class GeneratedOcRefundOperateRecordImpl implements OcRefundOper
     private String reason;
     private String sid;
     private String companyName;
+    private String remark;
     private String refundPhase;
     private Long refundVersion;
     private String refundAmount;
     private String operateType;
     private String operateDetail;
     private String operateResult;
+    private Short isDelete;
     private Short isLatest;
     private LocalDateTime addTime;
     
@@ -83,6 +85,11 @@ public abstract class GeneratedOcRefundOperateRecordImpl implements OcRefundOper
     }
     
     @Override
+    public Optional<String> getRemark() {
+        return Optional.ofNullable(remark);
+    }
+    
+    @Override
     public Optional<String> getRefundPhase() {
         return Optional.ofNullable(refundPhase);
     }
@@ -110,6 +117,11 @@ public abstract class GeneratedOcRefundOperateRecordImpl implements OcRefundOper
     @Override
     public Optional<String> getOperateResult() {
         return Optional.ofNullable(operateResult);
+    }
+    
+    @Override
+    public Optional<Short> getIsDelete() {
+        return Optional.ofNullable(isDelete);
     }
     
     @Override
@@ -171,6 +183,12 @@ public abstract class GeneratedOcRefundOperateRecordImpl implements OcRefundOper
     }
     
     @Override
+    public OcRefundOperateRecord setRemark(String remark) {
+        this.remark = remark;
+        return this;
+    }
+    
+    @Override
     public OcRefundOperateRecord setRefundPhase(String refundPhase) {
         this.refundPhase = refundPhase;
         return this;
@@ -207,6 +225,12 @@ public abstract class GeneratedOcRefundOperateRecordImpl implements OcRefundOper
     }
     
     @Override
+    public OcRefundOperateRecord setIsDelete(Short isDelete) {
+        this.isDelete = isDelete;
+        return this;
+    }
+    
+    @Override
     public OcRefundOperateRecord setIsLatest(Short isLatest) {
         this.isLatest = isLatest;
         return this;
@@ -229,12 +253,14 @@ public abstract class GeneratedOcRefundOperateRecordImpl implements OcRefundOper
         sj.add("reason = "        + Objects.toString(OptionalUtil.unwrap(getReason())));
         sj.add("sid = "           + Objects.toString(OptionalUtil.unwrap(getSid())));
         sj.add("companyName = "   + Objects.toString(OptionalUtil.unwrap(getCompanyName())));
+        sj.add("remark = "        + Objects.toString(OptionalUtil.unwrap(getRemark())));
         sj.add("refundPhase = "   + Objects.toString(OptionalUtil.unwrap(getRefundPhase())));
         sj.add("refundVersion = " + Objects.toString(OptionalUtil.unwrap(getRefundVersion())));
         sj.add("refundAmount = "  + Objects.toString(OptionalUtil.unwrap(getRefundAmount())));
         sj.add("operateType = "   + Objects.toString(OptionalUtil.unwrap(getOperateType())));
         sj.add("operateDetail = " + Objects.toString(OptionalUtil.unwrap(getOperateDetail())));
         sj.add("operateResult = " + Objects.toString(OptionalUtil.unwrap(getOperateResult())));
+        sj.add("isDelete = "      + Objects.toString(OptionalUtil.unwrap(getIsDelete())));
         sj.add("isLatest = "      + Objects.toString(OptionalUtil.unwrap(getIsLatest())));
         sj.add("addTime = "       + Objects.toString(getAddTime()));
         return "OcRefundOperateRecordImpl " + sj.toString();
@@ -253,12 +279,14 @@ public abstract class GeneratedOcRefundOperateRecordImpl implements OcRefundOper
         if (!Objects.equals(this.getReason(), thatOcRefundOperateRecord.getReason())) {return false; }
         if (!Objects.equals(this.getSid(), thatOcRefundOperateRecord.getSid())) {return false; }
         if (!Objects.equals(this.getCompanyName(), thatOcRefundOperateRecord.getCompanyName())) {return false; }
+        if (!Objects.equals(this.getRemark(), thatOcRefundOperateRecord.getRemark())) {return false; }
         if (!Objects.equals(this.getRefundPhase(), thatOcRefundOperateRecord.getRefundPhase())) {return false; }
         if (!Objects.equals(this.getRefundVersion(), thatOcRefundOperateRecord.getRefundVersion())) {return false; }
         if (!Objects.equals(this.getRefundAmount(), thatOcRefundOperateRecord.getRefundAmount())) {return false; }
         if (!Objects.equals(this.getOperateType(), thatOcRefundOperateRecord.getOperateType())) {return false; }
         if (!Objects.equals(this.getOperateDetail(), thatOcRefundOperateRecord.getOperateDetail())) {return false; }
         if (!Objects.equals(this.getOperateResult(), thatOcRefundOperateRecord.getOperateResult())) {return false; }
+        if (!Objects.equals(this.getIsDelete(), thatOcRefundOperateRecord.getIsDelete())) {return false; }
         if (!Objects.equals(this.getIsLatest(), thatOcRefundOperateRecord.getIsLatest())) {return false; }
         if (!Objects.equals(this.getAddTime(), thatOcRefundOperateRecord.getAddTime())) {return false; }
         return true;
@@ -275,12 +303,14 @@ public abstract class GeneratedOcRefundOperateRecordImpl implements OcRefundOper
         hash = 31 * hash + Objects.hashCode(getReason());
         hash = 31 * hash + Objects.hashCode(getSid());
         hash = 31 * hash + Objects.hashCode(getCompanyName());
+        hash = 31 * hash + Objects.hashCode(getRemark());
         hash = 31 * hash + Objects.hashCode(getRefundPhase());
         hash = 31 * hash + Objects.hashCode(getRefundVersion());
         hash = 31 * hash + Objects.hashCode(getRefundAmount());
         hash = 31 * hash + Objects.hashCode(getOperateType());
         hash = 31 * hash + Objects.hashCode(getOperateDetail());
         hash = 31 * hash + Objects.hashCode(getOperateResult());
+        hash = 31 * hash + Objects.hashCode(getIsDelete());
         hash = 31 * hash + Objects.hashCode(getIsLatest());
         hash = 31 * hash + Objects.hashCode(getAddTime());
         return hash;

@@ -29,6 +29,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderReco
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import com.myjo.ordercat.utils.OcEncryptionUtils;
+import com.myjo.ordercat.utils.OcStringUtils;
 import com.speedment.runtime.core.ApplicationBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +40,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -124,6 +126,12 @@ public class Main {
         //脚本引擎
         ScriptEngineManager m = new ScriptEngineManager();
         ScriptEngine e = m.getEngineByName("nashorn");
+        e.eval(new FileReader(OrderCatConfig.getOrderCatScriptFilePath()));
+        boolean t1 = OcStringUtils.judgeFilterOuterId(e,"805942-600-36.5麦巨");
+        boolean t2 = OcStringUtils.judgeFilterOuterId(e,"805942-600-36.5");
+        //boolean rt = OcStringUtils.judgeFilterOuterId(e,"xxxx-xxxx-xxx麦巨");
+        Logger.info("OcStringUtils.judgeFilterOuterId(e,'805942-600-36.5麦巨')="+t1);
+        Logger.info("OcStringUtils.judgeFilterOuterId(e,'805942-600-36.5')="+t2);
 
 
         Logger.info("初始化[nashorn]-js脚本引擎完成.");
@@ -132,6 +140,8 @@ public class Main {
         Map<String, String> map = new HashMap<>();
         TianmaSportHttp tianmaSportHttp = new TianmaSportHttp(map);
         TaoBaoHttp taoBaoHttp = new TaoBaoHttp();
+
+        OrderCatContext.setTaoBaoHttp(taoBaoHttp);
 
         Logger.info("初始化[TianmaSportHttp,TaoBaoHttp]-完成.");
 

@@ -3,23 +3,26 @@ package com.myjo.ordercat.rest.api;
 import com.aol.micro.server.auto.discovery.Rest;
 import com.myjo.ordercat.context.OrderCatContext;
 import com.myjo.ordercat.domain.PageResult;
+import com.myjo.ordercat.domain.ReturnResult;
 import com.myjo.ordercat.domain.vo.RefundOperateRecordVO;
+import com.myjo.ordercat.domain.vo.RemarkJson;
 import com.myjo.ordercat.handle.OrderOperate;
+import com.myjo.ordercat.http.TaoBaoHttp;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecord;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordManager;
 import com.myjo.ordercat.utils.OcDateTimeUtils;
+import com.taobao.api.domain.RefundMappingResult;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.alibaba.fastjson.JSON;
 
 import javax.ws.rs.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -45,7 +48,8 @@ public class RefundOperateResource {
 
         //Integer jobId = OcJobUtils.getLastSuccessJobID(ocJobExecInfoManager, JobName.SYNC_WAREHOUSE_JOB.getValue());
         List<OcRefundOperateRecord> list1 = ocRefundOperateRecordManager.stream()
-                .filter(OcRefundOperateRecord.REFUND_ID.equal(Long.valueOf(refundId)))
+                .filter(OcRefundOperateRecord.REFUND_ID.equal(Long.valueOf(refundId))
+                        .and(OcRefundOperateRecordImpl.IS_DELETE.equal((short) 0)))
                 .sorted(OcRefundOperateRecord.ADD_TIME.comparator().reversed())
                 .collect(Collectors.toList());
 
@@ -96,6 +100,8 @@ public class RefundOperateResource {
 
 
         predicateList.add(OcRefundOperateRecordImpl.IS_LATEST.equal((short) 1));
+        predicateList.add(OcRefundOperateRecordImpl.IS_DELETE.equal((short) 0));
+
 
 
         if (refundId != null) {
@@ -161,6 +167,7 @@ public class RefundOperateResource {
                     refundOperateRecordVO.setOperateDetail(refundOperateRecord.getOperateDetail().orElse(""));
                     refundOperateRecordVO.setOperateResult(refundOperateRecord.getOperateResult().orElse(""));
                     refundOperateRecordVO.setOperateType(refundOperateRecord.getOperateType().orElse(""));
+                    refundOperateRecordVO.setRemark(refundOperateRecord.getRemark().orElse(""));
                     return refundOperateRecordVO;
                 }).collect(Collectors.toList());
         success = true;
@@ -170,6 +177,126 @@ public class RefundOperateResource {
         result = pageResult;
         rt.put("success", success);
         rt.put("result", result);
+        return rt;
+    }
+
+
+    @POST
+    @Produces("application/json;charset=utf-8")
+    @Path("/operate-records/addRemark")
+    @ApiOperation(value = "添加对退款操作日志备注", response = Map.class)
+    public Map<String, Object> addRemark(
+            @ApiParam(required = true,name = "id", value = "ID") @FormParam("id") String id,
+            @ApiParam(required = true,name = "remark", value = "备注") @FormParam("remark") String remark) {
+
+
+        Logger.info(String.format("id:%s,remark:%s", id, remark));
+        Map<String, Object> rt = new HashMap<>();
+
+        OcRefundOperateRecordManager ocRefundOperateRecordManager = OrderCatContext.getOcRefundOperateRecordManager();
+        boolean success;
+        String message;
+
+        Optional<OcRefundOperateRecord> o = ocRefundOperateRecordManager.stream()
+                .filter(OcRefundOperateRecordImpl.ID.equal(Long.valueOf(id)))
+                .findAny();
+        //com.alibaba.fastjson.JSONObject object = JSON.parseObject(jsonstr);
+
+        RemarkJson remarkJson = new RemarkJson();
+        remarkJson.setAddTime(OcDateTimeUtils.localDateTime2String(LocalDateTime.now()));
+        remarkJson.setRemark(remark);
+
+        OcRefundOperateRecord ocRefundOperateRecord;
+        if (o.isPresent()) {
+            ocRefundOperateRecord = o.get();
+            List<RemarkJson> remarkJsons;
+            if(ocRefundOperateRecord.getRemark().isPresent()){
+                remarkJsons = (List<RemarkJson>)JSON.parse(ocRefundOperateRecord.getRemark().get());
+                remarkJsons.add(remarkJson);
+            }else {
+                remarkJsons = new ArrayList<>();
+                remarkJsons.add(remarkJson);
+            }
+            ocRefundOperateRecord.setRemark( JSON.toJSONString(remarkJsons));
+            ocRefundOperateRecordManager.update(ocRefundOperateRecord);
+            success = true;
+            message = String.format("备注成功!");
+        } else {
+            success = false;
+            message = String.format("[%s]-ID不存在记录!", id);
+        }
+        rt.put("success", success);
+        rt.put("message", message);
+        return rt;
+    }
+
+
+    @POST
+    @Produces("application/json;charset=utf-8")
+    @Path("/operate-records/delete")
+    @ApiOperation(value = "删除对退款操作日志备注", response = Map.class)
+    public Map<String, Object> delete(
+            @ApiParam(required = true,name = "id", value = "ID") @FormParam("id") String id) {
+
+        Logger.info(String.format("id:%s", id));
+        Map<String, Object> rt = new HashMap<>();
+
+        OcRefundOperateRecordManager ocRefundOperateRecordManager = OrderCatContext.getOcRefundOperateRecordManager();
+        boolean success;
+        String message;
+
+        Optional<OcRefundOperateRecord> o = ocRefundOperateRecordManager.stream()
+                .filter(OcRefundOperateRecordImpl.ID.equal(Long.valueOf(id)))
+                .findAny();
+        //com.alibaba.fastjson.JSONObject object = JSON.parseObject(jsonstr);
+
+        OcRefundOperateRecord ocRefundOperateRecord;
+        if (o.isPresent()) {
+            ocRefundOperateRecord = o.get();
+            ocRefundOperateRecord.setIsDelete((short) 1);
+
+            ocRefundOperateRecordManager.update(ocRefundOperateRecord);
+            success = true;
+            message = String.format("删除成功!");
+        } else {
+            success = false;
+            message = String.format("[%s]-ID不存在记录!", id);
+        }
+        rt.put("success", success);
+        rt.put("message", message);
+        return rt;
+    }
+
+
+
+    @POST
+    @Produces("application/json;charset=utf-8")
+    @Path("/operate-records/agreeTaobaoRpRefunds")
+    @ApiOperation(value = "批量同意退款", response = Map.class)
+    public Map<String, Object> agreeTaobaoRpRefunds(
+            @ApiParam(required = true,name = "refundInfos", value = "退款明细") @FormParam("refundInfos") String refundInfos,
+            @ApiParam(required = true,name = "sessionKey", value = "sessionKey") @FormParam("sessionKey") String sessionKey,
+            @ApiParam(required = true,name = "code", value = "短信验证码") @FormParam("code") String code) {
+
+        Logger.info(String.format("refundInfos:%s", refundInfos));
+        Logger.info(String.format("sessionKey:%s", sessionKey));
+        Logger.info(String.format("code:%s", code));
+        Map<String, Object> rt = new HashMap<>();
+
+        TaoBaoHttp taoBaoHttp = OrderCatContext.getTaoBaoHttp();
+        ReturnResult<RefundMappingResult> reto = taoBaoHttp.agreeTaobaoRpRefunds(refundInfos, sessionKey, code);
+        boolean success;
+        String message;
+        //com.alibaba.fastjson.JSONObject object = JSON.parseObject(jsonstr);
+        if (reto.isSuccess()) {
+            success = true;
+            message = String.format("退款成功!");
+        } else {
+            success = false;
+            message = String.format(reto.getErrorMessages());
+        }
+        rt.put("success", success);
+        rt.put("message", message);
         return rt;
     }
 

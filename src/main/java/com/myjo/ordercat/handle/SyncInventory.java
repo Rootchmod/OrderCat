@@ -529,17 +529,12 @@ public class SyncInventory {
             throw new OCException(String.format("宝贝[%s]-SKU[%s]的外部供应商编码为空!请检查!", String.valueOf(errorList.get(0).getNumIid()), String.valueOf(errorList.get(0).getSkuId())));
         }
 
-
         skus = skus.parallelStream()
                 //.filter(sku -> sku != null && sku.getOuterId() != null)
-                .filter(sku -> sku.getOuterId().indexOf("麦巨") == -1)
+                .filter(sku -> !OcStringUtils.judgeFilterOuterId(scriptEngine,sku.getOuterId()))
                 .collect(toList());
 
-        skus = skus.parallelStream()
-                .filter(sku -> sku.getOuterId().indexOf("临时") == -1)
-                .collect(toList());
-
-        Logger.info(String.format("SKU-list中过滤掉商家编码中有[ 麦巨 or 临时 ]的SKU:[%d]", skus.size()));
+        Logger.info(String.format("SKU-list中过滤掉不需要同步商家编码SKU.size:[%d]", skus.size()));
 
         return skus;
     }

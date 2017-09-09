@@ -1,10 +1,14 @@
 package com.myjo.ordercat
 
+import com.myjo.ordercat.config.OrderCatConfig
 import com.myjo.ordercat.utils.OcStringUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import javax.script.ScriptEngine
+import javax.script.ScriptEngineManager
 
 /**
  * Created by lee5hx on 17/4/20.
@@ -16,6 +20,7 @@ class OcStringUtilsSpec extends Specification {
 
 
     def setup() {
+
     }
 
     def println() {
@@ -31,6 +36,22 @@ class OcStringUtilsSpec extends Specification {
         then:
         dd == "805942-600"
         dd1 == "810506-011"
+
+    }
+
+
+    def "OcStringUtils.judgeFilterOuterId"() {
+        when:
+//脚本引擎
+        ScriptEngineManager m = new ScriptEngineManager();
+        ScriptEngine e = m.getEngineByName("nashorn");
+        e.eval(new FileReader(OrderCatConfig.getOrderCatScriptFilePath()));
+
+        def t1 = OcStringUtils.judgeFilterOuterId(e,"805942-600-36.5麦巨");
+        def t2 = OcStringUtils.judgeFilterOuterId(e,"805942-600-36.5");
+        then:
+        t1 == true
+        t2 == false
 
     }
 

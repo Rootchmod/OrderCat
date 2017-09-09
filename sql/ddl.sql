@@ -267,6 +267,8 @@ ALTER TABLE oc_refund_operate_record ADD COLUMN `refund_amount` varchar(255) NUL
 ALTER TABLE oc_refund_operate_record ADD COLUMN `refund_version` BIGINT NUll COMMENT '退款最后更新时间(时间戳格式)' NULL AFTER `company_name`;
 ALTER TABLE oc_refund_operate_record ADD COLUMN `refund_phase` varchar(255) NULL COMMENT '退款阶段(可选值为：onsale, aftersale，天猫退款必值，淘宝退款不需要传)' AFTER `company_name`;
 ALTER TABLE oc_refund_operate_record ADD COLUMN `is_latest` SMALLINT NULL COMMENT '是否为最新,1=最新，0=不是最新' AFTER `operate_result`;
+ALTER TABLE oc_refund_operate_record ADD COLUMN `remark` varchar(5000) NULL COMMENT '备注' AFTER `company_name`;
+ALTER TABLE oc_refund_operate_record ADD COLUMN `is_delete` SMALLINT NULL COMMENT '是否为最新,1=删除，0=未删除' AFTER `operate_result`;
 
 
 

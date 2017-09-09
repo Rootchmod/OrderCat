@@ -57,14 +57,16 @@ public abstract class GeneratedOcRefundOperateRecordSqlAdapter {
             entity.setReason(        resultSet.getString(6)                          );
             entity.setSid(           resultSet.getString(7)                          );
             entity.setCompanyName(   resultSet.getString(8)                          );
-            entity.setRefundPhase(   resultSet.getString(9)                          );
-            entity.setRefundVersion( getLong(resultSet, 10)                          );
-            entity.setRefundAmount(  resultSet.getString(11)                         );
-            entity.setOperateType(   resultSet.getString(12)                         );
-            entity.setOperateDetail( resultSet.getString(13)                         );
-            entity.setOperateResult( resultSet.getString(14)                         );
-            entity.setIsLatest(      getShort(resultSet, 15)                         );
-            entity.setAddTime(       addTimeHelper.apply(resultSet.getTimestamp(16)) );
+            entity.setRemark(        resultSet.getString(9)                          );
+            entity.setRefundPhase(   resultSet.getString(10)                         );
+            entity.setRefundVersion( getLong(resultSet, 11)                          );
+            entity.setRefundAmount(  resultSet.getString(12)                         );
+            entity.setOperateType(   resultSet.getString(13)                         );
+            entity.setOperateDetail( resultSet.getString(14)                         );
+            entity.setOperateResult( resultSet.getString(15)                         );
+            entity.setIsDelete(      getShort(resultSet, 16)                         );
+            entity.setIsLatest(      getShort(resultSet, 17)                         );
+            entity.setAddTime(       addTimeHelper.apply(resultSet.getTimestamp(18)) );
         } catch (final SQLException sqle) {
             throw new SpeedmentException(sqle);
         }

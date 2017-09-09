@@ -44,12 +44,14 @@ implements GeneratedOcRefundOperateRecordManager {
             OcRefundOperateRecord.REASON,
             OcRefundOperateRecord.SID,
             OcRefundOperateRecord.COMPANY_NAME,
+            OcRefundOperateRecord.REMARK,
             OcRefundOperateRecord.REFUND_PHASE,
             OcRefundOperateRecord.REFUND_VERSION,
             OcRefundOperateRecord.REFUND_AMOUNT,
             OcRefundOperateRecord.OPERATE_TYPE,
             OcRefundOperateRecord.OPERATE_DETAIL,
             OcRefundOperateRecord.OPERATE_RESULT,
+            OcRefundOperateRecord.IS_DELETE,
             OcRefundOperateRecord.IS_LATEST,
             OcRefundOperateRecord.ADD_TIME
         );

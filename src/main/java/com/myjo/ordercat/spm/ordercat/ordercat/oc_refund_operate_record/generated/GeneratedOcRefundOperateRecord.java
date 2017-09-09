@@ -124,6 +124,18 @@ public interface GeneratedOcRefundOperateRecord {
     );
     /**
      * This Field corresponds to the {@link OcRefundOperateRecord} field that
+     * can be obtained using the {@link OcRefundOperateRecord#getRemark()}
+     * method.
+     */
+    StringField<OcRefundOperateRecord, String> REMARK = StringField.create(
+        Identifier.REMARK,
+        o -> OptionalUtil.unwrap(o.getRemark()),
+        OcRefundOperateRecord::setRemark,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcRefundOperateRecord} field that
      * can be obtained using the {@link OcRefundOperateRecord#getRefundPhase()}
      * method.
      */
@@ -191,6 +203,18 @@ public interface GeneratedOcRefundOperateRecord {
         Identifier.OPERATE_RESULT,
         o -> OptionalUtil.unwrap(o.getOperateResult()),
         OcRefundOperateRecord::setOperateResult,
+        TypeMapper.identity(), 
+        false
+    );
+    /**
+     * This Field corresponds to the {@link OcRefundOperateRecord} field that
+     * can be obtained using the {@link OcRefundOperateRecord#getIsDelete()}
+     * method.
+     */
+    ComparableField<OcRefundOperateRecord, Short, Short> IS_DELETE = ComparableField.create(
+        Identifier.IS_DELETE,
+        o -> OptionalUtil.unwrap(o.getIsDelete()),
+        OcRefundOperateRecord::setIsDelete,
         TypeMapper.identity(), 
         false
     );
@@ -289,6 +313,15 @@ public interface GeneratedOcRefundOperateRecord {
     Optional<String> getCompanyName();
     
     /**
+     * Returns the remark of this OcRefundOperateRecord. The remark field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.remark.
+     * 
+     * @return the remark of this OcRefundOperateRecord
+     */
+    Optional<String> getRemark();
+    
+    /**
      * Returns the refundPhase of this OcRefundOperateRecord. The refundPhase
      * field corresponds to the database column
      * ordercat.ordercat.oc_refund_operate_record.refund_phase.
@@ -341,6 +374,15 @@ public interface GeneratedOcRefundOperateRecord {
      * @return the operateResult of this OcRefundOperateRecord
      */
     Optional<String> getOperateResult();
+    
+    /**
+     * Returns the isDelete of this OcRefundOperateRecord. The isDelete field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.is_delete.
+     * 
+     * @return the isDelete of this OcRefundOperateRecord
+     */
+    Optional<Short> getIsDelete();
     
     /**
      * Returns the isLatest of this OcRefundOperateRecord. The isLatest field
@@ -438,6 +480,16 @@ public interface GeneratedOcRefundOperateRecord {
     OcRefundOperateRecord setCompanyName(String companyName);
     
     /**
+     * Sets the remark of this OcRefundOperateRecord. The remark field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.remark.
+     * 
+     * @param remark to set of this OcRefundOperateRecord
+     * @return       this OcRefundOperateRecord instance
+     */
+    OcRefundOperateRecord setRemark(String remark);
+    
+    /**
      * Sets the refundPhase of this OcRefundOperateRecord. The refundPhase field
      * corresponds to the database column
      * ordercat.ordercat.oc_refund_operate_record.refund_phase.
@@ -498,6 +550,16 @@ public interface GeneratedOcRefundOperateRecord {
     OcRefundOperateRecord setOperateResult(String operateResult);
     
     /**
+     * Sets the isDelete of this OcRefundOperateRecord. The isDelete field
+     * corresponds to the database column
+     * ordercat.ordercat.oc_refund_operate_record.is_delete.
+     * 
+     * @param isDelete to set of this OcRefundOperateRecord
+     * @return         this OcRefundOperateRecord instance
+     */
+    OcRefundOperateRecord setIsDelete(Short isDelete);
+    
+    /**
      * Sets the isLatest of this OcRefundOperateRecord. The isLatest field
      * corresponds to the database column
      * ordercat.ordercat.oc_refund_operate_record.is_latest.
@@ -527,12 +589,14 @@ public interface GeneratedOcRefundOperateRecord {
         REASON         ("reason"),
         SID            ("sid"),
         COMPANY_NAME   ("company_name"),
+        REMARK         ("remark"),
         REFUND_PHASE   ("refund_phase"),
         REFUND_VERSION ("refund_version"),
         REFUND_AMOUNT  ("refund_amount"),
         OPERATE_TYPE   ("operate_type"),
         OPERATE_DETAIL ("operate_detail"),
         OPERATE_RESULT ("operate_result"),
+        IS_DELETE      ("is_delete"),
         IS_LATEST      ("is_latest"),
         ADD_TIME       ("add_time");
         

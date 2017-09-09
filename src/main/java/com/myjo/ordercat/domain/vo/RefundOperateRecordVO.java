@@ -18,6 +18,7 @@ public class RefundOperateRecordVO {
 
     private String operateType;
     private String operateResult;
+    private String remark;
 
 
     private String sid;
@@ -120,5 +121,13 @@ public class RefundOperateRecordVO {
 
     public void setOperateResult(String operateResult) {
         this.operateResult = operateResult;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

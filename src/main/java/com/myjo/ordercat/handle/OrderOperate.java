@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.myjo.ordercat.config.OrderCatConfig;
 import com.myjo.ordercat.domain.*;
+import com.myjo.ordercat.domain.constant.TianmaOrderStatus;
 import com.myjo.ordercat.domain.constant.TmOrderRecordStatus;
 import com.myjo.ordercat.domain.constant.TmOrderRecordType;
 import com.myjo.ordercat.exception.OCException;
@@ -223,8 +224,8 @@ public class OrderOperate {
         //下单
         String rt = tianmaSportHttp.orderBooking(requestMap);
         Logger.info(String.format("orderBooking下单-rt[%s}", rt));
-
-        PageResult<TianmaOrder> prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, null, String.valueOf(tid), null, 1, 10,null);
+        //查询待付款的天马订单
+        PageResult<TianmaOrder> prTmOrders = tianmaSportHttp.tradeOrderDataList(null, null, TianmaOrderStatus.WAITING_PAYMENT, String.valueOf(tid), null, 1, 10,null);
 
         if (prTmOrders.getTotal() > 1 || prTmOrders.getRows().size() > 1) {
             throw new OCException(String.format("淘宝订单[%d],在天马中的订单大于1.", tid));
@@ -579,7 +580,8 @@ public class OrderOperate {
             if (trade.getNum() > 1) {
                 throw new OCException(String.format("淘宝订单[%d].数量大于[1]不能进行下单.", tid));
             }
-            
+
+
             Long refundId =  trade.getOrders().get(0).getRefundId();
             if(refundId!=null){
                 throw new OCException(String.format("淘宝订单[%d].已经存在退款单[%d]不能进行下单.", tid,refundId));
@@ -588,6 +590,17 @@ public class OrderOperate {
 
             Order order = trade.getOrders().get(0);
             String outerSkuid = order.getOuterSkuId();
+
+
+            Logger.info("outerSkuid:" + outerSkuid);
+
+            if(OcStringUtils.judgeFilterOuterId(scriptEngine,outerSkuid)){
+                throw new OCException(String.format("淘宝订单[%d],外部供应商编码中包含非下单字符[%s].",tid,outerSkuid));
+            }
+
+
+
+
             Logger.info(String.format("autoOrder-tborder-outerSkuid=[%s]", outerSkuid));
             String articleno = OcStringUtils.getGoodsNoByOuterId(outerSkuid);
             ocTmOrderRecords.setGoodsNo(articleno);
@@ -597,9 +610,7 @@ public class OrderOperate {
             Logger.info(String.format("autoOrder-tborder-size=[%s]", size));
 
 
-            if(size.indexOf("麦巨")>-1){
-                throw new OCException(String.format("淘宝订单[%d],货号中存在[麦巨].", tid));
-            }
+
 
             if (OrderCatConfig.isBuyerMessageCheck() && trade.getBuyerMessage() != null) {
                 throw new OCException(String.format("淘宝订单[%d],存在买家留言[%s],不能自动下单.", tid, trade.getBuyerMessage()));
@@ -695,6 +706,44 @@ public class OrderOperate {
         ocTmOrderRecords.setAddTime(LocalDateTime.now());
         ocTmOrderRecordsManager.persist(ocTmOrderRecords);
         return ocTmOrderRecords;
+    }
+
+    /**
+     * 补单
+     * @param execJobId
+     * @throws Exception
+     */
+    public void repairOrder(Long execJobId) throws Exception{
+
+        //1.获取天马最近2天内已退款订单
+        //todo
+
+
+        //2.获取退款订单详细信息
+        //  付款时间距离当前时间24小时以内，订单备注为OC自动下单
+        //  符合条件则获取订单编号进行下一步，不符合则过滤。
+        //todo
+
+        //3.获取根据获取到的订单编号进行天马再次查询
+        //(防止有人工补单的特殊情况)
+        //全部订单——输入订单编号——点击查询
+        //如果只有1笔订单则进行下一步，如果有2笔及2笔以上订单则过滤。
+        //todo
+
+
+        // 4.获取根据获取到的订单编号进行天猫查询
+        // 如果天猫订单为买家已付款，订单处为绿旗，备注OC下单成功
+        // 则进行下一步，否则过滤。
+        //todo
+
+
+
+
+
+
+
+
+
     }
 
     public void setOcTmOrderRecordsManager(OcTmOrderRecordsManager ocTmOrderRecordsManager) {

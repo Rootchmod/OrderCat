@@ -403,6 +403,7 @@ public class RefundOperate {
                     refundOperateRecord1.setRefundVersion(refundOperateRecord.getRefundVersion());
                     refundOperateRecord1.setRefundPhase(refundOperateRecord.getRefundPhase());
                     refundOperateRecord1.setIsLatest((short) 1);
+                    refundOperateRecord1.setIsDelete((short) 0);
                     refundOperateRecord1.setAddTime(LocalDateTime.now());
 
                     ocRefundOperateRecordManager.persist(refundOperateRecord1);
