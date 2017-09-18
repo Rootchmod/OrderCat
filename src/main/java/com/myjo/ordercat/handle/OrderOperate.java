@@ -971,6 +971,7 @@ public class OrderOperate {
                 ocTmRepairOrderRecord.setRoWhProxyPrice(repairOrderRecord.getRoWhProxyPrice());
                 ocTmRepairOrderRecord.setRoWhName(repairOrderRecord.getRoWhName());
                 ocTmRepairOrderRecord.setRoWhUpdateTime(repairOrderRecord.getRoWhUpdateTime());
+                ocTmRepairOrderRecord.setRoTmSkuId(repairOrderRecord.getRoTmSkuId());
 
                 ocTmRepairOrderRecordsManager.persist(ocTmRepairOrderRecord);
             }

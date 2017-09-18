@@ -446,7 +446,7 @@ public class Main {
 
 
             //RepairOrderJob
-            JobDetail job8 = newJob(AutoRefundOperateJob.class)
+            JobDetail job8 = newJob(RepairOrderJob.class)
                     .usingJobData(map1)
                     .withIdentity(JobName.REPAIR_ORDER_JOB.getValue(), "myjo")
                     .build();
