@@ -118,7 +118,7 @@ class TaoBaoSpec extends Specification {
 //        System.out.println(d.get().getTitle());
 //        System.out.println(d.get().getIsDaixiao());
 //
-        def d2 = taoBaoHttp.getTaobaoTradeFullInfo(15052418593145554l)
+        def d2 = taoBaoHttp.getTaobaoTradeFullInfo(58406291823922807l)
         System.out.println(d2.get().getType());
         System.out.println(d2.get().getTitle());
         System.out.println(d2.get().getIsDaixiao());
@@ -126,11 +126,11 @@ class TaoBaoSpec extends Specification {
 
 
 
-        def d1 = taoBaoHttp.getTaobaoTradeFullInfo(37432170161898885l)
-        System.out.println(d1.get().getType());
-        System.out.println(d1.get().getTitle());
-        System.out.println(d1.get().getIsDaixiao());
-        System.out.println(d1.get().getNum());
+//        def d1 = taoBaoHttp.getTaobaoTradeFullInfo(37432170161898885l)
+//        System.out.println(d1.get().getType());
+//        System.out.println(d1.get().getTitle());
+//        System.out.println(d1.get().getIsDaixiao());
+//        System.out.println(d1.get().getNum());
         then:
         "ok" == "ok"
     }

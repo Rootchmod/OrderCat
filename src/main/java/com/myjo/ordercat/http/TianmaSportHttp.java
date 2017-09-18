@@ -567,6 +567,8 @@ public class TianmaSportHttp {
                 tianmaOrder.setMarketPrice(order.get("market_price").toString());
                 tianmaOrder.setDiscount(order.get("discount").toString());
                 tianmaOrder.setTid(String.valueOf(order.getInt("tid")));
+                tianmaOrder.setTradeRemark(order.get("trade_remark").toString());
+
                 orders.add(tianmaOrder);
 
             }
@@ -621,6 +623,55 @@ public class TianmaSportHttp {
         } else {
             throw new OCException("天马地址区域查询失败:" + code);
         }
+        return list;
+    }
+
+
+
+    public List<TmOrderDetail> getOrderDetailsById(String id) {
+        Logger.debug("http tm-sport getOrderDetailsById:" + id);
+
+        List<TmOrderDetail> list = new ArrayList<>();
+        try{
+            HttpResponse<JsonNode> response = Unirest.post(String.format(OrderCatConfig.getTradeOrdersGetIdHttpUrl()))
+                    .header("Host", OrderCatConfig.getTianmaSportHost())
+                    .header("Connection", "keep-alive")
+                    .header("Upgrade-Insecure-Requests", "1")
+                    .header("User-Agent", USER_AGENT)
+                    .header("Accept", "application/json, text/javascript, */*; q=0.01")
+                    .header("Referer", "http://www.tianmasport.com/ms/tradeOrders/myorder_list.shtml")
+                    .header("Accept-Encoding", "gzip, deflate, sdch")
+                    .header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .field("id",id)
+                    .asJson();
+            int code = response.getStatus();
+            if (code == 200) {
+                JSONObject rt = response.getBody().getObject();
+                org.json.JSONArray rows = rt.getJSONArray("data");
+                TmOrderDetail tmOrderDetail;
+                JSONObject area;
+                for (int i = 0; i < rows.length(); i++) {
+                    area = rows.getJSONObject(i);
+                    tmOrderDetail = new TmOrderDetail();
+                    tmOrderDetail.setSysuser(area.get("sysUser").toString());
+                    tmOrderDetail.setId(area.getLong("id"));
+                    tmOrderDetail.setBeforestatus(area.get("beforeStatus").toString());
+                    tmOrderDetail.setDealdate(area.get("dealDate").toString());
+                    tmOrderDetail.setOrderid(area.getLong("orderId"));
+                    tmOrderDetail.setDealdescr(area.get("dealDescr").toString());
+
+                    list.add(tmOrderDetail);
+                }
+
+
+            } else {
+                throw new OCException("订单详情查询失败:" + code);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return list;
     }
 

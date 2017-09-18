@@ -2,14 +2,18 @@ package com.myjo.ordercat
 
 import com.alibaba.fastjson.JSON
 import com.myjo.ordercat.config.OrderCatConfig
+import com.myjo.ordercat.domain.constant.JobName
 import com.myjo.ordercat.exception.OCException
 import com.myjo.ordercat.handle.ExecuteHandle
 import com.myjo.ordercat.handle.OrderOperate
+import com.myjo.ordercat.handle.RepairOrderHandle
 import com.myjo.ordercat.http.TaoBaoHttp
 import com.myjo.ordercat.http.TianmaSportHttp
 import com.myjo.ordercat.spm.OrdercatApplication
 import com.myjo.ordercat.spm.OrdercatApplicationBuilder
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_job_exec_info.OcJobExecInfoManager
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_repair_order_records.OcTmRepairOrderRecordsManager
 import com.myjo.ordercat.utils.OcDateTimeUtils
 import com.myjo.ordercat.utils.OcEncryptionUtils
 import org.apache.commons.io.FileUtils
@@ -52,13 +56,27 @@ class OrderOperateSpec extends Specification {
 
 
         OcTmOrderRecordsManager ocTmOrderRecordsManager = app.getOrThrow(OcTmOrderRecordsManager.class);
+        OcJobExecInfoManager ocJobExecInfoManager = app.getOrThrow(OcJobExecInfoManager.class);
+        OcTmRepairOrderRecordsManager ocTmRepairOrderRecordsManager = app.getOrThrow(OcTmRepairOrderRecordsManager.class);
+
 
         tianmaSportHttp.getVerifyCodeImage();
 
         String vcode = "1111";
 
-        orderOperate = new OrderOperate(tianmaSportHttp, taoBaoHttp, e);
+        orderOperate = new OrderOperate(tianmaSportHttp, taoBaoHttp, e)
         orderOperate.setOcTmOrderRecordsManager(ocTmOrderRecordsManager)
+        orderOperate.setOcTmRepairOrderRecordsManager(ocTmRepairOrderRecordsManager)
+
+
+        eh = new RepairOrderHandle(orderOperate);
+        eh.setJobName(JobName.REPAIR_ORDER_JOB.getValue());
+        eh.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
+
+
+
 
         //Logger.error("test1", new Exception("11111"));
         tianmaSportHttp.login(vcode);
@@ -68,12 +86,28 @@ class OrderOperateSpec extends Specification {
 
     }
 
+    def "repairOrder"() {//36073288294561388,30704141463704213
+        when:
+        eh.exec();
+        then:
+        "ok" == "ok";
+    }
+
     def "autoOrder"() {//36073288294561388,30704141463704213
         when:
         orderOperate.autoOrder(14078118090179836l, "c01");
         then:
         "ok" == "ok";
     }
+
+
+
+//    def "autoOrder"() {//36073288294561388,30704141463704213
+//        when:
+//        orderOperate.autoOrder(14078118090179836l, "c01");
+//        then:
+//        "ok" == "ok";
+//    }
 
 //    /**
 //     * Common

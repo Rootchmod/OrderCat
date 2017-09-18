@@ -26,6 +26,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefund
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sales_info.OcSalesInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_sync_inventory_item_info.OcSyncInventoryItemInfoManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_repair_order_records.OcTmRepairOrderRecordsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
 import com.myjo.ordercat.utils.OcEncryptionUtils;
@@ -85,7 +86,7 @@ public class Main {
                 .withConnectionUrl(OrderCatConfig.getDBmsName(), OrderCatConfig.getDBConnectionUrl())
                 .withUsername(OrderCatConfig.getDBUsername())
                 .withPassword(OcEncryptionUtils.base64Decoder(OrderCatConfig.getDBPassword(), 5))
-                .withLogging(ApplicationBuilder.LogType.STREAM)
+                //.withLogging(ApplicationBuilder.LogType.STREAM)
                 //.withLogging(ApplicationBuilder.LogType.STREAM_OPTIMIZER)
                 //.withLogging(ApplicationBuilder.LogType.CONNECTION)
                 //.withParam("connectionpool.maxAge", "8000")
@@ -109,6 +110,7 @@ public class Main {
         OcTmOrderRecordsManager ocTmOrderRecordsManager = app.getOrThrow(OcTmOrderRecordsManager.class);
         OcRefundOperateRecordManager ocRefundOperateRecordManager = app.getOrThrow(OcRefundOperateRecordManager.class);
         OcParamsManager ocParamsManager = app.getOrThrow(OcParamsManager.class);
+        OcTmRepairOrderRecordsManager ocTmRepairOrderRecordsManager = app.getOrThrow(OcTmRepairOrderRecordsManager.class);
 
 
         OrderCatContext.setOcFenxiaoCheckResultManager(ocFenxiaoCheckResultManager);
@@ -118,6 +120,7 @@ public class Main {
         OrderCatContext.setOcWarehouseInfoManager(ocWarehouseInfoManager);
         OrderCatContext.setOcRefundOperateRecordManager(ocRefundOperateRecordManager);
         OrderCatContext.setOcParamsManager(ocParamsManager);
+        OrderCatContext.setOcTmRepairOrderRecordsManager(ocTmRepairOrderRecordsManager);
 
 
         Logger.info("初始化[speedment]-完成.");
@@ -166,6 +169,7 @@ public class Main {
 
         OrderOperate orderOperate = new OrderOperate(tianmaSportHttp, taoBaoHttp, e);
         orderOperate.setOcTmOrderRecordsManager(ocTmOrderRecordsManager);
+        orderOperate.setOcTmRepairOrderRecordsManager(ocTmRepairOrderRecordsManager);
         orderOperate.setOcParamsManager(ocParamsManager);
         OrderCatContext.setOrderOperate(orderOperate);
 
@@ -224,6 +228,12 @@ public class Main {
         eh6.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
+        ExecuteHandle eh7;
+        eh7 = new RepairOrderHandle(orderOperate);
+        eh7.setJobName(JobName.REPAIR_ORDER_JOB.getValue());
+        eh7.setOcJobExecInfoManager(ocJobExecInfoManager);
+
+
         if (action.equals(JobName.SYNC_SALES_INFO_JOB.getValue())) {
             eh2.exec();
         } else if (action.equals(JobName.SYNC_WAREHOUSE_JOB.getValue())) {
@@ -236,6 +246,8 @@ public class Main {
             eh4.exec();
         } else if (action.equals(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue())) {
             eh5.exec();
+        } else if (action.equals(JobName.REPAIR_ORDER_JOB.getValue())) {
+            eh7.exec();
         } else if (action.equals(JobName.AUTO_REFUND_JOB.getValue())) {
             eh6.exec();
         } else if (action.equals("order_robot")) {
@@ -302,14 +314,6 @@ public class Main {
 
             Logger.info(String.format("Consumer-[%s] Started", consumerId));
         } else if (action.equals("test111")) {
-//            Refund refund = taoBaoHttp.getRefundById(2857828327578887l);
-//            ReturnResult<RefundMappingResult> rr = taoBaoHttp.agreeTaobaoRpRefunds(refund.getRefundId(), refund.getRefundFee(), refund.getRefundVersion(), refund.getRefundPhase(),"6202414bb1a378e511ef85ZZ2e63d0bab5222183461a3b61943914886");
-//
-//            if (rr.isSuccess()) {
-//                System.out.println(rr.getResult().get().getMessage());
-//            } else {
-//                System.out.println(rr.getErrorCode() + ":" + rr.getErrorMessages());
-//            }
 
         } else if (action.equals("start")) {
 
@@ -329,7 +333,7 @@ public class Main {
             SchedulerFactory sf = new StdSchedulerFactory();
             Scheduler sched = sf.getScheduler();
 
-            //SyncWarehouseJob
+            //init JobDataMap data
             JobDataMap map1 = new JobDataMap();
             map1.put("SyncWarehouseHandle", eh);
             map1.put("SyncTaoBaoInventoryHandle", eh1);
@@ -339,6 +343,7 @@ public class Main {
             map1.put("TianmaAcHandle", eh5);
             map1.put("TianmaSportHttp", tianmaSportHttp);
             map1.put("RefundOperateHandle", eh6);
+            map1.put("RepairOrderHandle", eh7);
 
 
             JobDetail job = newJob(SyncWarehouseJob.class)
@@ -438,6 +443,20 @@ public class Main {
                     .withSchedule(cronSchedule(OrderCatConfig.getAutoRefundOperateJobTriggerCron()))
                     .build();
             sched.scheduleJob(job7, trigger7);
+
+
+            //RepairOrderJob
+            JobDetail job8 = newJob(AutoRefundOperateJob.class)
+                    .usingJobData(map1)
+                    .withIdentity(JobName.REPAIR_ORDER_JOB.getValue(), "myjo")
+                    .build();
+
+            CronTrigger trigger8 = newTrigger()
+                    .withIdentity(JobName.REPAIR_ORDER_JOB.getValue() + "Trigger", "myjo")
+                    .withSchedule(cronSchedule(OrderCatConfig.getRepairOrderJobTriggerCron()))
+                    .build();
+            sched.scheduleJob(job8, trigger8);
+
 
 
             sched.start();

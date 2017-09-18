@@ -9,6 +9,7 @@ public enum JobName {
     //FENXIAO_ACCOUNT_CHECK_JOB("FenxiaoAccountCheckJob"),
     AS_REFUND_ACCOUNT_CHECK_JOB("AsRefundAccountCheckJob"),
     AUTO_REFUND_JOB("AutoRefundJob"),
+    REPAIR_ORDER_JOB("RepairOrderJob"),
     TIANMA_ACCOUNT_CHECK_JOB("TianmaAccountCheckJob");
 
     private String v;

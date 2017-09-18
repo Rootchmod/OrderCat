@@ -751,7 +751,7 @@ public class TaoBaoHttp {
         Trade trade = null;
         TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
         TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
-        req.setFields("tid,type,status,num,payment,orders,receiver_name,receiver_state,receiver_address,receiver_zip,receiver_mobile,receiver_phone,received_payment,receiver_city,receiver_district,buyer_message,is_daixiao,orders.refund_id");
+        req.setFields("tid,type,seller_memo,seller_flag,status,num,payment,orders,receiver_name,receiver_state,receiver_address,receiver_zip,receiver_mobile,receiver_phone,received_payment,receiver_city,receiver_district,buyer_message,is_daixiao,orders.refund_id");
         req.setTid(tid);
         try {
             TradeFullinfoGetResponse rsp = client.execute(req, OrderCatConfig.getTaobaoApiSessionKey());
@@ -781,6 +781,26 @@ public class TaoBaoHttp {
             Logger.error(e);
         }
     }
+
+    public void updateTradeMemo(long tid, String memo, long flag) {
+
+        TaobaoClient client = new DefaultTaobaoClient(OrderCatConfig.getTaobaoApiUrl(), OrderCatConfig.getTaobaoApiAppKey(), OrderCatConfig.getTaobaoApiAppSecret());
+        TradeMemoUpdateRequest req = new TradeMemoUpdateRequest();
+        req.setTid(tid);
+        req.setMemo(memo);
+        req.setFlag(flag);
+        req.setReset(false);
+        try {
+            TradeMemoUpdateResponse rsp = client.execute(req,  OrderCatConfig.getTaobaoApiSessionKey());
+            if (rsp.isSuccess()) {
+                Logger.info(rsp.getBody());
+            }
+        } catch (Exception e) {
+            Logger.error(e);
+        }
+    }
+
+
 
     /**
      * taobao.rp.refunds.agree (同意退款)

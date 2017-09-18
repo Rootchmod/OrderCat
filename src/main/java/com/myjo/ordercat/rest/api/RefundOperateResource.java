@@ -62,8 +62,8 @@ public class RefundOperateResource {
                     refundOperateRecordVO.setCompanyName(refundOperateRecord.getCompanyName().orElse(""));
                     refundOperateRecordVO.setSid(refundOperateRecord.getSid().orElse(""));
                     refundOperateRecordVO.setIsDaixiao(refundOperateRecord.getIsDaixiao().orElse(null));
-                    refundOperateRecordVO.setTid(refundOperateRecord.getTid().orElse(0l));
-                    refundOperateRecordVO.setRefundId(refundOperateRecord.getRefundId().orElse(0l));
+                    refundOperateRecordVO.setTid(String.valueOf(refundOperateRecord.getTid().orElse(0l)));
+                    refundOperateRecordVO.setRefundId(String.valueOf(refundOperateRecord.getRefundId().orElse(0l)));
                     refundOperateRecordVO.setReason(refundOperateRecord.getReason().orElse(""));
                     refundOperateRecordVO.setStatus(refundOperateRecord.getStatus().orElse(""));
                     refundOperateRecordVO.setOperateDetail(refundOperateRecord.getOperateDetail().orElse(""));
@@ -85,7 +85,7 @@ public class RefundOperateResource {
     @ApiOperation(value = "获取自动退款操作日志", response = PageResult.class)
     public Map<String, Object> operateRecords(
             @ApiParam(name = "refundId", value = "退款ID") @QueryParam(value = "refundId") String refundId,
-            @ApiParam(name = "operateType", value = "退款ID") @QueryParam(value = "operateType") String operateType,
+            @ApiParam(name = "operateType", value = "操作类型") @QueryParam(value = "operateType") String operateType,
             @ApiParam(required = true, name = "page_size", value = "分页大小") @QueryParam("page_size") int page_size,
             @ApiParam(required = true, name = "page", value = "当前页") @QueryParam("page") int page
     ) {
@@ -105,11 +105,11 @@ public class RefundOperateResource {
 
 
         if (refundId != null) {
-            predicateList.add(OcRefundOperateRecordImpl.REFUND_ID.greaterOrEqual(Long.valueOf(refundId)));
+            predicateList.add(OcRefundOperateRecordImpl.REFUND_ID.equal(Long.valueOf(refundId)));
         }
 
         if (operateType != null) {
-            predicateList.add(OcRefundOperateRecordImpl.OPERATE_TYPE.greaterOrEqual(operateType));
+            predicateList.add(OcRefundOperateRecordImpl.OPERATE_TYPE.equal(operateType));
         }
 
         Predicate<OcRefundOperateRecord> p1 = null;
@@ -160,8 +160,8 @@ public class RefundOperateResource {
                     refundOperateRecordVO.setCompanyName(refundOperateRecord.getCompanyName().orElse(""));
                     refundOperateRecordVO.setSid(refundOperateRecord.getSid().orElse(""));
                     refundOperateRecordVO.setIsDaixiao(refundOperateRecord.getIsDaixiao().orElse(null));
-                    refundOperateRecordVO.setTid(refundOperateRecord.getTid().orElse(0l));
-                    refundOperateRecordVO.setRefundId(refundOperateRecord.getRefundId().orElse(0l));
+                    refundOperateRecordVO.setTid(String.valueOf(refundOperateRecord.getTid().orElse(0l)));
+                    refundOperateRecordVO.setRefundId(String.valueOf(refundOperateRecord.getRefundId().orElse(0l)));
                     refundOperateRecordVO.setReason(refundOperateRecord.getReason().orElse(""));
                     refundOperateRecordVO.setStatus(refundOperateRecord.getStatus().orElse(""));
                     refundOperateRecordVO.setOperateDetail(refundOperateRecord.getOperateDetail().orElse(""));

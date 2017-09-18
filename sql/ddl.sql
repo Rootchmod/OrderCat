@@ -284,3 +284,43 @@ CREATE TABLE `oc_params` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='参数表';
 
 
+
+DROP TABLE IF EXISTS oc_tm_repair_order_records;
+CREATE TABLE `oc_tm_repair_order_records` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `outer_order_id` varchar(255) NULL COMMENT '淘宝订单ID',
+  `pct_tm_order_id` varchar(255) NULL COMMENT '天马订单(原)',
+  `ptc_odeal_descr` varchar(255) NULL COMMENT '待付款描述(原)',
+  `ptc_odeal_date` timestamp NULL DEFAULT NULL COMMENT '待付款时间(原)',
+  `ptc_tm_trade_remark` varchar(3000) NULL COMMENT '天马订单备注(原)',
+  `goodsNo` varchar(255) NULL COMMENT '商品货号',
+  `size1` varchar(255) NULL COMMENT '尺码1',
+  `size2` varchar(255) NULL COMMENT '尺码2',
+  `ptc_order_status` varchar(255) NULL COMMENT '订单状态(原)',
+  `customer_name` varchar(255) NULL COMMENT '客户名称',
+  `pay_price` decimal(25,10)  COMMENT '支付金额',
+  `ptc_mwh_id` int(11) DEFAULT NULL COMMENT '订单下单仓库ID(原)',
+  `ptc_mwh_name` varchar(255) DEFAULT NULL COMMENT '订单下单仓库名称(原)',
+  `ro_wh_snapshot_data` TEXT COMMENT '补单时下单仓库快照',
+  `ro_tm_size_info_str` varchar (3000) COMMENT '补单时天马尺码于SKU对应关系',
+  `ro_tm_sku_id` varchar(255) NULL COMMENT '天马SKU_ID',
+  `ro_wh_id` int(11) DEFAULT NULL COMMENT '下单仓库',
+  `ro_wh_name` varchar(255) DEFAULT NULL COMMENT '下单仓库名称',
+  `ro_wh_pick_rate` int(11) DEFAULT NULL COMMENT '下单仓库配货率,单位:百分比',
+  `ro_wh_proxy_price` decimal(25,10) DEFAULT NULL COMMENT '下单仓库价格',
+  `ro_wh_update_time` timestamp NULL DEFAULT NULL COMMENT '下单仓库库存更新时间',
+  `ro_wh_inventory_count` int(11) NULL DEFAULT NULL COMMENT '下单仓库库存数',
+  `ro_freight_price_str` varchar(255) COMMENT '运费',
+  `ro_status` varchar(255)  COMMENT '下单状态：成功或失败',
+  `ro_order_info` TEXT COMMENT '订单信息-json',
+  `ro_tm_order_id` varchar(255) NULL COMMENT '天马订单(原)',
+  `ro_fail_cause` TEXT COMMENT '失败原因',
+  `ro_break_even_price` decimal(25,10)  COMMENT '保本价(自动机器下单时，才会有数据)',
+  `add_time` timestamp NOT NULL COMMENT '下单时间',
+  PRIMARY KEY (`id`),
+  KEY `IDX_OUTER_ORDER_ID` (`outer_order_id`),
+  KEY `IDX_RO_STATUS` (`ro_status`),
+  KEY `IDX_ADD_TIME` (`add_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='补单记录表';
+
+

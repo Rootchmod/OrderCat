@@ -236,6 +236,30 @@ class TianmaSportHttpSpec extends Specification {
     }
 
 
+    def "getOrderDetailsById"(){
+        when:
+        //    id:23783596
+//    problemType:无理由退货
+//    proxyId:147424
+//    wareHouseName:天马总仓1仓
+//    marketPrice:599
+//    discount:5.8
+//    problemContent:OC-售后
+//    delivery:顺丰标快
+//    mapPath:
+
+        def rt = tianmaSportHttp.getOrderDetailsById("10000000")
+        System.out.println(rt)
+
+        then:
+        "ok" == "ok"
+
+    }
+
+
+
+
+
 
 
 

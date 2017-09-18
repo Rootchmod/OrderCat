@@ -16,6 +16,9 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParamsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsImpl;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_repair_order_records.OcTmRepairOrderRecords;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_repair_order_records.OcTmRepairOrderRecordsImpl;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_repair_order_records.OcTmRepairOrderRecordsManager;
 import com.myjo.ordercat.utils.*;
 import com.taobao.api.domain.Order;
 import com.taobao.api.domain.Trade;
@@ -43,6 +46,8 @@ public class OrderOperate {
     private TaoBaoHttp taoBaoHttp;
 
     private OcTmOrderRecordsManager ocTmOrderRecordsManager;
+
+    private OcTmRepairOrderRecordsManager ocTmRepairOrderRecordsManager;
 
     private OcParamsManager ocParamsManager;
 
@@ -88,7 +93,8 @@ public class OrderOperate {
             Map<String, Object> anrtMap,
             String wareHouseId,
             String payPwd1,
-            OcTmOrderRecords ocTmOrderRecords
+            String remark
+            //OcTmOrderRecords ocTmOrderRecords
     ) throws Exception {
         Map<String, String> requestMap = new HashMap<>();
 
@@ -115,7 +121,7 @@ public class OrderOperate {
         requestMap.put("recv_tel", trade.getReceiverPhone());
         requestMap.put("zipcode", trade.getReceiverZip());
         requestMap.put("recv_address", trade.getReceiverAddress());
-        requestMap.put("remark", "OC自动下单");
+        requestMap.put("remark", remark);
         requestMap.put("province", trade.getReceiverState());
         requestMap.put("city", trade.getReceiverCity());
         requestMap.put("area", trade.getReceiverDistrict());
@@ -200,7 +206,8 @@ public class OrderOperate {
             throw new OCException(String.format("淘宝订单[%d]的,没有选择出快递公司,在天马中没有选择出快递公司.", tid));
         }
 
-        ocTmOrderRecords.setFreightPriceStr(express);
+        //ocTmOrderRecords.setFreightPriceStr(express);
+        requestMap.put("FreightPriceStr",express);
 
         StringBuilder jsonStr = new StringBuilder();
 
@@ -235,7 +242,8 @@ public class OrderOperate {
         //天马的订单ID
         String orderId = prTmOrders.getRows().get(0).getOrderId();
 
-        ocTmOrderRecords.setTmOrderId(orderId);
+       //ocTmOrderRecords.setTmOrderId(orderId);
+        requestMap.put("TmOrderId",orderId);
 
         tianmaSportHttp.updataBalance(payTid, payPwd1);
 
@@ -298,10 +306,10 @@ public class OrderOperate {
     ) {
         ComputeWarehouseResult rt = null;
 
-        jsonObjectList = jsonObjectList
-                .parallelStream()
-                .filter(jsonObject -> breakEvenPrice.compareTo(jsonObject.getBigDecimal("proxyPrice")) >= 0).collect(Collectors.toList());
-        Logger.info(String.format("过滤掉大于保本价的仓库信息.size[%d].", jsonObjectList.size()));
+//        jsonObjectList = jsonObjectList
+//                .parallelStream()
+//                .filter(jsonObject -> breakEvenPrice.compareTo(jsonObject.getBigDecimal("proxyPrice")) >= 0).collect(Collectors.toList());
+//        Logger.info(String.format("过滤掉大于保本价的仓库信息.size[%d].", jsonObjectList.size()));
 
 
         //根据付款金额计算保本价格
@@ -535,6 +543,141 @@ public class OrderOperate {
         return Optional.ofNullable(rt);
     }
 
+
+
+    public Optional<ComputeWarehouseResult> computeRoWarehouseId(
+            RepairOrderRecord repairOrderRecord,
+            BigDecimal breakEvenPrice
+    ){
+
+
+        List<com.alibaba.fastjson.JSONObject> jsonObjectList = repairOrderRecord.getRoWhSnapshotData();
+        String tmSkuId = repairOrderRecord.getRoTmSkuId();
+        LocalDateTime nowDate = repairOrderRecord.getNowDateTime();
+
+
+
+        ComputeWarehouseResult rt = null;
+        //根据付款金额计算保本价格
+        Logger.info(String.format("保本价格[%s].", breakEvenPrice.toPlainString()));
+        //过滤掉大于保本价的仓库信息
+        jsonObjectList = jsonObjectList
+                .parallelStream()
+                .filter(jsonObject -> breakEvenPrice.compareTo(jsonObject.getBigDecimal("proxyPrice")) >= 0).collect(Collectors.toList());
+        Logger.info(String.format("过滤掉大于保本价的仓库信息.size[%d].", jsonObjectList.size()));
+        //过滤掉不存在改尺码的仓库信息
+        jsonObjectList = jsonObjectList
+                .parallelStream()
+                .filter(jsonObject -> jsonObject.get(tmSkuId) != null).collect(Collectors.toList());
+        Logger.info(String.format("过滤掉不存在的尺码的仓库信息.size[%d].", jsonObjectList.size()));
+
+
+
+        //屏蔽指定仓库
+        List<ShieldWhPolicy> shieldWareHousePolicylist = OrderCatConfig.getRoShieldWareHousePolicy();
+        for (ShieldWhPolicy shieldWhPolicy : shieldWareHousePolicylist) {
+            Logger.info(String.format("正在查看是否包含屏蔽的仓库-[%s-%s]", shieldWhPolicy.getWarehouseId(), shieldWhPolicy.getWarehouseName()));
+            jsonObjectList = jsonObjectList.parallelStream()
+                    .filter(jsonObject -> !jsonObject.getString("wareHouseID").equals(shieldWhPolicy.getWarehouseId()))
+                    .collect(Collectors.toList());
+        }
+        Logger.info(String.format("屏蔽指定仓库.size[%d].", jsonObjectList.size()));
+
+
+        //删除配货率低于及基础线的直接删除掉  默认50
+        BigDecimal opPrtdl = new BigDecimal(OrderCatConfig.getRoPickRateLessThanDelLimit());
+        jsonObjectList = jsonObjectList.parallelStream().
+                filter(jsonObject -> OcLcUtils.getPickRate(jsonObject.getString("pickRate")).compareTo(opPrtdl) == 1)
+                .collect(Collectors.toList());
+
+
+        Logger.info(String.format("配货率低于[%d]百分比,进行删除.size:%d", OrderCatConfig.getOpPickRateLessThanDelLimit(), jsonObjectList.size()));
+
+
+        for (PickRateDelCondition pickRateDelCondition : OrderCatConfig.getRoPickRateDelConditions()) {
+            Logger.info(String.format("配货率在[%d]-[%d]百分比,并且库存小于等于[%d]进行删除.",
+                    pickRateDelCondition.getLlPickRate(),
+                    pickRateDelCondition.getUlPickRate(),
+                    pickRateDelCondition.getRepertory()));
+
+            jsonObjectList = jsonObjectList.parallelStream().
+                    filter(jsonObject -> filterPickRate(jsonObject, pickRateDelCondition, tmSkuId))
+                    .collect(Collectors.toList());
+
+            Logger.info(String.format("配货率在[%d]-[%d]百分比,并且库存小于等于[%d],进行删除后的记录数为:[%d]",
+                    pickRateDelCondition.getLlPickRate(),
+                    pickRateDelCondition.getUlPickRate(),
+                    pickRateDelCondition.getRepertory(),
+                    jsonObjectList.size()));
+        }
+
+
+        List<com.alibaba.fastjson.JSONObject> weekJsonObjectList = null;
+
+        //如果下单时间为周五4:00-周六4:00，则过滤周六周日不发货仓库
+        if (nowDate.getDayOfWeek() == DayOfWeek.FRIDAY && nowDate.getHour() >= 4) {
+            weekJsonObjectList = jsonObjectList.parallelStream()
+                    .filter(jsonObject -> {
+                        int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
+                        return pickDate != 0;
+                    }).collect(Collectors.toList());
+            Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "FRIDAY", weekJsonObjectList.size()));
+        }
+        if (nowDate.getDayOfWeek() == DayOfWeek.SATURDAY && nowDate.getHour() < 4) {
+            weekJsonObjectList = jsonObjectList.parallelStream()
+                    .filter(jsonObject -> {
+                        int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
+                        return pickDate != 0;
+                    }).collect(Collectors.toList());
+            Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "SATURDAY", weekJsonObjectList.size()));
+        }
+
+        //如果下单时间为周六4:00-周日4:00，则过滤周日不发货仓库
+        if (nowDate.getDayOfWeek() == DayOfWeek.SATURDAY && nowDate.getHour() >= 4) {
+            weekJsonObjectList = jsonObjectList.parallelStream()
+                    .filter(jsonObject -> {
+                        int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
+                        return pickDate == 2;
+                    }).collect(Collectors.toList());
+            Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "SATURDAY", weekJsonObjectList.size()));
+        }
+        if (nowDate.getDayOfWeek() == DayOfWeek.SUNDAY && nowDate.getHour() < 4) {
+            weekJsonObjectList = jsonObjectList.parallelStream()
+                    .filter(jsonObject -> {
+                        int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
+                        return pickDate == 2;
+                    }).collect(Collectors.toList());
+            Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "SATURDAY", weekJsonObjectList.size()));
+        }
+
+        if (weekJsonObjectList != null) {
+            jsonObjectList = weekJsonObjectList;
+        }
+
+        //如果大于1 过滤 上次下单仓库
+        if (jsonObjectList.size() > 1) {
+            jsonObjectList = jsonObjectList.parallelStream()
+                    .filter(jsonObject -> !jsonObject.getString("wareHouseID").equals(repairOrderRecord.getPtcMWarehouseId().toString()))
+                    .collect(Collectors.toList());
+        }
+
+
+        if(jsonObjectList.size() == 0){
+            rt = null;
+        }else {
+            Optional<JSONObject> maxPickRate = jsonObjectList
+                    .parallelStream()
+                    .filter(t -> t != null)
+                    .max(
+                            Comparator.comparing(p -> OcLcUtils.getPickRate(p.getString("pickRate")))
+                    );
+            rt = giveWarehouseResult(maxPickRate.get(), tmSkuId);
+        }
+        return Optional.ofNullable(rt);
+
+    }
+
+
     /**
      * 自动下单
      */
@@ -642,7 +785,7 @@ public class OrderOperate {
             BigDecimal payAmount = new BigDecimal(trade.getPayment());
             Logger.info(String.format("autoOrder-payAmount=[%s]", payAmount.toPlainString()));
             ocTmOrderRecords.setTbPayAmount(payAmount);
-            BigDecimal breakEvenPrice = OcBigDecimalUtils.toBreakEvenPrice(scriptEngine, payAmount);
+            BigDecimal breakEvenPrice = OcBigDecimalUtils.toBreakEvenPrice(scriptEngine, payAmount,OrderCatConfig.getBreakEvenPricePolicyEquation());
             Logger.info(String.format("autoOrder-breakEvenPrice=[%s]", breakEvenPrice.toPlainString()));
 
             ocTmOrderRecords.setBreakEvenPrice(breakEvenPrice);
@@ -679,8 +822,10 @@ public class OrderOperate {
                     anrtMap,
                     warehouseResult.getWarehouseId(),
                     payPwd1,
-                    ocTmOrderRecords
+                    "OC自动下单"
             );
+            ocTmOrderRecords.setTmOrderId(requestMap.get("TmOrderId"));
+            ocTmOrderRecords.setFreightPriceStr(requestMap.get("FreightPriceStr"));
             ocTmOrderRecords.setStatus(TmOrderRecordStatus.SUCCESS.getValue());
             ocTmOrderRecords.setOrderInfo(JSON.toJSONString(requestMap));
 
@@ -709,42 +854,255 @@ public class OrderOperate {
     }
 
     /**
-     * 补单
+     * 批量补单
      * @param execJobId
      * @throws Exception
      */
-    public void repairOrder(Long execJobId) throws Exception{
+    public void batchRepairOrder(Long execJobId) throws Exception{
 
         //1.获取天马最近2天内已退款订单
-        //todo
+        int dayCount = OrderCatConfig.getOrderRefundedDateIntervalDay();
+        Logger.info(String.format("天马已退款订单查询周期(天):%d", dayCount));
+        LocalDateTime lend = LocalDateTime.now();
+        LocalDateTime lbegin = lend.minusDays(dayCount);
+        String startTime = OcDateTimeUtils.localDateTime2String(lbegin, OcDateTimeUtils.OC_DATE);
+        String endTime = OcDateTimeUtils.localDateTime2String(lend, OcDateTimeUtils.OC_DATE);
+        Logger.info(String.format("已退款订单查询起始日期:[%s],截止日期:%s", startTime,endTime));
+        List<TianmaOrder> orderList = tianmaSportHttp.tradeOrderDataList(startTime, endTime, TianmaOrderStatus.REFUNDED, null);
+
+
+        LocalDateTime now = LocalDateTime.now();
+        // 赋值
+        List<RepairOrderRecord> repairOrderRecords = orderList.parallelStream().map(tianmaOrder -> {
+            RepairOrderRecord repairOrderRecord = new RepairOrderRecord();
+            repairOrderRecord.setCustomerName(tianmaOrder.getName());
+            repairOrderRecord.setGoodsNo(tianmaOrder.getGoodsNo());
+            repairOrderRecord.setOuterOrderId(tianmaOrder.getOuterOrderId());
+            //repairOrderRecord.setPayPrice(tianmaOrder.getPayPrice());
+
+
+            repairOrderRecord.setPctTmOrderid(tianmaOrder.getOrderId());
+            repairOrderRecord.setPtcMWarehouseId(tianmaOrder.getWarehouseId());
+            repairOrderRecord.setPtcMWarehouseName(tianmaOrder.getWarehouseName());
+            repairOrderRecord.setPtcOrderStatus(tianmaOrder.getStatus());
+            repairOrderRecord.setPtcTmTradeRemark(tianmaOrder.getTradeRemark());
+            repairOrderRecord.setSize1(tianmaOrder.getSize1());
+            repairOrderRecord.setSize2(tianmaOrder.getSize2());
+            repairOrderRecord.setNowDateTime(now);
+            List<TmOrderDetail> tempList = tianmaSportHttp.getOrderDetailsById(repairOrderRecord.getPctTmOrderid());
+            if(tempList!=null&&tempList.size()>0){
+                TmOrderDetail detail = tempList.get(tempList.size() - 1);
+                repairOrderRecord.setPtcODealDate(OcDateTimeUtils.string2LocalDateTime(detail.getDealdate()));
+                repairOrderRecord.setPtcODealDescr(detail.getDealdescr());
+            }
+            return repairOrderRecord;
+        }).collect(Collectors.toList());
+        Logger.info(String.format("[%d]天内已退款的订单.size:%d", dayCount,repairOrderRecords.size()));
 
 
         //2.获取退款订单详细信息
-        //  付款时间距离当前时间24小时以内，订单备注为OC自动下单
-        //  符合条件则获取订单编号进行下一步，不符合则过滤。
-        //todo
+        //  付款时间距离当前时间24小时以内（获取订单详情），订单备注为OC自动下单
+        //  1)订单备注为OC自动下单
+        repairOrderRecords = repairOrderRecords.parallelStream()
+                .filter(repairOrderRecord -> "OC自动下单".equals(repairOrderRecord.getPtcTmTradeRemark()))
+                .collect(Collectors.toList());
+        Logger.info(String.format("订单备注为OC自动下单.size:%d", repairOrderRecords.size()));
 
-        //3.获取根据获取到的订单编号进行天马再次查询
-        //(防止有人工补单的特殊情况)
-        //全部订单——输入订单编号——点击查询
-        //如果只有1笔订单则进行下一步，如果有2笔及2笔以上订单则过滤。
-        //todo
+        //  2)付款时间距离当前时间24小时以内（获取订单详情）
+        repairOrderRecords = repairOrderRecords.parallelStream()
+                .filter(repairOrderRecord -> repairOrderRecord.getPtcODealDate()!=null)
+                .filter(repairOrderRecord -> repairOrderRecord.getPtcODealDate().compareTo(repairOrderRecord.getNowDateTime().minusHours(48))==1)
+                .collect(Collectors.toList());
 
+        Logger.info(String.format("付款时间距离当前时间24小时以内.size:%d", repairOrderRecords.size()));
 
-        // 4.获取根据获取到的订单编号进行天猫查询
-        // 如果天猫订单为买家已付款，订单处为绿旗，备注OC下单成功
-        // 则进行下一步，否则过滤。
-        //todo
-
-
-
+        repairOrderRecords.parallelStream().forEach(repairOrderRecord -> {
 
 
+            Optional<OcTmRepairOrderRecords> optOrm = ocTmRepairOrderRecordsManager.stream()
+                    .filter(OcTmRepairOrderRecordsImpl.OUTER_ORDER_ID.equal(repairOrderRecord.getOuterOrderId()))
+                    .findFirst();
+
+            if(!optOrm.isPresent()){
+                try {
+                    repairOrder(repairOrderRecord);
+                    repairOrderRecord.setRoStatus(TmOrderRecordStatus.SUCCESS.getValue());
+                    taoBaoHttp.updateTradeMemo(
+                            Long.valueOf(repairOrderRecord.getOuterOrderId()),
+                            String.format("OC补单成功,天马订单ID:[%s]", repairOrderRecord.getRoTmOrderId()), 4l);
+                }catch (Exception e){
+                    StringWriter errors = new StringWriter();
+                    e.printStackTrace(new PrintWriter(errors));
+                    repairOrderRecord.setRoStatus(TmOrderRecordStatus.FAILURE.getValue());
+                    repairOrderRecord.setRoFailCause(e.getMessage());
+                    taoBaoHttp.updateTradeMemo(Long.valueOf(repairOrderRecord.getOuterOrderId()), String.format("OC补单失败,失败原因:%s", e.getMessage()), 5l);
+                }
+
+                //持久化数据
+                OcTmRepairOrderRecordsImpl ocTmRepairOrderRecord = new OcTmRepairOrderRecordsImpl();
+                ocTmRepairOrderRecord.setAddTime(LocalDateTime.now());
+                ocTmRepairOrderRecord.setCustomerName(repairOrderRecord.getCustomerName());
+                ocTmRepairOrderRecord.setGoodsNo(repairOrderRecord.getGoodsNo());
+                ocTmRepairOrderRecord.setOuterOrderId(repairOrderRecord.getOuterOrderId());
+                ocTmRepairOrderRecord.setPayPrice(repairOrderRecord.getPayPrice());
+                ocTmRepairOrderRecord.setSize1(repairOrderRecord.getSize1());
+                ocTmRepairOrderRecord.setSize2(repairOrderRecord.getSize2());
+
+                //ptc
+                ocTmRepairOrderRecord.setPctTmOrderId(repairOrderRecord.getPctTmOrderid());
+                ocTmRepairOrderRecord.setPtcMwhId(repairOrderRecord.getPtcMWarehouseId());
+                ocTmRepairOrderRecord.setPtcMwhName(repairOrderRecord.getPtcMWarehouseName());
+                ocTmRepairOrderRecord.setPtcOdealDate(repairOrderRecord.getPtcODealDate());
+                ocTmRepairOrderRecord.setPtcOdealDescr(repairOrderRecord.getPtcODealDescr());
+                ocTmRepairOrderRecord.setPtcOrderStatus(repairOrderRecord.getPtcOrderStatus().getVal());
+                ocTmRepairOrderRecord.setPtcTmTradeRemark(repairOrderRecord.getPtcTmTradeRemark());
+                //ro
+                ocTmRepairOrderRecord.setRoBreakEvenPrice(repairOrderRecord.getBreakEvenPrice());
+                ocTmRepairOrderRecord.setRoFailCause(repairOrderRecord.getRoFailCause());
+                ocTmRepairOrderRecord.setRoFreightPriceStr(repairOrderRecord.getRoFreightPriceStr());
+                ocTmRepairOrderRecord.setRoOrderInfo(repairOrderRecord.getRoOrderInfo());
+                ocTmRepairOrderRecord.setRoStatus(repairOrderRecord.getRoStatus());
+                ocTmRepairOrderRecord.setRoTmOrderId(repairOrderRecord.getRoTmOrderId());
+                ocTmRepairOrderRecord.setRoTmSizeInfoStr(JSON.toJSONString(repairOrderRecord.getRoTmSizeInfos()));
+                ocTmRepairOrderRecord.setRoWhSnapshotData(JSON.toJSONString(repairOrderRecord.getRoWhSnapshotData()));
+                ocTmRepairOrderRecord.setRoWhId(repairOrderRecord.getRoWhId());
+                ocTmRepairOrderRecord.setRoWhInventoryCount(repairOrderRecord.getRoWhInventoryCount());
+                ocTmRepairOrderRecord.setRoWhPickRate(repairOrderRecord.getRoWhPickRate());
+                ocTmRepairOrderRecord.setRoWhProxyPrice(repairOrderRecord.getRoWhProxyPrice());
+                ocTmRepairOrderRecord.setRoWhName(repairOrderRecord.getRoWhName());
+                ocTmRepairOrderRecord.setRoWhUpdateTime(repairOrderRecord.getRoWhUpdateTime());
+
+                ocTmRepairOrderRecordsManager.persist(ocTmRepairOrderRecord);
+            }
 
 
-
+        });
+       // System.out.println(repairOrderRecords);
 
     }
+
+
+    private void repairOrder(RepairOrderRecord repairOrderRecord) throws Exception{
+        long tid = Long.valueOf(repairOrderRecord.getOuterOrderId());
+        Logger.info(String.format("开始补单-淘宝订单[%d]",
+                tid
+        ));
+
+        Optional<Trade> optionalTrade = taoBaoHttp.getTaobaoTradeFullInfo(tid);
+        if (!optionalTrade.isPresent()) {
+            throw new OCException(String.format("淘宝订单[%d],没有找到对应的订单信息.", tid));
+        }
+        Trade trade = optionalTrade.get();
+        if (trade.getOrders().size() > 1) {
+            throw new OCException(String.format("淘宝订单[%d],子单数量大于1,不能进行下单.", tid));
+        }
+
+        Long refundId =  trade.getOrders().get(0).getRefundId();
+        if(refundId!=null){
+            throw new OCException(String.format("淘宝订单[%d].已经存在退款单[%d]不能进行下单.", tid,refundId));
+        }
+
+        // 3.获取根据获取到的订单编号进行天猫查询
+        // 如果天猫订单为买家已付款，订单处为绿旗，备注OC下单成功
+        // 则进行下一步，否则过滤。
+        long sellerFlag = 3l; //绿旗
+        String sellerMemo = String.format("OC下单成功,天马订单ID:[%s]",repairOrderRecord.getPctTmOrderid());
+        String status = "WAIT_SELLER_SEND_GOODS"; //(等待卖家发货,即:买家已付款)
+        if(!(status.equals(trade.getStatus()) && sellerFlag == trade.getSellerFlag() && sellerMemo.equals(trade.getSellerMemo()))){
+            throw new OCException(String.format("淘宝订单信息不匹配!订单状态:[%s],旗帜:[%s],备注[%s].",
+                    trade.getStatus(),
+                    trade.getSellerFlag(),
+                    trade.getSellerMemo()
+            ));
+        }
+        // 4.获取根据获取到的订单编号进行天马再次查询
+        // (防止有人工补单的特殊情况)
+        // 全部订单——输入订单编号——点击查询
+        // 如果只有1笔订单则进行下一步，如果有2笔及2笔以上订单则过滤。
+        PageResult<TianmaOrder> prTmOrders = tianmaSportHttp.tradeOrderDataList(
+                null,
+                null,
+                null,
+                String.valueOf(tid),
+                null,
+                1,
+                10,
+                null);
+
+        if (prTmOrders.getTotal() > 1 || prTmOrders.getRows().size() > 1) {
+            throw new OCException(String.format("淘宝订单[%d],在天马中的订单大于1.(可能人工已经补单)", tid));
+        }
+        // 5.根据天猫订单再次下单
+        // 计算补单保本价
+        BigDecimal payAmount = new BigDecimal(trade.getPayment());
+        repairOrderRecord.setPayPrice(payAmount);
+
+        Logger.info(String.format("repairOrder-payAmount=[%s]", payAmount.toPlainString()));
+        String ps = OrderCatConfig.getORBreakEvenPricePolicyEquation();
+        Logger.info(String.format("repairOrder-getBreakEvenPricePolicyEquation=[%s]", ps));
+        BigDecimal breakEvenPrice = OcBigDecimalUtils.toBreakEvenPrice(scriptEngine, payAmount,ps);
+        Logger.info(String.format("repairOrder-breakEvenPrice(补单保本价)=[%s]", breakEvenPrice.toPlainString()));
+        repairOrderRecord.setBreakEvenPrice(breakEvenPrice);
+
+        //计算补单仓库
+        Map<String, Object> anrtMap = tianmaSportHttp.getSearchByArticleno(repairOrderRecord.getGoodsNo());
+        Map<String, TmSizeInfo> tmSizeInfoMap = (Map<String, TmSizeInfo>) anrtMap.get("sizeInfo");
+        List<com.alibaba.fastjson.JSONObject> jsonObjectList = (List<com.alibaba.fastjson.JSONObject>) anrtMap.get("jsonObjectList");
+
+        String size = repairOrderRecord.getSize1();
+        TmSizeInfo tmSizeInfo = tmSizeInfoMap.get(size);
+        if (tmSizeInfo == null) {
+            throw new OCException(String.format("淘宝订单[%d]的尺码[%s],在天马没有找对应信息.", tid, size));
+        }
+        List<TmSizeInfo> tmSizeInfoList = new ArrayList();
+        for (Map.Entry<String, TmSizeInfo> entry : tmSizeInfoMap.entrySet()) {
+            tmSizeInfoList.add(entry.getValue());
+        }
+
+
+        repairOrderRecord.setRoTmSizeInfos(tmSizeInfoList);
+        repairOrderRecord.setRoWhSnapshotData(jsonObjectList);
+        String tmSkuId = tmSizeInfo.getTmSukId();
+        repairOrderRecord.setRoTmSkuId(tmSkuId);
+
+        Optional<ComputeWarehouseResult> optWareHouse = computeRoWarehouseId(
+                repairOrderRecord,breakEvenPrice
+        );
+
+        if (!optWareHouse.isPresent()) {
+            throw new OCException(String.format("淘宝订单[%d],没有计算出仓库信息.请人工处理.", tid, size));
+        }
+
+        ComputeWarehouseResult warehouseResult = optWareHouse.get();
+
+
+        repairOrderRecord.setRoWhId(Integer.valueOf(warehouseResult.getWarehouseId()));
+        repairOrderRecord.setRoWhName(warehouseResult.getWarehouseName());
+        repairOrderRecord.setRoWhPickRate(Integer.valueOf(warehouseResult.getPickRate()));
+        repairOrderRecord.setRoWhInventoryCount(Integer.valueOf(warehouseResult.getInventoryCount()));
+        repairOrderRecord.setRoWhProxyPrice(warehouseResult.getProxyPrice());
+        repairOrderRecord.setRoWhUpdateTime(OcDateTimeUtils.string2LocalDateTime(warehouseResult.getWhUpdateTime()));
+
+        //支付密码
+        String payPwd1 = OcEncryptionUtils.base64Decoder(OrderCatConfig.getOrderOperateTmPayPwd(), 5);
+        //天马下单+支付
+        Map<String, String> requestMap = tmsportOrderAndPay(
+                tid,
+                trade,
+                anrtMap,
+                warehouseResult.getWarehouseId(),
+                payPwd1,
+                "OC自动补单"
+        );
+        repairOrderRecord.setRoTmOrderId(requestMap.get("TmOrderId"));
+        repairOrderRecord.setRoFreightPriceStr(requestMap.get("FreightPriceStr"));
+        repairOrderRecord.setRoOrderInfo(JSON.toJSONString(requestMap));
+
+    }
+
+
+
+
 
     public void setOcTmOrderRecordsManager(OcTmOrderRecordsManager ocTmOrderRecordsManager) {
         this.ocTmOrderRecordsManager = ocTmOrderRecordsManager;
@@ -752,5 +1110,10 @@ public class OrderOperate {
 
     public void setOcParamsManager(OcParamsManager ocParamsManager) {
         this.ocParamsManager = ocParamsManager;
+    }
+
+
+    public void setOcTmRepairOrderRecordsManager(OcTmRepairOrderRecordsManager ocTmRepairOrderRecordsManager) {
+        this.ocTmRepairOrderRecordsManager = ocTmRepairOrderRecordsManager;
     }
 }

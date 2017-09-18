@@ -9,6 +9,7 @@ import com.myjo.ordercat.spm.ordercat.ordercat.oc_params.OcParamsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_refund_operate_record.OcRefundOperateRecordManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecords;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_order_records.OcTmOrderRecordsManager;
+import com.myjo.ordercat.spm.ordercat.ordercat.oc_tm_repair_order_records.OcTmRepairOrderRecordsManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_tmsport_check_result.OcTmsportCheckResultManager;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfo;
 import com.myjo.ordercat.spm.ordercat.ordercat.oc_warehouse_info.OcWarehouseInfoManager;
@@ -26,6 +27,8 @@ public class OrderCatContext {
     private static OcJobExecInfoManager ocJobExecInfoManager;
     private static OcRefundOperateRecordManager ocRefundOperateRecordManager;
     private static OcParamsManager ocParamsManager;
+
+    private static OcTmRepairOrderRecordsManager ocTmRepairOrderRecordsManager;
 
     private static TaoBaoHttp taoBaoHttp;
 
@@ -99,5 +102,14 @@ public class OrderCatContext {
 
     public static void setTaoBaoHttp(TaoBaoHttp taoBaoHttp) {
         OrderCatContext.taoBaoHttp = taoBaoHttp;
+    }
+
+
+    public static OcTmRepairOrderRecordsManager getOcTmRepairOrderRecordsManager() {
+        return ocTmRepairOrderRecordsManager;
+    }
+
+    public static void setOcTmRepairOrderRecordsManager(OcTmRepairOrderRecordsManager ocTmRepairOrderRecordsManager) {
+        OrderCatContext.ocTmRepairOrderRecordsManager = ocTmRepairOrderRecordsManager;
     }
 }

@@ -76,11 +76,11 @@ public class OcBigDecimalUtils {
     }
 
 
-    public static BigDecimal toBreakEvenPrice(ScriptEngine e, BigDecimal payAmount) {
+    public static BigDecimal toBreakEvenPrice(ScriptEngine e, BigDecimal payAmount,String ps) {
 
         BigDecimal breakEvenPrice = null;
         try {
-            String ps = OrderCatConfig.getBreakEvenPricePolicyEquation();
+            //String ps = OrderCatConfig.getBreakEvenPricePolicyEquation();
             String evalStr = ps.replaceAll("payAmount",payAmount.toPlainString());
             Object ddd  = e.eval(evalStr);
             Double rt = (double)ddd;

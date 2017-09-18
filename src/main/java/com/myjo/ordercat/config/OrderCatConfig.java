@@ -31,6 +31,11 @@ public class OrderCatConfig {
     private static final String AUTO_SEND_GOODS = "auto-send-goods.%s";
     private static final String ORDER_OPERATE = "order-operate.%s";
     private static final String REFUND_OPERATE = "refund-operate.%s";
+    private static final String ORDER_REPAIR = "order-repair.%s";
+
+
+
+
 
 
     private static Config config;
@@ -129,6 +134,10 @@ public class OrderCatConfig {
 
     public static String getAutoRefundOperateJobTriggerCron() {
         return config.getString(String.format(SCHEDULER_CRON, "autoRefundOperateJob_trigger_cron"));
+    }
+
+    public static String getRepairOrderJobTriggerCron() {
+        return config.getString(String.format(SCHEDULER_CRON, "repairOrderJob_trigger_cron"));
     }
 
 
@@ -422,10 +431,9 @@ public class OrderCatConfig {
         return config.getString(String.format(TIANMA_SPORT, "sold_problem_http_url"));
     }
 
-
-
-
-
+    public static String getTradeOrdersGetIdHttpUrl() {
+        return config.getString(String.format(TIANMA_SPORT, "trade_orders_get_id_http_url"));
+    }
 
 
 
@@ -485,6 +493,20 @@ public class OrderCatConfig {
         return rtList;
     }
 
+    public static List<ShieldWhPolicy> getRoShieldWareHousePolicy() {
+        List<ShieldWhPolicy> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_REPAIR, "shield_warehouse_policy"));
+        ShieldWhPolicy shieldWhPolicy;
+        for (ConfigObject cb : list) {
+            shieldWhPolicy = ConfigBeanFactory.create(cb.toConfig(), ShieldWhPolicy.class);
+            rtList.add(shieldWhPolicy);
+        }
+        return rtList;
+    }
+
+
+
+
 
     public static List<CycleWhComp> getCycleWhComp() {
         List<CycleWhComp> rtList = new ArrayList<>();
@@ -519,6 +541,11 @@ public class OrderCatConfig {
         return Integer.valueOf(config.getString(String.format(ORDER_OPERATE, "pick_rate_less_than_del_limit")));
     }
 
+    public static Integer getRoPickRateLessThanDelLimit() {
+        return Integer.valueOf(config.getString(String.format(ORDER_REPAIR, "pick_rate_less_than_del_limit")));
+    }
+
+
 
     public static List<PickRateDelCondition> getOpPickRateDelConditions() {
         List<PickRateDelCondition> rtList = new ArrayList<>();
@@ -530,6 +557,18 @@ public class OrderCatConfig {
         }
         return rtList;
     }
+
+    public static List<PickRateDelCondition> getRoPickRateDelConditions() {
+        List<PickRateDelCondition> rtList = new ArrayList<>();
+        List<? extends ConfigObject> list = config.getObjectList(String.format(ORDER_REPAIR, "pick_rate_less_than_del_conditions"));
+        PickRateDelCondition prdc;
+        for (ConfigObject cb : list) {
+            prdc = ConfigBeanFactory.create(cb.toConfig(), PickRateDelCondition.class);
+            rtList.add(prdc);
+        }
+        return rtList;
+    }
+
 
     public static Integer getRefundDateIntervalDay() {
         return config.getInt(String.format(REFUND_OPERATE, "refund_date_interval_day"));
@@ -545,6 +584,17 @@ public class OrderCatConfig {
     }
     public static List<String> getRefundRetainReasons() {
         return config.getStringList(String.format(REFUND_OPERATE, "retain_reasons"));
+    }
+
+
+
+    public static Integer getOrderRefundedDateIntervalDay() {
+        return config.getInt(String.format(ORDER_REPAIR, "order_refunded_date_interval_day"));
+    }
+
+
+    public static String getORBreakEvenPricePolicyEquation() {
+        return config.getString(String.format(ORDER_REPAIR, "break_even_price_policy_equation"));
     }
 
 

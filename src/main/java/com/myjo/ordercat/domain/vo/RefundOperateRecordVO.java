@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public class RefundOperateRecordVO {
     private Long id;
-    private Long refundId;
-    private Long tid;
+    private String refundId;
+    private String tid;
     private String status;
     private String reason;
     private Short isDaixiao;
@@ -26,19 +26,19 @@ public class RefundOperateRecordVO {
     private Date addTime;
 
 
-    public Long getRefundId() {
+    public String getRefundId() {
         return refundId;
     }
 
-    public void setRefundId(Long refundId) {
+    public void setRefundId(String refundId) {
         this.refundId = refundId;
     }
 
-    public Long getTid() {
+    public String getTid() {
         return tid;
     }
 
-    public void setTid(Long tid) {
+    public void setTid(String tid) {
         this.tid = tid;
     }
 

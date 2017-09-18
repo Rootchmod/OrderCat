@@ -51,6 +51,9 @@ public class TianmaOrder {
     private String marketPrice;
     private String discount;
 
+
+    private String tradeRemark;
+
     public String getOuterOrderId() {
         return outerOrderId;
     }
@@ -203,6 +206,14 @@ public class TianmaOrder {
 
     public void setDiscount(String discount) {
         this.discount = discount;
+    }
+
+    public String getTradeRemark() {
+        return tradeRemark;
+    }
+
+    public void setTradeRemark(String tradeRemark) {
+        this.tradeRemark = tradeRemark;
     }
 }
 
