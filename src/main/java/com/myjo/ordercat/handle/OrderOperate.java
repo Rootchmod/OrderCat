@@ -29,6 +29,7 @@ import javax.script.ScriptEngine;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -407,46 +408,53 @@ public class OrderOperate {
 
         //过滤周六周日不配货仓库
         //LocalDateTime nowDate = LocalDateTime.now();
-        List<com.alibaba.fastjson.JSONObject> weekJsonObjectList = null;
+        boolean isWeekCheck = OrderCatConfig.isWeekCheck();
 
-        //如果下单时间为周五4:00-周六4:00，则过滤周六周日不发货仓库
-        if (nowDate.getDayOfWeek() == DayOfWeek.FRIDAY && nowDate.getHour() >= 4) {
-            weekJsonObjectList = jsonObjectList.parallelStream()
-                    .filter(jsonObject -> {
-                        int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
-                        return pickDate != 0;
-                    }).collect(Collectors.toList());
-            Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "FRIDAY", weekJsonObjectList.size()));
-        }
-        if (nowDate.getDayOfWeek() == DayOfWeek.SATURDAY && nowDate.getHour() < 4) {
-            weekJsonObjectList = jsonObjectList.parallelStream()
-                    .filter(jsonObject -> {
-                        int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
-                        return pickDate != 0;
-                    }).collect(Collectors.toList());
-            Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "SATURDAY", weekJsonObjectList.size()));
-        }
+        Logger.info(String.format("computeWarehouseId---isWeekCheck:[%s].",String.valueOf(isWeekCheck)));
 
-        //如果下单时间为周六4:00-周日4:00，则过滤周日不发货仓库
-        if (nowDate.getDayOfWeek() == DayOfWeek.SATURDAY && nowDate.getHour() >= 4) {
-            weekJsonObjectList = jsonObjectList.parallelStream()
-                    .filter(jsonObject -> {
-                        int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
-                        return pickDate == 2;
-                    }).collect(Collectors.toList());
-            Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "SATURDAY", weekJsonObjectList.size()));
-        }
-        if (nowDate.getDayOfWeek() == DayOfWeek.SUNDAY && nowDate.getHour() < 4) {
-            weekJsonObjectList = jsonObjectList.parallelStream()
-                    .filter(jsonObject -> {
-                        int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
-                        return pickDate == 2;
-                    }).collect(Collectors.toList());
-            Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "SATURDAY", weekJsonObjectList.size()));
-        }
+        if(isWeekCheck){
+            List<com.alibaba.fastjson.JSONObject> weekJsonObjectList = null;
 
-        if (weekJsonObjectList != null) {
-            jsonObjectList = weekJsonObjectList;
+            //如果下单时间为周五4:00-周六4:00，则过滤周六周日不发货仓库
+            if (nowDate.getDayOfWeek() == DayOfWeek.FRIDAY && nowDate.getHour() >= 4) {
+                weekJsonObjectList = jsonObjectList.parallelStream()
+                        .filter(jsonObject -> {
+                            int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
+                            return pickDate != 0;
+                        }).collect(Collectors.toList());
+                Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "FRIDAY", weekJsonObjectList.size()));
+            }
+            if (nowDate.getDayOfWeek() == DayOfWeek.SATURDAY && nowDate.getHour() < 4) {
+                weekJsonObjectList = jsonObjectList.parallelStream()
+                        .filter(jsonObject -> {
+                            int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
+                            return pickDate != 0;
+                        }).collect(Collectors.toList());
+                Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "SATURDAY", weekJsonObjectList.size()));
+            }
+
+            //如果下单时间为周六4:00-周日4:00，则过滤周日不发货仓库
+            if (nowDate.getDayOfWeek() == DayOfWeek.SATURDAY && nowDate.getHour() >= 4) {
+                weekJsonObjectList = jsonObjectList.parallelStream()
+                        .filter(jsonObject -> {
+                            int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
+                            return pickDate == 2;
+                        }).collect(Collectors.toList());
+                Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "SATURDAY", weekJsonObjectList.size()));
+            }
+            if (nowDate.getDayOfWeek() == DayOfWeek.SUNDAY && nowDate.getHour() < 4) {
+                weekJsonObjectList = jsonObjectList.parallelStream()
+                        .filter(jsonObject -> {
+                            int pickDate = Integer.valueOf(jsonObject.getString("pick_date"));
+                            return pickDate == 2;
+                        }).collect(Collectors.toList());
+                Logger.info(String.format("-[%s]-weekJsonObjectList-size[%d].", "SATURDAY", weekJsonObjectList.size()));
+            }
+
+            if (weekJsonObjectList != null) {
+                jsonObjectList = weekJsonObjectList;
+            }
+
         }
 
         //以符合条件的价格最低的仓库为基准仓库，进行对比
@@ -706,6 +714,8 @@ public class OrderOperate {
             Trade trade = getTaoBaoTrade(tid);
 
 
+
+
             BigDecimal payAmount = new BigDecimal(trade.getPayment());
             Logger.info(String.format("autoOrder-payAmount=[%s]", payAmount.toPlainString()));
             ocTmOrderRecords.setTbPayAmount(payAmount);
@@ -735,6 +745,16 @@ public class OrderOperate {
 
             Order order = trade.getOrders().get(0);
             String outerSkuid = order.getOuterSkuId();
+
+
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            tianmaSportHttp.mJOrderSend(
+                    String.valueOf(tid),
+                    outerSkuid,
+                    trade.getBuyerNick(),
+                    payAmount.toPlainString(),
+                    sdf.format(trade.getCreated())
+                    );
 
 
             Logger.info("outerSkuid:" + outerSkuid);

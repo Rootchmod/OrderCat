@@ -32,7 +32,7 @@ public class OrderCatConfig {
     private static final String ORDER_OPERATE = "order-operate.%s";
     private static final String REFUND_OPERATE = "refund-operate.%s";
     private static final String ORDER_REPAIR = "order-repair.%s";
-
+    private static final String LOCAL_API = "local-api.%s";
 
 
 
@@ -69,6 +69,12 @@ public class OrderCatConfig {
         //config = ConfigFactory.parseFile(new File(config));
     }
 
+    public static String getLocalApiSendOrderHttpUrl() {
+        return config.getString(String.format(LOCAL_API, "order_send_http_url"));
+    }
+
+
+
 
     public static Integer getAsdOrderDateIntervalDay() {
         return config.getInt(String.format(AUTO_SEND_GOODS, "order_date_interval_day"));
@@ -104,9 +110,9 @@ public class OrderCatConfig {
     }
 
 
-    public static List<String> getFeixiaoNoCheckNumIidList() {
-        return config.getStringList(String.format(ACCOUNT_CHECK, "fenxiao_no_check_numIid_list"));
-    }
+//    public static List<String> getFeixiaoNoCheckNumIidList() {
+//        return config.getStringList(String.format(ACCOUNT_CHECK, "fenxiao_no_check_numIid_list"));
+//    }
 
     //syncWarehouseJob_trigger_cron
     public static String getSyncWarehouseJobTriggerCron() {
@@ -596,6 +602,12 @@ public class OrderCatConfig {
     public static String getORBreakEvenPricePolicyEquation() {
         return config.getString(String.format(ORDER_REPAIR, "break_even_price_policy_equation"));
     }
+
+
+    public static boolean isWeekCheck() {
+        return config.getBoolean(String.format(ORDER_OPERATE, "is_weekCheck"));
+    }
+
 
 
 }

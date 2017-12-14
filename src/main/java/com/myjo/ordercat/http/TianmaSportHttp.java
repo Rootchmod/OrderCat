@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.*;
 
 
@@ -59,6 +60,89 @@ public class TianmaSportHttp {
 
     public TianmaSportHttp(Map<String, String> map) {
         this.map = map;
+    }
+
+
+
+
+    public String mJOrderSend(String tid,String SJBM,String MJID,String PayNum,String time) {
+//        host:27.193.208.124
+//        port:54188
+//
+//        接口1:/test
+//        参数:{
+//            tid:订单编号
+//            SJBM:外部商家编码
+//            MJID:买家ID
+//            PayNum:买家付款金额
+//            time:时间}
+//        方式:GET
+//        功能:添加订单
+//        说明:时间的格式  YYYY-MM-DD HH:mm:ss     例:2017-12-12 12:32:42.00
+//
+//        接口2:/seach
+//        参数:null
+//        方式:GET
+//        功能:查询表内订单
+//
+//        接口3:/delete
+//        参数:null
+//        方式:GET
+//        功能:sudo rm -rf /
+//
+//                接口4:star
+//        参数:null
+//        方式:GET
+//        功能:查询接口运行是否正常
+//        说明:运行正常返回OK
+
+
+        String rt = null;
+
+        //order_send_http_url = "http://27.193.208.124:54188/test?tid=%s&SJBM=%s&MJID=%s&PayNum=%s&time=%s"
+        try{
+            String url = String.format(
+                    OrderCatConfig.getLocalApiSendOrderHttpUrl(),
+                    tid,
+                    SJBM,
+                    MJID,
+                    PayNum,
+                    time
+            );
+
+            Logger.info(String.format(" mJOrderSend url=%s ",url));
+            String turl = url.split("\\?")[0];
+            Logger.info(String.format(" mJOrderSend url=%s ",turl));
+
+
+
+            HttpResponse<JsonNode> jsonResponse = Unirest.get(turl)
+                    .header("Host", "27.193.208.124")
+                    .header("Connection", "keep-alive")
+                    .header("Accept", "application/json, text/javascript, */*; q=0.01")
+                    //.header("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4")
+                    //.header("Origin", "http://www.tianmasport.com")
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .header("User-Agent", USER_AGENT)
+//                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+//                .header("Referer", "http://www.tianmasport.com/ms/login.shtml")
+//                .header("Upgrade-Insecure-Requests", "1")
+                    .header("Accept-Encoding", "gzip, deflate, sdch")
+                    .queryString("tid",tid)
+                    .queryString("SJBM",SJBM)
+                    .queryString("MJID",MJID)
+                    .queryString("PayNum",PayNum)
+                    .queryString("time",time)
+                    .asJson();
+            rt = jsonResponse.getBody().toString();
+        }catch (Exception e){
+            e.printStackTrace();
+            Logger.error(e);
+        }
+
+
+        Logger.info("mJOrderSend rt:" + rt);
+        return rt;
     }
 
 
@@ -370,8 +454,6 @@ public class TianmaSportHttp {
                 inventoryInfo.setReturnRate(Integer.valueOf(jsonObject.getString("returnRate")));
                 inventoryInfo.setEndT(jsonObject.getString("endT"));
                 inventoryInfo.setArticlenoOld(jsonObject.getString("articleno_old"));
-
-
                 inventoryInfo.setUpdateTime(OcDateTimeUtils.string2LocalDateTime(jsonObject.getString("updateTime")));
                 list.add(inventoryInfo);
                 jsonObjectList.add(jsonObject);

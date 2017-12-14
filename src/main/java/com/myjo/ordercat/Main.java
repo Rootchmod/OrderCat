@@ -282,7 +282,7 @@ public class Main {
             System.out.println("Consumer Started");
 
             Logger.info(String.format("Consumer-[%s] Started", consumerId));
-        } else if (action.equals("order_robot_clean")) {
+        } else if (action.equals("order_robot_queue_clean")) {
             Properties properties = new Properties();
             properties.put(PropertyKeyConst.ConsumerId, "CID_MJ_MT1");
             properties.put(PropertyKeyConst.AccessKey, OrderCatConfig.getTaobaoApiAppKey());

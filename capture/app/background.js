@@ -112,9 +112,13 @@ function onDisconnected() {
 function onBeforeSendHeaders(details) {
   var hostName = "com.myjo.ordercat";
   var requestHeaders = details.requestHeaders;
+
+
+
+
   if(details.url.indexOf("://wuliu.taobao.com/user/`.do") != -1){
     bkg.console.log(details);
-    bkg.console.log(requestHeaders);
+    //bkg.console.log(requestHeaders);
     var port = chrome.runtime.connectNative(hostName)
 
     port.onDisconnect.addListener(onDisconnected);

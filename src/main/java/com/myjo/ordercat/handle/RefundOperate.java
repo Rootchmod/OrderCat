@@ -208,8 +208,13 @@ public class RefundOperate {
                 Collectors.toMap(o -> o, Function.identity())
         );
 
+
+//        List<Refund> refundList12 = refundList.parallelStream()
+//                .filter(refund -> !statusesMap.containsKey(refund.getStatus().toString()))
+//                .collect(Collectors.toList());
+
         refundList = refundList.parallelStream()
-                .filter(refund -> statusesMap.containsKey(refund.getStatus()))
+                .filter(refund -> statusesMap.containsKey(refund.getStatus().toString()))
                 .collect(Collectors.toList());
         Logger.info(String.format("退款单据状态过滤后的.size:[%d]",
                 refundList.size()
@@ -230,9 +235,16 @@ public class RefundOperate {
         Map<String, String> reasonsMap = reasonsList.parallelStream().collect(
                 Collectors.toMap(o -> o, Function.identity())
         );
+//        refundList12 = refundList.parallelStream()
+//                .filter(refund -> !reasonsMap.containsKey(refund.getReason()))
+//                .collect(Collectors.toList());
+
         refundList = refundList.parallelStream()
                 .filter(refund -> reasonsMap.containsKey(refund.getReason()))
                 .collect(Collectors.toList());
+
+
+
         Logger.info(String.format("退款单据原因过滤后的.size:[%d]", refundList.size()));
         //3.调用接口根据订单ID,来区分此订单是否为分销还是购销
         List<RefundOperateRecord> refundOperateRecordList = refundList.stream().map(refund -> {

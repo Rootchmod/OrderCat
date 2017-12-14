@@ -8,6 +8,10 @@ import org.apache.logging.log4j.Logger
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+
 /**
  * Created by lee5hx on 17/4/20.
  */
@@ -29,6 +33,22 @@ class OcSizeUtilsSpec extends Specification {
         def f = OcSizeUtils.getShoeSize1BySize2(Brand.NIKE, Sex.MALE, "9");
         def f1 = OcSizeUtils.getShoeSize1BySize2(Brand.NIKE, Sex.FEMALE, "6");
         def f2 = OcSizeUtils.getShoeSize1BySize2(Brand.NIKE, Sex.FEMALE, "5");
+
+
+
+
+            Integer databaseObject = 1436160088;
+
+
+            LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochSecond(databaseObject), TimeZone
+                    .getDefault().toZoneId());
+
+            System.out.println(ldt)
+            int t = (int)ldt.atZone(ZoneId.systemDefault()).toEpochSecond();
+
+
+
+            System.out.println(t)
 
 
 

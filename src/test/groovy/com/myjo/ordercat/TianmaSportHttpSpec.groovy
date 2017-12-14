@@ -256,6 +256,37 @@ class TianmaSportHttpSpec extends Specification {
 
     }
 
+    def "mJOrderSend"(){
+        when:
+        //    id:23783596
+//    problemType:无理由退货
+//    proxyId:147424
+//    wareHouseName:天马总仓1仓
+//    marketPrice:599
+//    discount:5.8
+//    problemContent:OC-售后
+//    delivery:顺丰标快
+//    mapPath:
+
+//        tid:96688007460360059
+//        SJBM:849568-007-44
+//        MJID:o0小桔子0o
+//        PayNum:582.00
+//        time:
+
+        def tid = "96688007460360059";
+        def SJBM = "849568-007-44";
+        def MJID = "o0小桔子0o";
+        def PayNum = "582.00";
+        def time = "2017-12-13 18:32:29";
+
+        def rt = tianmaSportHttp.mJOrderSend(tid,SJBM,MJID,PayNum,time);
+        System.out.println(rt)
+
+        then:
+        "ok" == "ok"
+
+    }
 
 
 

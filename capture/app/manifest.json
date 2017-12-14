@@ -9,7 +9,8 @@
     "cookies",
     "http://*/*",
     "https://*/*",
-    "contextMenus"
+    "contextMenus",
+    "notifications"
   ],
   "icons": { "16": "icon-128.png", "48": "icon-128.png", "128": "icon-128.png" },
   "browser_action": {
