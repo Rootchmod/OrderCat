@@ -92,17 +92,14 @@ class TianmaSportHttpSpec extends Specification {
 
         when:
         //tianmaSportHttp = new TianmaSportHttp(map);
-        //String v = IOUtils.toString(System.in)
-        for(int i=0;i<100000;i++){
-            Optional<LogisticsCompany> logisticsCompany = tianmaSportHttp.ajaxGuessMailNoRequest("885214803258033378","23134990467245578");
-            Optional<LogisticsCompany> logisticsCompany1 = tianmaSportHttp.ajaxGuessMailNoRequest("3921971273918","23134990467245578");
-            Thread.sleep(10000)
-        }
+        //String v = IOUtils.toString(System.in)885214803258033378
+        Optional<LogisticsCompany> logisticsCompany = tianmaSportHttp.ajaxGuessMailNoRequest("1","23134990467245578");
+        Optional<LogisticsCompany> logisticsCompany1 = tianmaSportHttp.ajaxGuessMailNoRequest("3921971273918","23134990467245578");
 
         //def f = tianmaSportHttp.getSearchByArticleno("tianmaSportHttp")
         //System.out.println(postExample.login());
         then:
-        logisticsCompany.get().code.get() == "YTO"
+        logisticsCompany.isPresent()== false
         logisticsCompany1.get().code.get() == "YUNDA"
 
     }

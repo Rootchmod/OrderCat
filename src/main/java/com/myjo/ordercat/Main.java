@@ -210,10 +210,10 @@ public class Main {
         eh3.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
-        ExecuteHandle eh4;
-        eh4 = new AutoSendHandle(sendGoods);
-        eh4.setJobName(JobName.AUTO_SEND_GOODS_JOB.getValue());
-        eh4.setOcJobExecInfoManager(ocJobExecInfoManager);
+//        ExecuteHandle eh4;
+//        eh4 = new AutoSendHandle(sendGoods);
+//        eh4.setJobName(JobName.AUTO_SEND_GOODS_JOB.getValue());
+//        eh4.setOcJobExecInfoManager(ocJobExecInfoManager);
 
 
         ExecuteHandle eh5;
@@ -242,9 +242,11 @@ public class Main {
             eh3.exec();
         } else if (action.equals(JobName.SYNC_TAOBAO_INVENTORY_JOB.getValue())) {
             eh1.exec();
-        } else if (action.equals(JobName.AUTO_SEND_GOODS_JOB.getValue())) {
-            eh4.exec();
-        } else if (action.equals(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue())) {
+        }
+//        else if (action.equals(JobName.AUTO_SEND_GOODS_JOB.getValue())) {
+//            eh4.exec();
+//        }
+        else if (action.equals(JobName.TIANMA_ACCOUNT_CHECK_JOB.getValue())) {
             eh5.exec();
         } else if (action.equals(JobName.REPAIR_ORDER_JOB.getValue())) {
             eh7.exec();
@@ -339,7 +341,7 @@ public class Main {
             map1.put("SyncTaoBaoInventoryHandle", eh1);
             map1.put("SyncSalesInfoHandle", eh2);
             map1.put("FenXiaoAcHandle", eh3);
-            map1.put("AutoSendHandle", eh4);
+            //map1.put("AutoSendHandle", eh4);
             map1.put("TianmaAcHandle", eh5);
             map1.put("TianmaSportHttp", tianmaSportHttp);
             map1.put("RefundOperateHandle", eh6);
@@ -394,16 +396,16 @@ public class Main {
 //            sched.scheduleJob(job3, trigger3);
 
             //AutoSendGoodsJob
-            JobDetail job4 = newJob(AutoSendGoodsJob.class)
-                    .usingJobData(map1)
-                    .withIdentity(JobName.AUTO_SEND_GOODS_JOB.getValue(), "myjo")
-                    .build();
-
-            CronTrigger trigger4 = newTrigger()
-                    .withIdentity(JobName.AUTO_SEND_GOODS_JOB.getValue() + "Trigger", "myjo")
-                    .withSchedule(cronSchedule(OrderCatConfig.getAutoSendGoodsJobTriggerCron()))
-                    .build();
-            sched.scheduleJob(job4, trigger4);
+//            JobDetail job4 = newJob(AutoSendGoodsJob.class)
+//                    .usingJobData(map1)
+//                    .withIdentity(JobName.AUTO_SEND_GOODS_JOB.getValue(), "myjo")
+//                    .build();
+//
+//            CronTrigger trigger4 = newTrigger()
+//                    .withIdentity(JobName.AUTO_SEND_GOODS_JOB.getValue() + "Trigger", "myjo")
+//                    .withSchedule(cronSchedule(OrderCatConfig.getAutoSendGoodsJobTriggerCron()))
+//                    .build();
+//            sched.scheduleJob(job4, trigger4);
 
 
             //GuessMailNoKeepJob

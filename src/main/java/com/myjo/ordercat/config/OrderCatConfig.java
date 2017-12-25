@@ -33,7 +33,7 @@ public class OrderCatConfig {
     private static final String REFUND_OPERATE = "refund-operate.%s";
     private static final String ORDER_REPAIR = "order-repair.%s";
     private static final String LOCAL_API = "local-api.%s";
-
+    private static final String ORDERCAT2_API = "ordercat2-api.%s";
 
 
 
@@ -68,6 +68,24 @@ public class OrderCatConfig {
 //                "taobao-api");
         //config = ConfigFactory.parseFile(new File(config));
     }
+
+
+
+//    ordercat2-api{
+//        jwt_token = "OC2LEE eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjZWFwaSIsImNyZWF0ZWQiOjE1MTI3OTU4NDEzMzIsImV4cCI6MTUyODM0Nzg0MX0.lN-W85i23k1d2t612E4Nw4LoP2M4-i9AfV99ODQ2BbMM2lzP5S4IXSN55LYdpUV9Z4I0bf5Pitn1OC2pxzSrKQ"
+//        guess_mail_no_http_url = "https://ordercat2-api.maijufenxiao.com/logistics/company/guess/%s"
+//    }
+
+
+    public static String getOc2ApiJwtToken(){
+        return config.getString(String.format(ORDERCAT2_API, "jwt_token"));
+    }
+
+    public static String getOc2ApiGuessMailNoHttpUrl(){
+        return config.getString(String.format(ORDERCAT2_API, "guess_mail_no_http_url"));
+    }
+
+
 
     public static String getLocalApiSendOrderHttpUrl() {
         return config.getString(String.format(LOCAL_API, "order_send_http_url"));
