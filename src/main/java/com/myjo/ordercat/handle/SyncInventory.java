@@ -116,6 +116,7 @@ public class SyncInventory {
         Logger.debug("dataGathering.InventoryQueryCondition.list" + list.size());
 
         String[] quarter = {
+                "18Q4", "18Q3", "18Q2", "18Q1",
                 "17Q4", "17Q3", "17Q2", "17Q1",
                 "16Q4", "16Q3", "16Q2", "16Q1",
                 "15Q4", "15Q3", "15Q2", "15Q1",

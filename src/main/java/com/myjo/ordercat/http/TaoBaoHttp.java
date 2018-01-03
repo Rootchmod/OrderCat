@@ -378,7 +378,6 @@ public class TaoBaoHttp {
         long pageNo = 1l;
         long pageSize = 100l;
         List<Trade> rtlist = new ArrayList<>();
-
         PageResult<Trade> pageResult;
         do {
             pageResult = getSoldTrades(begin, end, status, pageNo, pageSize);
